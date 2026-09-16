@@ -27,38 +27,38 @@
 <script src="studies-data.js?v=20260916-v1" defer></script>
 <script src="artists-catalog.js?v=20260916-v1" defer></script>
 <script src="studies.js?v=20260916-v1" defer></script>
+<link rel="stylesheet" href="identity-first.css?v=20260916-i1">
+<script src="identity-first.js?v=20260916-i1" defer></script>
 </head>
 <body>
-<a class="skip" href="#direzione">Vai alla direzione visiva</a>
+<a class="skip" href="#segni">Vai ai segni dell’identità</a>
 <header class="navigation">
 <a href="#inizio" class="home" aria-label="HANGOVER, inizio"><i class="mark h" aria-hidden="true"></i></a>
-<nav aria-label="Sezioni"><a href="#direzione">Direzione</a><a href="#segni">Segni</a><a href="#blueprint">Blueprint</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#artisti">Artisti</a><a href="#finestre">Finestre</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
+<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#artisti">Artisti</a><a href="#finestre">Finestre</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
 <button id="motionToggle" class="motion-toggle" aria-pressed="false" aria-label="Metti in pausa le animazioni">Ⅱ</button>
 </header>
 <main>
-<section id="inizio" class="hero">
-<div class="eyebrow"><span>HANGOVER / VISUAL IDENTITY</span><span>EDIZIONE 2026</span></div>
-<h1 class="sr-only">Hangover — Identità visiva</h1>
-<div class="hero-logo"><i class="mark word" aria-hidden="true"></i></div>
-<div class="poster-fan" aria-label="Una selezione della moodboard">
-<button class="fan-card" data-image="33" style="--n:-2" aria-label="Apri Trap / Rap"><img src="assets/moodboard/33.webp" width="1122" height="1402" alt="Trap: Sfera Ebbasta, cromo e rosso" fetchpriority="high"></button>
-<button class="fan-card" data-image="32" style="--n:-1" aria-label="Apri Reggaeton"><img src="assets/moodboard/32.webp" width="1122" height="1402" alt="Reggaeton: Bad Bunny, arancio e verde" fetchpriority="high"></button>
-<button class="fan-card" data-image="23" style="--n:0" aria-label="Apri Hangover Club"><img src="assets/moodboard/23.webp" width="1122" height="1402" alt="HANG OVER come finestra sulla pista" fetchpriority="high"></button>
-<button class="fan-card" data-image="37" style="--n:1" aria-label="Apri House"><img src="assets/moodboard/37.webp" width="1122" height="1402" alt="House: Martin Garrix, metallo e LED" fetchpriority="high"></button>
-<button class="fan-card" data-image="34" style="--n:2" aria-label="Apri Afrobeats"><img src="assets/moodboard/34.webp" width="1122" height="1402" alt="Afrobeats: Burna Boy, oro e verde" fetchpriority="high"></button>
+<section id="inizio" class="hero identity-first" aria-labelledby="identityName">
+<div class="eyebrow"><span>HANGOVER / IDENTITÀ VISIVA</span><span>EDIZIONE 2026</span></div>
+<h1 id="identityName" class="hero-logo"><span class="sr-only">HANGOVER</span><i class="mark word" aria-hidden="true"></i></h1>
+<div class="identity-index">
+ <a class="intro-panel intro-sign" href="#segni" aria-label="Esplora il logo e i segni H, HG e HGR">
+  <div class="intro-label"><span>01 / IL SEGNO</span><span aria-hidden="true">↗</span></div>
+  <div class="intro-family" aria-hidden="true"><i class="mark h"></i><div><i class="mark hg"></i><i class="mark hgr"></i></div></div>
+  <span class="intro-caption">H / HG / HGR</span>
+ </a>
+ <a class="intro-panel intro-type" href="#tipografia" aria-label="Esplora il lettering e i font">
+  <div class="intro-label"><span>02 / IL CARATTERE</span><span aria-hidden="true">↗</span></div>
+  <div class="intro-type-sample" aria-hidden="true"><b>Aa</b><span>Aa<br>0123</span></div>
+  <span class="intro-caption">LETTERING / SANS / MONO</span>
+ </a>
+ <a class="intro-panel intro-art" href="#stile" aria-label="Esplora lo stile artistico, la materia e i colori">
+  <img src="assets/foundation/reference-08.webp" width="1254" height="1254" alt="Monogramma HGR blu materico su arancio" fetchpriority="high">
+  <div class="intro-label"><span>03 / LA MATERIA</span><span aria-hidden="true">↗</span></div>
+  <span class="intro-caption">GRANA / COLORE / CONTRASTO</span>
+ </a>
 </div>
-<div class="hero-bottom"><a href="#direzione" class="arrow-link">ENTRA ↓</a><span>H / HG / HGR</span><a href="#moodboard">SELEZIONE COMPLETA ↗</a></div>
-</section>
-
-<section id="direzione" class="foundation" aria-labelledby="foundationTitle">
-<div class="foundation-head">
-<div class="foundation-kicker"><span>HANGOVER / VISUAL ATLAS</span><span>IL NUCLEO</span></div>
-<h2 id="foundationTitle">Direzione<span>fondamentale.</span></h2><i class="mark h foundation-seal" aria-hidden="true"></i>
-</div>
-<div class="foundation-meta"><span>24 ELEMENTI / 02 NUOVE TAVOLE</span><span>SEGNO · MATERIA · NOTTE</span></div>
-<div class="atlas-controls"><div class="atlas-nav" id="atlasNav" role="group" aria-label="Tavole della direzione visiva"></div><div class="atlas-arrows"><button id="atlasPrev" aria-label="Tavola precedente">←</button><button id="atlasNext" aria-label="Tavola successiva">→</button></div></div>
-<div class="atlas-track" id="atlasTrack" aria-label="Atlante visivo da sfogliare"></div>
-<div class="atlas-footer"><span class="atlas-count" id="atlasCount" aria-live="polite">01 / 05</span><div class="atlas-progress" aria-hidden="true"><i></i></div><span class="atlas-hint">TRASCINA / SFOGLIA →</span></div>
+<div class="hero-bottom"><a href="#segni" class="arrow-link">ESPLORA L’IDENTITÀ ↓</a><div class="intro-palette" aria-label="Palette: ghiaccio, cobalto, arancio, nero, carta, acido"><i></i><i></i><i></i><i></i><i></i><i></i></div><a href="#blueprint">DENTRO LA MATRICE ↗</a></div>
 </section>
 
 <section id="segni" class="identity section">
@@ -81,6 +81,27 @@
 <div class="letter-detail"><span>G</span><i class="mark g"></i><span>E</span><i class="mark e"></i><span>R</span><i class="mark r"></i></div>
 </section>
 
+<section id="tipografia" class="type-section section" aria-labelledby="typeHeading">
+ <div class="section-meta"><h2 id="typeHeading">Il carattere</h2><span>LETTERING / SANS / MONO</span></div>
+ <div class="type-title"><h3>Una voce.<br><span>Tre registri.</span></h3><span class="type-punctuation" aria-hidden="true">Aa↗</span></div>
+ <div class="custom-type"><div class="type-meta"><span>01 / HANGOVER</span><span>LETTERING DISEGNATO</span></div><i class="mark word" role="img" aria-label="Lettering originale HANGOVER"></i><div class="custom-type-footer"><span>OTTO LETTERE. TAGLI, CURVE, PIENI E VUOTI.</span><a href="#blueprint">ESPLORA I TRACCIATI ↗</a></div></div>
+ <div class="type-input-row"><label for="typeSample">PROVA I CARATTERI</label><input id="typeSample" maxlength="28" value="Hangover, all night." autocomplete="off" spellcheck="false"><span id="typeCount" aria-hidden="true">20 / 28</span></div>
+ <div class="type-specimens">
+  <article class="type-specimen type-sans"><div class="type-meta"><h4>02 / ARIAL</h4><span>BOLD · 700</span></div><p class="type-live" data-type-live>Hangover, all night.</p><div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp;?!</div><span class="type-role">TITOLI / MESSAGGI</span></article>
+  <article class="type-specimen type-mono"><div class="type-meta"><h4>03 / COURIER NEW</h4><span>REGULAR · 400</span></div><p class="type-live" data-type-live>Hangover, all night.</p><div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp;?!</div><span class="type-role">DETTAGLI / DIDASCALIE</span></article>
+ </div>
+</section>
+
+<section id="stile" class="art-section section" aria-labelledby="artHeading">
+ <div class="section-meta"><h2 id="artHeading">Stile artistico</h2><span>LA NOSTRA FIRMA</span></div>
+ <div class="art-direction">
+  <div class="art-form" role="img" aria-label="G originale in grande, tra cobalto e arancio"><div class="art-grid" aria-hidden="true"></div><i class="mark g" aria-hidden="true"></i><i class="mark g art-form-echo" aria-hidden="true"></i><span>FORMA / 01</span></div>
+  <div class="art-statement"><h3>Cromo.<br>Grana.<br>Contrasto.</h3><div class="art-palette" aria-label="Palette base"><span style="--tone:#b7dff5">GHIACCIO</span><span style="--tone:#064ccc">COBALTO</span><span style="--tone:#ff5028">ARANCIO</span><span style="--tone:#080b0d">NOTTE</span></div></div>
+ </div>
+ <div class="art-textures"><figure><img src="assets/materials/material-4.webp" width="1254" height="1254" alt="H in argento con texture su nero" loading="lazy"><figcaption>LUCE FREDDA / ARGENTO</figcaption></figure><div class="art-contrast"><i class="mark hgr" aria-hidden="true"></i><span>STESSO SEGNO.<br>UN’ALTRA TEMPERATURA.</span></div><figure><img src="assets/materials/material-1.webp" width="1254" height="1254" alt="HG oro materico su petrolio" loading="lazy"><figcaption>LUCE CALDA / ORO</figcaption></figure></div>
+ <a class="art-next" href="#blueprint"><span>DAL SEGNO AL SISTEMA</span><span aria-hidden="true">↓</span></a>
+</section>
+
 <section id="blueprint" class="blueprint-section section" aria-labelledby="blueprintHeading">
  <div class="section-meta"><h2 id="blueprintHeading">Blueprint</h2><span>FORMA / SISTEMA / MATERIA</span></div>
  <div class="chapter-heading"><h3>Dentro<br>la matrice.</h3><div>OTTO LETTERE.<br>UN SOLO LINGUAGGIO.</div></div>
@@ -89,6 +110,24 @@
  <div class="chapter-heading material-heading"><h3>Materia.</h3><div>NOVE SUPERFICI.<br>H / HG / HGR.</div></div>
  <div class="study-grid materials-grid" id="materialsGrid"></div>
  <a class="visual-book-link" href="downloads/HANGOVER-VISUAL-BOOK.pdf" download><span>HANGOVER / VISUAL BOOK — PDF</span><span>↘</span></a>
+</section>
+
+<section id="direzione" class="foundation" aria-labelledby="foundationTitle">
+<div class="foundation-head">
+<div class="foundation-kicker"><span>HANGOVER / VISUAL ATLAS</span><span>LE APPLICAZIONI</span></div>
+<h2 id="foundationTitle">L’identità<span>prende forma.</span></h2><i class="mark h foundation-seal" aria-hidden="true"></i>
+</div>
+<div class="poster-fan" aria-label="Una selezione della moodboard">
+<button class="fan-card" data-image="33" style="--n:-2" aria-label="Apri Trap / Rap"><img src="assets/moodboard/33.webp" width="1122" height="1402" alt="Trap: Sfera Ebbasta, cromo e rosso" loading="lazy"></button>
+<button class="fan-card" data-image="32" style="--n:-1" aria-label="Apri Reggaeton"><img src="assets/moodboard/32.webp" width="1122" height="1402" alt="Reggaeton: Bad Bunny, arancio e verde" loading="lazy"></button>
+<button class="fan-card" data-image="23" style="--n:0" aria-label="Apri Hangover Club"><img src="assets/moodboard/23.webp" width="1122" height="1402" alt="HANG OVER come finestra sulla pista" loading="lazy"></button>
+<button class="fan-card" data-image="37" style="--n:1" aria-label="Apri House"><img src="assets/moodboard/37.webp" width="1122" height="1402" alt="House: Martin Garrix, metallo e LED" loading="lazy"></button>
+<button class="fan-card" data-image="34" style="--n:2" aria-label="Apri Afrobeats"><img src="assets/moodboard/34.webp" width="1122" height="1402" alt="Afrobeats: Burna Boy, oro e verde" loading="lazy"></button>
+</div>
+<div class="foundation-meta"><span>24 ELEMENTI / 02 NUOVE TAVOLE</span><span>SEGNO · MATERIA · NOTTE</span></div>
+<div class="atlas-controls"><div class="atlas-nav" id="atlasNav" role="group" aria-label="Tavole della direzione visiva"></div><div class="atlas-arrows"><button id="atlasPrev" aria-label="Tavola precedente">←</button><button id="atlasNext" aria-label="Tavola successiva">→</button></div></div>
+<div class="atlas-track" id="atlasTrack" aria-label="Atlante visivo da sfogliare"></div>
+<div class="atlas-footer"><span class="atlas-count" id="atlasCount" aria-live="polite">01 / 06</span><div class="atlas-progress" aria-hidden="true"><i></i></div><span class="atlas-hint">TRASCINA / SFOGLIA →</span></div>
 </section>
 
 <section id="serate" class="nights section" data-mood="club">
