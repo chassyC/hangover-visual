@@ -7,10 +7,14 @@
 <title>HANGOVER — Visual Identity</title>
 <link rel="icon" href="assets/h.svg" type="image/svg+xml">
 <link rel="preload" href="assets/hangover.svg" as="image">
-<link rel="stylesheet" href="style.css?v=20260916-type">
+<link rel="stylesheet" href="style.css?v=20260916-motion">
 <link rel="stylesheet" href="interactions.css?v=20260916-m1">
 <link rel="stylesheet" href="foundation.css?v=20260916-d1">
+<link rel="stylesheet" href="motion-lab.css?v=20260916-m2">
 <script src="catalog.js?v=20260916-h3" defer></script><script src="foundation-catalog.js?v=20260916-d1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="app.js?v=20260916-d1" defer></script><script src="foundation.js?v=20260916-d1" defer></script>
+<script src="motion-data.js?v=20260916-m2" defer></script>
+<script src="motion-engine.js?v=20260916-m2" defer></script>
+<script src="motion-lab.js?v=20260916-m2" defer></script>
 </head>
 <body>
 <a class="skip" href="#direzione">Vai alla direzione visiva</a>
@@ -82,7 +86,50 @@
 </section>
 
 <section id="motion" class="motion section">
-<div class="section-meta"><h2>In movimento</h2><span>9:16 / 1:1 / 16:9</span></div>
+<div class="section-meta"><h2>In movimento</h2><span>12 STUDI / 3 FORMATI</span></div>
+<div id="motionLab" class="motion-lab" aria-label="Hangover Motion Studio">
+ <div class="ml-heading"><div><p class="ml-eyebrow">HANGOVER / MOTION STUDIO</p><h3>La notte.<br>In ogni formato.</h3></div><p class="ml-intro">12 studi da mettere in movimento.<br>Scegli, modifica, fai tuo.</p></div>
+ <div class="ml-workspace">
+  <div class="ml-preview-column">
+   <div class="ml-stage" data-ml-stage>
+    <div class="ml-stage-top"><span data-ml-name>01 / PRISMA</span><span data-ml-dimensions>1920 × 1080</span></div>
+    <canvas data-ml-canvas width="960" height="540" role="img" aria-label="Anteprima animata Prisma"></canvas>
+    <div class="ml-stage-bottom"><span data-ml-description>Luce liquida · logo cromato</span><span>H / 2026</span></div>
+    <span class="ml-loading" data-ml-loading>Preparazione anteprima…</span>
+   </div>
+   <div class="ml-player">
+    <button type="button" data-ml-play aria-label="Metti in pausa l’anteprima" aria-pressed="false">Ⅱ</button>
+    <button type="button" data-ml-restart aria-label="Ricomincia l’anteprima">↺</button>
+    <label class="ml-scrub"><span class="ml-sr-only">Posizione nell’animazione</span><input data-ml-seek type="range" min="0" max="10" step="0.01" value="0" aria-valuetext="0 secondi"></label>
+    <output data-ml-time>00:00 / 00:10</output>
+   </div>
+   <div class="ml-export">
+    <button type="button" data-ml-export="video" class="ml-primary">Esporta video ↗</button>
+    <button type="button" data-ml-export="png">Fotogramma PNG ↓</button>
+    <button type="button" data-ml-export="template">Template modificabile ↓</button>
+   </div>
+   <div class="ml-export-state"><p data-ml-status role="status" aria-live="polite">Modifica un dettaglio, poi porta fuori il tuo loop.</p><button type="button" data-ml-cancel hidden>Annulla esportazione</button><a data-ml-download hidden>Scarica video ↓</a></div>
+   <details class="ml-result" data-ml-result hidden><summary>Anteprima del file</summary><video data-ml-result-video controls playsinline preload="metadata" hidden></video><img data-ml-result-image alt="Fotogramma esportato" hidden><a data-ml-result-template target="_blank" rel="noopener" hidden>Apri il template ↗</a></details>
+   <p class="ml-note">Video senza audio · 30 fps · MP4 o WebM secondo il browser. Il template si apre e si modifica anche offline.</p>
+  </div>
+  <form class="ml-controls" data-ml-controls autocomplete="off">
+   <fieldset><legend>01 / FORMATO</legend><div class="ml-segment" aria-label="Formato del video"><button type="button" data-ml-format="9:16" aria-pressed="false">9:16</button><button type="button" data-ml-format="1:1" aria-pressed="false">1:1</button><button type="button" data-ml-format="16:9" aria-pressed="true">16:9</button></div></fieldset>
+   <fieldset><legend>02 / COLORE</legend><div class="ml-palettes"><button type="button" data-ml-palette="ice" style="--swatch:#06264f;--swatch-ink:#b7dff5" aria-label="Cobalto e ghiaccio" aria-pressed="true"><span>H</span></button><button type="button" data-ml-palette="orange" style="--swatch:#ff5028;--swatch-ink:#080c0f" aria-label="Arancio e inchiostro" aria-pressed="false"><span>H</span></button><button type="button" data-ml-palette="paper" style="--swatch:#ece8de;--swatch-ink:#06264f" aria-label="Carta e blu" aria-pressed="false"><span>H</span></button><button type="button" data-ml-palette="acid" style="--swatch:#0a1016;--swatch-ink:#f4f34d" aria-label="Acido e notte" aria-pressed="false"><span>H</span></button></div></fieldset>
+   <fieldset class="ml-copy"><legend>03 / LE TUE PAROLE</legend><label>Titolo<input name="title" data-ml-field="title" type="text" value="ALL NIGHT" maxlength="42"></label><label>Dettaglio / invito<input name="subtitle" data-ml-field="subtitle" type="text" value="HANGOVER / AFTER DARK" maxlength="72"></label><label data-ml-lineup-label hidden>Line-up · un nome per riga<textarea name="lineup" data-ml-field="lineup" rows="3" maxlength="160">[ARTISTA 01]
+[ARTISTA 02]
+[ARTISTA 03]</textarea></label></fieldset>
+   <fieldset><legend>04 / MATERIA</legend><label class="ml-sr-only" for="mlPhoto">Immagine di partenza</label><select id="mlPhoto" data-ml-photo><option value="01">Materia / riflessi</option><option value="03">Ritmo / linee</option><option value="17">Console / notte</option><option value="23">Dancefloor / persone</option></select><div class="ml-file-row"><label class="ml-file-button">Usa una tua foto ↗<input type="file" data-ml-photo-file accept="image/jpeg,image/png,image/webp"></label><button type="button" data-ml-reset-photo hidden>Ripristina</button></div><span class="ml-note" data-ml-photo-note>La foto entra nei preset fotografici.</span></fieldset>
+   <fieldset><legend>05 / RITMO &amp; EFFETTI</legend><div class="ml-two-fields"><label>Durata<select data-ml-field="duration"><option value="6">6 secondi</option><option value="10" selected>10 secondi</option><option value="15">15 secondi</option></select></label><label>Movimento<select data-ml-field="speed"><option value="0.75">Lento</option><option value="1" selected>Normale</option><option value="1.25">Veloce</option></select></label></div><div class="ml-effects"><label><input type="checkbox" data-ml-effect="grain" checked> Grana</label><label><input type="checkbox" data-ml-effect="light"> Luce</label><label><input type="checkbox" data-ml-effect="registration"> Fuori registro</label></div></fieldset>
+   <div class="ml-preset-actions"><button type="button" data-ml-export="preset">Salva preset ↓</button><label class="ml-file-button">Importa preset ↗<input type="file" data-ml-preset-file accept="application/json,.json"></label></div>
+  </form>
+ </div>
+ <div class="ml-library-heading"><h4>Scegli il movimento.</h4><div class="ml-filters" aria-label="Tipi di animazione"><button type="button" data-ml-filter="all" aria-pressed="true">Tutti <sup>12</sup></button><button type="button" data-ml-filter="compositions" aria-pressed="false">Composizioni <sup>6</sup></button><button type="button" data-ml-filter="stories" aria-pressed="false">Stories <sup>3</sup></button><button type="button" data-ml-filter="video" aria-pressed="false">Video <sup>3</sup></button></div></div>
+ <div class="ml-library" data-ml-library aria-label="Libreria dei preset"></div>
+ <noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
+</div>
+
+<div class="motion-kit-bar"><span>Lo studio offline + tutti i 12 preset.</span><a href="downloads/HANGOVER-MOTION-KIT.zip" download>Scarica il Motion Kit ↓</a></div>
+<details class="motion-legacy"><summary>Prime prove / Chrome, Echo, Cut e carosello</summary>
 <div class="motion-layout">
 <div class="story-shell">
 <div class="story-progress"><i></i><i></i><i></i></div>
@@ -99,6 +146,7 @@
 <div class="carousel" aria-label="Carosello social"><button class="carousel-arrow" id="carouselPrev" aria-label="Slide precedente">←</button><div class="carousel-window" id="carouselWindow"></div><button class="carousel-arrow" id="carouselNext" aria-label="Slide successiva">→</button></div>
 <div class="carousel-footer"><span>CAROSELLO</span><span id="carouselCount" aria-live="polite">01 / 04</span></div>
 </div></div>
+</details>
 </section>
 
 <section id="notte" class="night-life section">

@@ -1,0 +1,19 @@
+{
+  "schema": "hangover.motion.preset",
+  "version": 1,
+  "config": {
+    "preset": "contact",
+    "palette": "paper",
+    "format": "16:9",
+    "title": "ALL NIGHT",
+    "subtitle": "HANGOVER / AFTER DARK",
+    "lineup": "[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]",
+    "duration": 10,
+    "speed": 1,
+    "photo": "23",
+    "effects": [
+      "grain"
+    ],
+    "customImage": null
+  }
+}
