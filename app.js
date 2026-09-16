@@ -89,7 +89,7 @@ async function showLightboxImage(direction=0){
  if(old){old.removeAttribute('id');old.alt='';old.setAttribute('aria-hidden','true');old.classList.add('is-outgoing');}
  else $('#lightboxImage')?.remove();
  lightboxViewport.append(img);activeImage=img;renderedIndex=index;
- $('#lightboxCaption').textContent=item.title;$('#lightboxCounter').textContent=pad(index+1)+' / '+pad(lightboxItems.length);$('#lightboxDownload').href=item.original;$('#lightboxDownload').download='hangover-'+pad(item.id)+'.png';
+ $('#lightboxCaption').textContent=item.title;$('#lightboxCounter').textContent=pad(index+1)+' / '+pad(lightboxItems.length);$('#lightboxDownload').href=item.original;$('#lightboxDownload').download='hangover-'+pad(item.id)+'.'+item.original.split('.').pop();
  lightboxViewport.removeAttribute('aria-busy');
  Motion.animate(img,[{opacity:0,transform:'translate3d('+direction*55+'px,0,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],340);
  if(old){const from=old.style.transform||'translate3d(0,0,0)';Motion.animate(old,[{opacity:1,transform:from},{opacity:0,transform:'translate3d('+(-direction*65)+'px,0,0)'}],300).then(()=>old.remove());}
@@ -98,8 +98,10 @@ async function showLightboxImage(direction=0){
  warmNeighbours();
 }
 document.addEventListener('click',e=>{
- const b=e.target.closest('[data-image]');if(!b)return;
- lastFocused=b;lightboxItems=b.closest('#archiveGrid')?filtered:catalog;lightboxIndex=lightboxItems.findIndex(x=>x.id===Number(b.dataset.image));
+ const b=e.target.closest('[data-image], [data-foundation]');if(!b)return;
+ const foundation=b.hasAttribute('data-foundation');
+ lastFocused=b;lightboxItems=foundation?window.HANGOVER_FOUNDATION:b.closest('#archiveGrid')?filtered:catalog;lightboxIndex=lightboxItems.findIndex(x=>x.id===Number(foundation?b.dataset.foundation:b.dataset.image));
+ lightbox.setAttribute('aria-label',foundation?'Direzione visiva fondamentale':'Immagine della moodboard');
  lightbox.showModal();document.body.classList.add('modal-open');showLightboxImage();$('#lightboxClose').focus();
 });
 function shiftImage(n){lightboxIndex=(lightboxIndex+n+lightboxItems.length)%lightboxItems.length;showLightboxImage(n);}

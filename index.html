@@ -9,13 +9,14 @@
 <link rel="preload" href="assets/hangover.svg" as="image">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="interactions.css?v=20260916-m1">
-<script src="catalog.js?v=20260916-h3" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="app.js?v=20260916-m1" defer></script>
+<link rel="stylesheet" href="foundation.css?v=20260916-d1">
+<script src="catalog.js?v=20260916-h3" defer></script><script src="foundation-catalog.js?v=20260916-d1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="app.js?v=20260916-d1" defer></script><script src="foundation.js?v=20260916-d1" defer></script>
 </head>
 <body>
-<a class="skip" href="#segni">Vai all'identità</a>
+<a class="skip" href="#direzione">Vai alla direzione visiva</a>
 <header class="navigation">
 <a href="#inizio" class="home" aria-label="HANGOVER, inizio"><i class="mark h" aria-hidden="true"></i></a>
-<nav aria-label="Sezioni"><a href="#segni">Segni</a><a href="#serate">Serate</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#moodboard">Moodboard <span>39</span></a></nav>
+<nav aria-label="Sezioni"><a href="#direzione">Direzione</a><a href="#segni">Segni</a><a href="#serate">Serate</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#moodboard">Moodboard <span>39</span></a></nav>
 <button id="motionToggle" class="motion-toggle" aria-pressed="false" aria-label="Metti in pausa le animazioni">Ⅱ</button>
 </header>
 <main>
@@ -30,7 +31,18 @@
 <button class="fan-card" data-image="37" style="--n:1" aria-label="Apri House"><img src="assets/moodboard/37.webp" width="1122" height="1402" alt="House: Martin Garrix, metallo e LED" fetchpriority="high"></button>
 <button class="fan-card" data-image="34" style="--n:2" aria-label="Apri Afrobeats"><img src="assets/moodboard/34.webp" width="1122" height="1402" alt="Afrobeats: Burna Boy, oro e verde" fetchpriority="high"></button>
 </div>
-<div class="hero-bottom"><a href="#segni" class="arrow-link">ENTRA ↓</a><span>H / HG / HGR</span><a href="#moodboard">SELEZIONE COMPLETA ↗</a></div>
+<div class="hero-bottom"><a href="#direzione" class="arrow-link">ENTRA ↓</a><span>H / HG / HGR</span><a href="#moodboard">SELEZIONE COMPLETA ↗</a></div>
+</section>
+
+<section id="direzione" class="foundation" aria-labelledby="foundationTitle">
+<div class="foundation-head">
+<div class="foundation-kicker"><span>HANGOVER / VISUAL ATLAS</span><span>IL NUCLEO</span></div>
+<h2 id="foundationTitle">Direzione<span>fondamentale.</span></h2><i class="mark h foundation-seal" aria-hidden="true"></i>
+</div>
+<div class="foundation-meta"><span>20 RIFERIMENTI / 02 NUOVE TAVOLE</span><span>SEGNO · MATERIA · NOTTE</span></div>
+<div class="atlas-controls"><div class="atlas-nav" id="atlasNav" role="group" aria-label="Tavole della direzione visiva"></div><div class="atlas-arrows"><button id="atlasPrev" aria-label="Tavola precedente">←</button><button id="atlasNext" aria-label="Tavola successiva">→</button></div></div>
+<div class="atlas-track" id="atlasTrack" aria-label="Atlante visivo da sfogliare"></div>
+<div class="atlas-footer"><span class="atlas-count" id="atlasCount" aria-live="polite">01 / 05</span><div class="atlas-progress" aria-hidden="true"><i></i></div><span class="atlas-hint">TRASCINA / SFOGLIA →</span></div>
 </section>
 
 <section id="segni" class="identity section">
