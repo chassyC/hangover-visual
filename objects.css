@@ -70,3 +70,17 @@
 
 .objects-heading h3.objects-name{font-family:"HANGOVER Display",sans-serif;font-weight:400;font-size:clamp(28px,7vw,104px);line-height:1.15;letter-spacing:0}
 @media(max-width:600px){.objects-heading h3.objects-name{font-size:clamp(28px,8.5vw,50px)}}
+/* Per-object text and colour controls. */
+.object-editor-group{border:0;border-top:1px solid #beddec55;margin:4px 0 0;padding:16px 0 0;min-width:0;display:grid;gap:16px}
+.object-editor-group legend{padding:0 12px 0 0;font:12px 'Courier New',monospace;letter-spacing:.08em;text-transform:uppercase;color:#beddec}
+.object-colors{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:12px}
+.object-colors input[type=color]{padding:4px;height:46px;cursor:pointer}
+.object-text-fields{display:grid;gap:17px}
+.object-field-label{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.object-field-label small{letter-spacing:0;white-space:nowrap;font-size:10px;opacity:.65}
+.object-editor textarea{box-sizing:border-box;resize:vertical;min-width:0;width:100%;border:1px solid #d4e1e466;border-radius:0;background:#102f50;color:#f5f3e8;padding:12px;font:16px/1.4 Arial,sans-serif;min-height:48px;max-height:180px}
+.object-editor textarea:focus{outline:2px solid #ff5028;outline-offset:2px}
+.object-editor small:empty{display:none}
+.object-editor #objectFitHint,.object-editor #objectColorHint{color:#f7c090}
+.object-reset{align-self:flex-start;min-height:44px;border:0;background:none;padding:4px 0;color:#beddec;text-decoration:underline;text-underline-offset:4px;font:11px 'Courier New',monospace;cursor:pointer}
+@media(min-width:601px){.object-proof{position:sticky;top:81px;align-self:start;height:min(650px,calc(100dvh - 122px))}.object-proof svg{max-height:100%}}

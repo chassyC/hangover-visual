@@ -19,16 +19,8 @@
   const layouts=[['orbit','Orbita'],['stack','Colonna'],['repeat','Ripetizione'],['split','Due campi'],['frame','Cornice'],['ticket','Matrice']].map(([id,name])=>({id,name}));
   const effects=[['flat','Tinta piatta'],['grain','Grana'],['chrome','Cromo'],['holo','Olografico'],['foil','Lamina'],['emboss','Rilievo']].map(([id,name])=>({id,name}));
   const fonts=[['display','HANGOVER Display'],['sans','Sans'],['mono','Mono']].map(([id,name])=>({id,name}));
-  const palettes=[
-    {id:'ice',name:'Blu ghiaccio',bg:'#063c9a',fg:'#c3e3f3',accent:'#ff552d'},
-    {id:'orange',name:'Arancio acceso',bg:'#ff552d',fg:'#091726',accent:'#f0ecdf'},
-    {id:'paper',name:'Carta e inchiostro',bg:'#f0ecdf',fg:'#07284e',accent:'#ff552d'},
-    {id:'acid',name:'Acido notturno',bg:'#0b151b',fg:'#e6ef46',accent:'#beddec'},
-    {id:'plum',name:'Prugna e rosa',bg:'#291530',fg:'#f6d7ec',accent:'#ff8b69'},
-    {id:'mint',name:'Menta e petrolio',bg:'#c2eedb',fg:'#133a39',accent:'#8b2677'},
-    {id:'mono',name:'Nero e gesso',bg:'#121212',fg:'#f4f0e8',accent:'#b7b2aa'},
-    {id:'red',name:'Rosso lacca',bg:'#931b27',fg:'#ffe9dc',accent:'#b9dafa'}
-  ];
+  const palettes=root.HangoverPalettes;
+  if(!palettes)throw Error("Palette HANGOVER non disponibili.");
   const moods=[['electric','Elettrico'],['playful','Giocoso'],['raw','Ruvido'],['minimal','Essenziale'],['dreamy','Sospeso'],['bold','Deciso']].map(([id,name])=>({id,name}));
   const contexts=[['club','Club'],['campus','Campus'],['street','Street'],['table','Tavolo'],['personal','Personale']].map(([id,name])=>({id,name}));
   const marks=['none','h','hg','hgr','hang','over','hangover'];
@@ -60,12 +52,12 @@
       qrEnabled:v.qrEnabled===true,qrURL:typeof v.qrURL==='string'?v.qrURL.trim().slice(0,1201):defaults.qrURL};
   }
   const moodProfiles={
-    electric:{pal:['acid','ice','orange'],layouts:['orbit','repeat','split'],effects:['chrome','holo','flat'],level:80},
-    playful:{pal:['orange','mint','plum'],layouts:['repeat','orbit','split'],effects:['flat','holo','foil'],level:68},
-    raw:{pal:['paper','mono','red'],layouts:['ticket','repeat','stack'],effects:['grain','flat','emboss'],level:61},
-    minimal:{pal:['mono','paper','mint'],layouts:['frame','stack','split'],effects:['flat','emboss','grain'],level:20},
-    dreamy:{pal:['plum','mint','ice'],layouts:['orbit','frame','stack'],effects:['holo','foil','chrome'],level:44},
-    bold:{pal:['red','orange','acid'],layouts:['stack','split','ticket'],effects:['flat','foil','emboss'],level:89}
+    electric:{pal:['acid','ice','ultraviolet','orange'],layouts:['orbit','repeat','split'],effects:['chrome','holo','flat'],level:80},
+    playful:{pal:['orange','mint','lilac','lemon'],layouts:['repeat','orbit','split'],effects:['flat','holo','foil'],level:68},
+    raw:{pal:['paper','mono','copper','red'],layouts:['ticket','repeat','stack'],effects:['grain','flat','emboss'],level:61},
+    minimal:{pal:['mono','paper','silver','sand'],layouts:['frame','stack','split'],effects:['flat','emboss','grain'],level:20},
+    dreamy:{pal:['plum','petrol','ocean','rose'],layouts:['orbit','frame','stack'],effects:['holo','foil','chrome'],level:44},
+    bold:{pal:['red','orange','cherry','acid'],layouts:['stack','split','ticket'],effects:['flat','foil','emboss'],level:89}
   };
   const contextProfiles={
     club:{pal:['ice','acid','plum'],layouts:['orbit','repeat','split'],effects:['chrome','holo','foil'],level:82},

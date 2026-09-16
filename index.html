@@ -20,14 +20,17 @@
 <script src="motion-zip.js?v=20260916-motion40" defer></script>
 <script src="motion-engine.js?v=20260916-motion40" defer></script>
 <script src="motion-lab.js?v=20260916-motion40" defer></script>
-<link rel="stylesheet" href="objects.css?v=20260916-o60">
+<link rel="stylesheet" href="objects.css?v=20260916-text1">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
 <script src="qr-engine.js?v=20260916-maker1" defer></script>
+<script src="font-data.js?v=20260916-f1" defer></script>
+<script src="palette-data.js?v=20260916-text1" defer></script>
+<script src="text-layout.js?v=20260916-text1" defer></script>
 <script src="objects-wear.js?v=20260916-o60" defer></script>
-<script src="objects-print.js?v=20260916-o60" defer></script>
-<script src="objects-club.js?v=20260916-o60" defer></script>
-<script src="objects-engine.js?v=20260916-o60" defer></script>
-<script src="objects.js?v=20260916-o60" defer></script>
+<script src="objects-print.js?v=20260916-text1" defer></script>
+<script src="objects-club.js?v=20260916-text1" defer></script>
+<script src="objects-engine.js?v=20260916-text1" defer></script>
+<script src="objects.js?v=20260916-text1" defer></script>
 <link rel="stylesheet" href="signage.css?v=20260916-s1">
 <script src="signage-engine.js?v=20260916-s1" defer></script>
 <script src="signage.js?v=20260916-s1" defer></script>
@@ -35,7 +38,6 @@
 <link rel="stylesheet" href="studies.css?v=20260916-vibe1">
 <script src="studies-data.js?v=20260916-mat1" defer></script>
 <script src="artists-catalog.js?v=20260916-v1" defer></script>
-<script src="font-data.js?v=20260916-f1" defer></script>
 <script src="studies.js?v=20260916-mat1" defer></script>
 <link rel="stylesheet" href="identity-first.css?v=20260916-i1">
 <script src="identity-first.js?v=20260916-i1" defer></script>
@@ -47,8 +49,8 @@
 <script src="art-lab.js?v=20260916-f1" defer></script>
 <link rel="stylesheet" href="maker.css?v=20260916-maker1">
 <link rel="stylesheet" href="qr-lab.css?v=20260916-maker1">
-<script src="maker-data.js?v=20260916-maker1" defer></script>
-<script src="maker-engine.js?v=20260916-maker1" defer></script>
+<script src="maker-data.js?v=20260916-text1" defer></script>
+<script src="maker-engine.js?v=20260916-text1" defer></script>
 <script src="maker.js?v=20260916-maker1" defer></script>
 <script src="qr-lab.js?v=20260916-maker1" defer></script>
 </head>
@@ -294,7 +296,7 @@
 <div class="objects-catalogue-head"><h3>60 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#segnaletica">Segnaletica ↓</a><a class="objects-kit" href="#maker">Crea il tuo ↗</a><a class="objects-kit" href="#qr-studio">Crea un QR ↗</a><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div></div>
 <div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 60</button><button data-object-filter="new" aria-pressed="false">Nuovi / 37</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Stampati</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
 <div class="object-grid" id="objectGrid"></div><p class="object-filter-count" id="objectCount" aria-live="polite"></p>
-<div class="objects-bottom"><p>Apri un pezzo. Cambia palette, inserisci i dettagli e il link della tua serata. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
+<div class="objects-bottom"><p>Apri un pezzo. Scegli i colori, modifica tutte le scritte e aggiungi il tuo link. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
 </div>
 <section id="maker" class="maker" aria-labelledby="makerTitle">
   <div class="maker-heading"><div><span class="maker-kicker">HANGOVER / OBJECT MAKER</span><h3 id="makerTitle">Make it<br><em>yours.</em></h3></div><p>Un’idea, mille forme.<br>Scegli il supporto. Trova la tua vibe.<br>Il resto lo decidi tu.</p></div>
@@ -400,12 +402,19 @@
 <div class="object-dialog-top"><h3 id="objectTitle">Oggetto HANGOVER</h3><button id="objectClose" aria-label="Chiudi oggetto">CHIUDI ×</button></div>
 <div class="object-workspace"><div class="object-proof" id="objectPreview"></div><div class="object-editor">
 <p id="objectDescription"></p>
-<label>Palette<select id="objectPalette"><option value="ice">Cobalto / ghiaccio</option><option value="orange">Arancio / notte</option><option value="paper">Carta / blu</option><option value="acid">Notte / acido</option></select></label>
-<label data-object-event data-object-field="title">Titolo della serata<input id="objectEvent" maxlength="32" autocomplete="off"></label>
-<label data-object-event data-object-field="detail">Data e luogo<input id="objectDetail" maxlength="65" autocomplete="off"></label>
-<label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">Il QR viene creato qui. Il modello iniziale apre il sito HANGOVER.</small></label>
+<fieldset class="object-editor-group"><legend>01 / Colori</legend>
+<label>Palette<select id="objectPalette"></select></label>
+<div class="object-colors"><label>Base<input id="objectBg" type="color" value="#063c9a"></label><label>Contrasto<input id="objectFg" type="color" value="#c3e3f3"></label><label>Accento<input id="objectAccent" type="color" value="#ff552d"></label></div>
+<small id="objectColorHint"></small></fieldset>
+<fieldset class="object-editor-group"><legend>02 / Le tue scritte</legend>
+<small>Modifica nome, sigle e testi. Dimensioni e righe si adattano allo spazio del modello.</small>
+<div id="objectTextFields" class="object-text-fields"></div>
+<small id="objectFitHint" aria-live="polite"></small></fieldset>
+<label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">QR diretto, nero su bianco: il link e lo spazio di lettura restano indipendenti dai colori.</small></label>
 <div class="object-export"><button data-export="svg">SCARICA SVG ↘</button><button data-export="png">SCARICA PNG ↘</button></div>
-<button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button><p role="status" id="objectStatus" aria-live="polite"></p>
+<button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button>
+<button class="object-reset" id="objectReset">Ripristina questo modello</button>
+<p role="status" id="objectStatus" aria-live="polite"></p>
 </div></div></dialog>
 
 <noscript><p class="noscript">Per sfogliare la moodboard e provare le varianti del logo, attiva JavaScript nel browser.</p></noscript>

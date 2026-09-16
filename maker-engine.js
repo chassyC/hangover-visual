@@ -55,24 +55,8 @@ function wrap(text,target,font){
  if(current.trim())result.push(current.trim());return result.filter(Boolean);
 }
 function fittedText(value,box,font,fill,paint='',role='title',maxLines=8){
- const text=font==='display'?characters(value):String(value||'').replace(/\s+/g,' ').trim().toUpperCase();if(!text)return '';
- const total=Math.max(1,textMetrics(text,font).width);let best=null;
- for(let targetLines=1;targetLines<=maxLines;targetLines++){
-  const lines=wrap(text,total/targetLines*1.045,font),width=Math.max(...lines.map(t=>textMetrics(t,font).width)),height=lines.reduce((sum,t)=>sum+textMetrics(t,font).height,0)+(lines.length-1)*28;
-  const scale=Math.min(box.w/width,box.h/height);
-  if(!best||scale>best.scale)best={lines,width,height,scale};
- }
- const {lines,height,scale}=best,top=box.y+(box.h-height*scale)/2;let out='',cursorY=0;
- lines.forEach((t,i)=>{
-  const met=textMetrics(t,font),x=box.x+(box.w-met.width*scale)/2,y=top+(cursorY+met.top)*scale;cursorY+=met.height+28;
-  if(font==='display'){
-   let cursor=0,letters='';for(const c of Array.from(t)){if(c!==' '){const g=root.HANGOVER_FONT.glyphs[c]||root.HANGOVER_FONT.glyphs['?'];letters+=`<path d="${g.d}" transform="translate(${n(cursor-g.offset)} ${-g.offset})"/>`;}cursor+=met.advance(c)+met.tracking;}
-   out+=`<g transform="translate(${n(x)} ${n(y)}) scale(${n(scale)})" fill="${fill}" fill-rule="evenodd" ${paint}>${letters}</g>`;
-  }else{
-   out+=`<text x="${n(x)}" y="${n(y+scale*119)}" font-size="${n(141*scale)}" font-family="${font==='mono'?'monospace':'Arial, Helvetica, sans-serif'}" font-weight="${font==='mono'?600:800}" textLength="${n(met.width*scale)}" lengthAdjust="spacingAndGlyphs" fill="${fill}" ${paint}>${esc(t)}</text>`;
-  }
- });
- return `<g data-role="${role}" data-box="${[box.x,box.y,box.w,box.h].map(n).join(' ')}">${out}</g>`;
+ const text=font==='display'?characters(value):String(value||'').replace(/\s+/g,' ').trim().toUpperCase();
+ return `<g data-role="${role}" data-box="${[box.x,box.y,box.w,box.h].map(n).join(' ')}" ${paint}>${root.HangoverText.fit(text,box,{font,color:fill,align:'center',maxLines,key:role,weight:font==='mono'?600:800})}</g>`;
 }
 function fittedMark(name,box,fill,paint=''){
  if(name==='none')return '';
