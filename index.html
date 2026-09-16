@@ -15,6 +15,10 @@
 <script src="motion-data.js?v=20260916-m2" defer></script>
 <script src="motion-engine.js?v=20260916-m2" defer></script>
 <script src="motion-lab.js?v=20260916-m2" defer></script>
+<link rel="stylesheet" href="objects.css?v=20260916-o1">
+<script src="vendor/qrcode.js?v=20260916-o1" defer></script>
+<script src="objects-engine.js?v=20260916-o1" defer></script>
+<script src="objects.js?v=20260916-o1" defer></script>
 </head>
 <body>
 <a class="skip" href="#direzione">Vai alla direzione visiva</a>
@@ -125,7 +129,19 @@
  </div>
  <div class="ml-library-heading"><h4>Scegli il movimento.</h4><div class="ml-filters" aria-label="Tipi di animazione"><button type="button" data-ml-filter="all" aria-pressed="true">Tutti <sup>12</sup></button><button type="button" data-ml-filter="compositions" aria-pressed="false">Composizioni <sup>6</sup></button><button type="button" data-ml-filter="stories" aria-pressed="false">Stories <sup>3</sup></button><button type="button" data-ml-filter="video" aria-pressed="false">Video <sup>3</sup></button></div></div>
  <div class="ml-library" data-ml-library aria-label="Libreria dei preset"></div>
- <noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
+ <dialog id="objectDialog" aria-labelledby="objectTitle">
+<div class="object-dialog-top"><h3 id="objectTitle">Oggetto HANGOVER</h3><button id="objectClose" aria-label="Chiudi oggetto">CHIUDI ×</button></div>
+<div class="object-workspace"><div class="object-proof" id="objectPreview"></div><div class="object-editor">
+<p id="objectDescription"></p>
+<label>Palette<select id="objectPalette"><option value="ice">Cobalto / ghiaccio</option><option value="orange">Arancio / notte</option><option value="paper">Carta / blu</option><option value="acid">Notte / acido</option></select></label>
+<label data-object-event>Titolo della serata<input id="objectEvent" maxlength="32" autocomplete="off"></label>
+<label data-object-event>Data e luogo<input id="objectDetail" maxlength="65" autocomplete="off"></label>
+<label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">Il QR viene creato qui. Il modello iniziale apre il sito HANGOVER.</small></label>
+<div class="object-export"><button data-export="svg">SCARICA SVG ↘</button><button data-export="png">SCARICA PNG ↘</button></div>
+<button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button><p role="status" id="objectStatus" aria-live="polite"></p>
+</div></div></dialog>
+
+<noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
 </div>
 
 <div class="motion-kit-bar"><span>Lo studio offline + tutti i 12 preset.</span><a href="downloads/HANGOVER-MOTION-KIT.zip" download>Scarica il Motion Kit ↓</a></div>
@@ -160,20 +176,15 @@
 <div class="door-strip"><button data-image="16" aria-label="Apri Entrata"><img src="assets/moodboard/16.webp" loading="lazy" alt="Entrata del club"></button><button data-image="19" aria-label="Apri Braccialetto"><img src="assets/moodboard/19.webp" loading="lazy" alt="Braccialetto all'ingresso"></button><button data-image="18" aria-label="Apri Specchio"><img src="assets/moodboard/18.webp" loading="lazy" alt="Riflessi del club"></button></div>
 </section>
 
-<section id="oggetti" class="objects section">
-<div class="section-meta"><h2>Da portare con sé</h2><span>WEAR / PRINT / STICK</span></div>
-<figure class="merch-photo"><div class="wear-mockup" role="img" aria-label="T-shirt, bomber e felpa Hangover, con lettering originale approvato"><img src="assets/applications/wear-blank.webp" loading="lazy" alt="" width="1536" height="1024"><div class="wear-tee"><i class="mark h"></i><span>HANGOVER</span></div><div class="wear-bomber"><i class="mark hang"></i><i class="mark over"></i></div><i class="mark hgr wear-bomber-small"></i><i class="mark hg wear-chest"></i><div class="wear-sleeve"><i class="mark word"></i></div></div><figcaption><span>T-SHIRT / BOMBER / HOODIE</span><span>HANGOVER</span></figcaption></figure>
-<div class="print-layout"><figure class="print-photo"><img src="assets/applications/print.webp" loading="lazy" alt="Libretto Hangover, sticker H HG HGR, biglietto, token e braccialetto" width="1536" height="1024"><figcaption>STAMPA / STICKER / BRACCIALETTI</figcaption></figure>
-<div class="ticket-wall">
-<div class="ticket"><i class="mark h"></i><div><i class="mark word"></i><b>ALL NIGHT</b><span>ADMIT ONE</span><div class="barcode"></div></div><span class="ticket-stub">HGR — 0001</span></div>
-<div class="drink-token"><i class="mark h"></i><span>DRINK</span></div>
-<div class="sticker"><i class="mark hgr"></i></div>
-<div class="coupon"><span>HANGOVER</span><b>+1</b><span>BRING A FRIEND</span></div>
-</div></div>
-<div class="signage">
-<div class="wayfinding"><i class="mark h"></i><div><span>DANCEFLOOR</span><b>↗</b></div></div>
-<div class="wayfinding secondary"><i class="mark hg"></i><div><span>BAR</span><b>←</b></div></div>
-<div class="signage-label">SEGNALETICA</div>
+<section id="oggetti" class="objects section" aria-labelledby="objectsTitle">
+<div class="section-meta"><h2 id="objectsTitle">Da portare con sé</h2><span>WEAR / PRINT / COLLECT</span></div>
+<div class="objects-heading"><h3>La notte,<span>in tasca.</span></h3><p>Un segno da indossare.<br>Un invito da far girare.<br>Qualcosa da tenere.</p></div>
+<div class="object-table" id="objectTable" aria-label="Banco dei materiali HANGOVER"><span class="table-note">TOCCA UN OGGETTO ↗</span></div>
+<div class="objects-catalogue">
+<div class="objects-catalogue-head"><h3>23 modi di esserci.</h3><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div>
+<div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 23</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Volantini</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
+<div class="object-grid" id="objectGrid"></div><p class="object-filter-count" id="objectCount" aria-live="polite"></p>
+<div class="objects-bottom"><p>Apri un pezzo. Cambia palette, inserisci i dettagli e il link della tua serata. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
 </div>
 </section>
 
@@ -193,5 +204,17 @@
 </main>
 <footer class="site-footer"><i class="mark word" aria-hidden="true"></i><div><span>HANGOVER</span><span>VISUAL IDENTITY / 2026</span><a href="#inizio">TORNA SU ↑</a></div></footer>
 <dialog id="lightbox" aria-label="Immagine della moodboard"><div class="lightbox-top"><span id="lightboxCaption"></span><button id="lightboxClose" aria-label="Chiudi immagine">CHIUDI ×</button></div><div class="lightbox-stage"><button id="lightboxPrev" aria-label="Immagine precedente">←</button><div class="lightbox-viewport" id="lightboxViewport"><img id="lightboxImage" class="lightbox-image" alt="" draggable="false"><span id="lightboxStatus" class="lightbox-status" role="status"></span></div><button id="lightboxNext" aria-label="Immagine successiva">→</button></div><div class="lightbox-bottom"><span id="lightboxCounter"></span><a id="lightboxDownload" download>APRI ORIGINALE ↗</a></div></dialog>
+<dialog id="objectDialog" aria-labelledby="objectTitle">
+<div class="object-dialog-top"><h3 id="objectTitle">Oggetto HANGOVER</h3><button id="objectClose" aria-label="Chiudi oggetto">CHIUDI ×</button></div>
+<div class="object-workspace"><div class="object-proof" id="objectPreview"></div><div class="object-editor">
+<p id="objectDescription"></p>
+<label>Palette<select id="objectPalette"><option value="ice">Cobalto / ghiaccio</option><option value="orange">Arancio / notte</option><option value="paper">Carta / blu</option><option value="acid">Notte / acido</option></select></label>
+<label data-object-event>Titolo della serata<input id="objectEvent" maxlength="32" autocomplete="off"></label>
+<label data-object-event>Data e luogo<input id="objectDetail" maxlength="65" autocomplete="off"></label>
+<label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">Il QR viene creato qui. Il modello iniziale apre il sito HANGOVER.</small></label>
+<div class="object-export"><button data-export="svg">SCARICA SVG ↘</button><button data-export="png">SCARICA PNG ↘</button></div>
+<button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button><p role="status" id="objectStatus" aria-live="polite"></p>
+</div></div></dialog>
+
 <noscript><p class="noscript">Per sfogliare la moodboard e provare le varianti del logo, attiva JavaScript nel browser.</p></noscript>
 </body></html>
