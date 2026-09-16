@@ -98,10 +98,10 @@ async function showLightboxImage(direction=0){
  warmNeighbours();
 }
 document.addEventListener('click',e=>{
- const b=e.target.closest('[data-image], [data-foundation]');if(!b)return;
- const foundation=b.hasAttribute('data-foundation');
- lastFocused=b;lightboxItems=foundation?window.HANGOVER_FOUNDATION:b.closest('#archiveGrid')?filtered:catalog;lightboxIndex=lightboxItems.findIndex(x=>x.id===Number(foundation?b.dataset.foundation:b.dataset.image));
- lightbox.setAttribute('aria-label',foundation?'Direzione visiva fondamentale':'Immagine della moodboard');
+ const b=e.target.closest('[data-image], [data-foundation], [data-campus]');if(!b)return;
+ const foundation=b.hasAttribute('data-foundation'), campus=b.hasAttribute('data-campus');
+ lastFocused=b;lightboxItems=campus?window.HANGOVER_CAMPUS:foundation?window.HANGOVER_FOUNDATION:b.closest('#archiveGrid')?filtered:catalog;lightboxIndex=lightboxItems.findIndex(x=>x.id===Number(campus?b.dataset.campus:foundation?b.dataset.foundation:b.dataset.image));
+ lightbox.setAttribute('aria-label',campus?'Fuori / Campus':foundation?'Direzione visiva fondamentale':'Immagine della moodboard');
  lightbox.showModal();document.body.classList.add('modal-open');showLightboxImage();$('#lightboxClose').focus();
 });
 function shiftImage(n){lightboxIndex=(lightboxIndex+n+lightboxItems.length)%lightboxItems.length;showLightboxImage(n);}

@@ -1,0 +1,17 @@
+.campus-expansion-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin:clamp(70px,10vw,160px) 0 60px;padding-top:36px;border-top:1px solid #123c5050}
+.campus-expansion-head h3{margin:0;font-size:clamp(48px,7.5vw,118px);line-height:.9;letter-spacing:-.065em;font-weight:900}
+.campus-expansion-head>div{display:grid;gap:22px;text-align:right;font:11px/1.5 'Courier New',monospace;letter-spacing:.08em}
+.campus-expansion-head a{justify-self:end;padding:12px 0;border-bottom:1px solid currentColor;text-transform:uppercase}
+.campus-studies{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px 5%;align-items:start}
+.campus-study{margin:0;min-width:0}
+.campus-study:nth-child(even){margin-top:16%}
+.campus-study button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.campus-study img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:contain}
+.campus-study figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:18px;font:11px/1.5 'Courier New',monospace;text-transform:uppercase;letter-spacing:.04em}
+.campus-study figcaption span:last-child{text-align:right;opacity:.75}
+.campus-study button:focus-visible,.campus-expansion-head a:focus-visible{outline:3px solid #ff622e;outline-offset:7px}
+@media(hover:hover){.campus-study button:hover{transform:translateY(-6px)}}
+@media(max-width:650px){.campus-expansion-head{display:block;margin-top:64px;margin-bottom:36px;padding-top:28px}.campus-expansion-head>div{margin-top:28px;text-align:left;gap:10px;font-size:10px}.campus-expansion-head a{justify-self:start}.campus-studies{grid-template-columns:1fr;gap:36px}.campus-study:nth-child(even){margin-top:0}.campus-study figcaption{font-size:9px;margin-top:12px}}
+@media(prefers-reduced-motion:reduce){.campus-study button{transition:none}.campus-study button:hover{transform:none}}
+.motion-paused .campus-study button{transition:none}
+.motion-paused .campus-study button:hover{transform:none}
