@@ -129,3 +129,17 @@ function shiftCarousel(direction){
 }
 $('#carouselPrev').addEventListener('click',()=>shiftCarousel(-1));$('#carouselNext').addEventListener('click',()=>shiftCarousel(1));renderCarousel();
 Motion.swipe($('#carouselWindow'),{move:dx=>{if(Motion.enabled())$('#carouselWindow').style.transform='translateX('+Math.max(-40,Math.min(40,dx*.2))+'px)';},end:direction=>{$('#carouselWindow').style.removeProperty('transform');if(direction)shiftCarousel(direction);},cancel:()=>$('#carouselWindow').style.removeProperty('transform')});
+
+// In serata: CSS motion runs only for the surfaces actually in view.
+const serataSurfaces=$$('#notte .serata-title, #notte .editorial-photo, #notte .editorial-word, #notte .door-strip button');
+serataSurfaces.forEach((el,i)=>{el.setAttribute('data-serata-motion','');el.style.setProperty('--serata-phase',(-i*1.3)+'s');});
+const serataVisible=new Set();
+function syncSerataMotion(){serataSurfaces.forEach(el=>el.classList.toggle('serata-active',serataVisible.has(el)&&!document.hidden));}
+if('IntersectionObserver' in window){
+ const observer=new IntersectionObserver(entries=>{
+  entries.forEach(({target,isIntersecting})=>{if(isIntersecting)serataVisible.add(target);else serataVisible.delete(target);});
+  syncSerataMotion();
+ },{threshold:0});
+ serataSurfaces.forEach(el=>observer.observe(el));
+}else{serataSurfaces.forEach(el=>serataVisible.add(el));syncSerataMotion();}
+document.addEventListener('visibilitychange',syncSerataMotion);

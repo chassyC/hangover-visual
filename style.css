@@ -24,3 +24,23 @@ body.paused *,body.paused *:before,body.paused *:after{animation-play-state:paus
 @media(max-width:640px){.video-stage{aspect-ratio:16/9}}
 /* Keep Motion reachable alongside every section on small screens. */
 @media(max-width:640px){.navigation nav{min-width:0;flex:1;overflow-x:auto;gap:12px;scrollbar-width:none}.navigation nav::-webkit-scrollbar{display:none}.navigation nav a:nth-child(4){display:block}.navigation nav a{flex:none;white-space:nowrap}.navigation .home,.navigation .motion-toggle{flex-shrink:0}}
+
+/* In serata: a soft musical pulse, with drifting prints and split lettering. */
+.serata-title{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.serata-beat{display:inline-flex;align-items:center;gap:3px;height:14px;color:var(--ice)}
+.serata-beat i{display:block;width:2px;height:12px;background:currentColor;transform:scaleY(.4);animation:serata-beat 1.7s ease-in-out infinite;animation-play-state:paused}
+.serata-beat i:nth-child(2){animation-delay:-.55s}
+.serata-beat i:nth-child(3){animation-delay:-1.1s}
+.serata-words>span{display:inline-block;animation:serata-title 6s ease-in-out infinite;animation-play-state:paused}
+.serata-words>span:last-child{animation-delay:-.45s}
+.night-life .editorial-photo,.night-life .door-strip button{animation:serata-drift 8s ease-in-out infinite;animation-delay:var(--serata-phase,0s);animation-play-state:paused}
+.night-life .editorial-word .mark{animation:serata-lettering 9s ease-in-out infinite;animation-play-state:paused}
+.night-life .editorial-word .over{animation-direction:reverse;animation-delay:-2s}
+.night-life [data-serata-motion].serata-active,.night-life [data-serata-motion].serata-active *{animation-play-state:running}
+.night-life .editorial-photo:focus-visible,.night-life .door-strip button:focus-visible{animation-play-state:paused}
+@keyframes serata-beat{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+@keyframes serata-title{0%,24%,100%{transform:translateY(0);color:inherit}42%{transform:translateY(-3px);color:var(--ice)}62%{transform:translateY(0);color:inherit}}
+@keyframes serata-drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-6px,0)}}
+@keyframes serata-lettering{0%,100%{transform:translate3d(0,0,0);opacity:1}50%{transform:translate3d(5px,-4px,0);opacity:.78}}
+@media(max-width:640px){.serata-title{gap:8px}@keyframes serata-drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-3px,0)}}}
+@media(prefers-reduced-motion:reduce){.night-life [data-serata-motion],.night-life [data-serata-motion] *{animation:none!important}}
