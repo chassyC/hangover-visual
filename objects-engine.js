@@ -27,6 +27,17 @@ const items=[
  ['coaster','Sottobicchiere / H','extra',90,90,'Ø 90 mm · cartone assorbente'],
  ['qr-card','Cartoncino / QR','extra',100,150,'100 × 150 mm · scopri il prossimo evento']
 ].map((x,i)=>Object.fromEntries(['id','name','category','mmw','mmh','description'].map((k,n)=>[k,x[n]]).concat([['number',String(i+1).padStart(2,'0')]])));
+const legacyEvents=new Set(['a3','a4','a5','a6','dl','member','crew','ticket','tyvek','qr-card']);
+for(const it of items){it.event=legacyEvents.has(it.id);it.qr=it.event;it.fields=it.event?['title','detail']:[];}
+items.find(i=>i.id==='member').fields=['title'];
+items.find(i=>i.id==='crew').fields=['detail'];
+for(const id of ['tyvek','qr-card'])items.find(i=>i.id===id).fields=[];
+const extensions=['createHangoverWear','createHangoverPrint','createHangoverClub'].map(name=>root[name]?.()||{items:[],renderers:{}});
+const renderers=Object.assign({},...extensions.map(x=>x.renderers));
+for(const extension of extensions)for(const item of extension.items){
+ if(items.some(x=>x.id===item.id))throw Error('Oggetto duplicato: '+item.id);
+ items.push({...item,number:String(items.length+1).padStart(2,'0')});
+}
 const palettes={ice:{name:'Cobalto / ghiaccio',bg:'#063c9a',fg:'#c3e3f3',accent:'#ff552d'},orange:{name:'Arancio / notte',bg:'#ff552d',fg:'#091726',accent:'#f0ecdf'},paper:{name:'Carta / blu',bg:'#f0ecdf',fg:'#07284e',accent:'#ff552d'},acid:{name:'Notte / acido',bg:'#0b151b',fg:'#e6ef46',accent:'#beddec'}};
 const defaults={title:'ALL NIGHT',detail:'DATA · LUOGO',url:'https://chassyc.github.io/hangover-visual/',palette:'ice'};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
@@ -43,8 +54,8 @@ function render(id,options={}){
  const txt=(t,x,y,size,c,extra='')=>`<text x="${x}" y="${y}" font-family="Arial, Helvetica, sans-serif" font-size="${size}" fill="${c}" ${extra}>${esc(t)}</text>`;
  const micro=(t,x,y,size=21,c=p.fg,extra='')=>txt(t,x,y,size,c,`style="font-family:monospace" letter-spacing="3" ${extra}`);
  const logo=(name,x,y,w,color=p.fg)=>{const g=DATA.glyphs[name],s=w/g.width;return `<g transform="translate(${x} ${y}) scale(${s})" fill="${color}" fill-rule="evenodd">${g.paths.map(a=>`<path d="${a.d}" transform="translate(${a.translate.join(' ')})"/>`).join('')}</g>`;};
- const title=(x,y,size=90,c=p.fg,width=870)=>{const s=Math.min(size,width/Math.max(1,Array.from(o.title).length)*1.4);return txt(o.title.toUpperCase(),x,y,s,c,'font-weight="800" letter-spacing="-2"');};
- const detail=(x,y,size=23,c=p.fg,width=880)=>txt(o.detail.toUpperCase(),x,y,Math.min(size,width/Math.max(1,o.detail.length)*1.5),c,'letter-spacing="1"');
+ const title=(x,y,size=90,c=p.fg,width=870)=>{const s=Math.min(size,width/Math.max(1,Array.from(o.title).length));return txt(o.title.toUpperCase(),x,y,s,c,'font-weight="800" letter-spacing="-2"');};
+ const detail=(x,y,size=23,c=p.fg,width=880)=>txt(o.detail.toUpperCase(),x,y,Math.min(size,Math.max(1,(width/Math.max(1,Array.from(o.detail).length)-1)/1.05)),c,'letter-spacing="1"');
  const qr=(x,y,size)=>qrGroup(o.url,x,y,size);
  const seams=(x,y,w,h,r=0,c=p.fg)=>rect(x,y,w,h,'none',r,`stroke="${c}" stroke-width="2" stroke-dasharray="5 6" opacity=".55"`);
  const photo=(id,x,y,w,h)=>`<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" overflow="hidden"><image href="${esc(DATA.photos.find(a=>a.id===id).src)}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/></svg>`;
@@ -74,8 +85,10 @@ function render(id,options={}){
  case'lanyard':b=rect(0,0,W,H,p.accent)+[20,220,420,620,820].map(x=>logo('hgr',x,8,81,p.bg)+micro('HANGOVER',x+93,27,11,p.bg)).join('')+line(0,3,W,3,p.bg,1,'stroke-dasharray="2 3"')+line(0,H-3,W,H-3,p.bg,1,'stroke-dasharray="2 3"');break;
  case'coaster':b=circle(500,500,495,p.fg)+circle(500,500,475,'none',`stroke="${p.bg}" stroke-width="2"`)+logo('h',337,193,325,p.bg)+micro('ONE MORE DANCE',500,813,30,p.bg,'text-anchor="middle"')+micro('HANGOVER',500,885,22,p.bg,'text-anchor="middle"');break;
  case'qr-card':b=rect(0,0,W,H,p.fg)+logo('hangover',55,65,890,p.bg)+txt('NEXT',55,380,170,p.bg,'font-weight="900"')+txt('NIGHT.',55,540,170,p.bg,'font-weight="900"')+qr(200,630,600)+line(55,H-200,945,H-200,p.accent,4)+micro('SCOPRI IL PROSSIMO EVENTO',55,H-90,28,p.bg);break;
+ default: if(renderers[id])b=renderers[id]({W,H,p,o,uid,rect,line,circle,txt,micro,logo,title,detail,qr,seams,photo,chrome,esc});
  }
- const physical=!['tee','tote','cap','lanyard'].includes(id);
+ if(!b)throw Error('Disegno non disponibile: '+id);
+ const physical=!it.mockup&&!['tee','tote','cap','lanyard'].includes(id);
  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${physical?it.mmw+'mm':W}" height="${physical?it.mmh+'mm':H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(it.name)}"><title>${esc(it.name)}</title><defs><linearGradient id="${uid}-chrome" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#64849c"/><stop offset=".3" stop-color="#def4fa"/><stop offset=".5" stop-color="#8dacc2"/><stop offset=".75" stop-color="#e7f5f7"/><stop offset="1" stop-color="#789aaa"/></linearGradient></defs>${b}</svg>`;
 }
 root.HangoverObjects={items,palettes,defaults,render,matrix,validatedURL,qrGroup};

@@ -67,3 +67,6 @@
 @media(prefers-reduced-motion:reduce){.table-object,.object-card-art svg{transition:none}}
 .object-editor [hidden]{display:none!important}
 #objectDialog{height:fit-content;margin:auto}
+
+.objects-heading h3.objects-name{font-family:"HANGOVER Display",sans-serif;font-weight:400;font-size:clamp(28px,7vw,104px);line-height:1.15;letter-spacing:0}
+@media(max-width:600px){.objects-heading h3.objects-name{font-size:clamp(28px,8.5vw,50px)}}

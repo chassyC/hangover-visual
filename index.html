@@ -20,15 +20,18 @@
 <script src="motion-zip.js?v=20260916-motion40" defer></script>
 <script src="motion-engine.js?v=20260916-motion40" defer></script>
 <script src="motion-lab.js?v=20260916-motion40" defer></script>
-<link rel="stylesheet" href="objects.css?v=20260916-o1">
+<link rel="stylesheet" href="objects.css?v=20260916-o60">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
-<script src="objects-engine.js?v=20260916-o1" defer></script>
-<script src="objects.js?v=20260916-o1" defer></script>
+<script src="objects-wear.js?v=20260916-o60" defer></script>
+<script src="objects-print.js?v=20260916-o60" defer></script>
+<script src="objects-club.js?v=20260916-o60" defer></script>
+<script src="objects-engine.js?v=20260916-o60" defer></script>
+<script src="objects.js?v=20260916-o60" defer></script>
 <link rel="stylesheet" href="signage.css?v=20260916-s1">
 <script src="signage-engine.js?v=20260916-s1" defer></script>
 <script src="signage.js?v=20260916-s1" defer></script>
 <link rel="stylesheet" href="campus.css?v=20260916-c1">
-<link rel="stylesheet" href="studies.css?v=20260916-mat1">
+<link rel="stylesheet" href="studies.css?v=20260916-vibe1">
 <script src="studies-data.js?v=20260916-mat1" defer></script>
 <script src="artists-catalog.js?v=20260916-v1" defer></script>
 <script src="font-data.js?v=20260916-f1" defer></script>
@@ -46,7 +49,7 @@
 <a class="skip" href="#segni">Vai ai segni dell’identità</a>
 <header class="navigation">
 <a href="#inizio" class="home" aria-label="HANGOVER, inizio"><i class="mark h" aria-hidden="true"></i></a>
-<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#artisti">Artisti</a><a href="#finestre">Finestre</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
+<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#artisti">Artisti</a><a href="#finestre">Vibe</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
 <button id="motionToggle" class="motion-toggle" aria-pressed="false" aria-label="Metti in pausa le animazioni">Ⅱ</button>
 </header>
 <main>
@@ -278,11 +281,11 @@
 
 <section id="oggetti" class="objects section" aria-labelledby="objectsTitle">
 <div class="section-meta"><h2 id="objectsTitle">Da portare con sé</h2><span>WEAR / PRINT / COLLECT</span></div>
-<div class="objects-heading"><h3>La notte,<span>in tasca.</span></h3><p>Un segno da indossare.<br>Un invito da far girare.<br>Qualcosa da tenere.</p></div>
+<div class="objects-heading"><h3 class="objects-name">HANGOVER</h3><p>Un segno da indossare.<br>Un invito da far girare.<br>Qualcosa da tenere.</p></div>
 <div class="object-table" id="objectTable" aria-label="Banco dei materiali HANGOVER"><span class="table-note">TOCCA UN OGGETTO ↗</span></div>
 <div class="objects-catalogue">
-<div class="objects-catalogue-head"><h3>23 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#segnaletica">Segnaletica ↓</a><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div></div>
-<div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 23</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Volantini</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
+<div class="objects-catalogue-head"><h3>60 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#segnaletica">Segnaletica ↓</a><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div></div>
+<div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 60</button><button data-object-filter="new" aria-pressed="false">Nuovi / 37</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Stampati</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
 <div class="object-grid" id="objectGrid"></div><p class="object-filter-count" id="objectCount" aria-live="polite"></p>
 <div class="objects-bottom"><p>Apri un pezzo. Cambia palette, inserisci i dettagli e il link della tua serata. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
 </div>
@@ -329,8 +332,8 @@
  <p class="artists-note">Studi visivi con ritratti generati. Gli artisti sono riferimenti musicali della serie “In rotazione”.</p>
 </section>
 <section id="finestre" class="windows-section section" aria-labelledby="windowsHeading">
- <div class="section-meta"><h2 id="windowsHeading">Finestre</h2><span>LETTERE / AMBIENTI / VIBE</span></div>
- <div class="chapter-heading"><h3>Il mondo<br>dentro il segno.</h3><div>DAL CAMPUS AL CLUB.<br>OTTO NUOVI STUDI + CINQUE RIFERIMENTI.</div></div>
+ <div class="section-meta"><h2 id="windowsHeading">Around the vibe</h2><span>LETTERE / AMBIENTI / VIBE</span></div>
+ <div class="chapter-heading"><h3 class="vibe-title" aria-label="HANGOVER — AROUND THE VIBE"><span class="vibe-brand">HANGOVER</span>Around<br>the vibe.</h3><div>DAL CAMPUS AL CLUB.<br>OTTO NUOVI STUDI + CINQUE RIFERIMENTI.</div></div>
  <div class="study-filters" id="windowsFilters" aria-label="Filtra le finestre fotografiche"><button data-filter="all" aria-pressed="true">Tutte</button><button data-filter="Giorno" aria-pressed="false">Giorno</button><button data-filter="Tramonto" aria-pressed="false">Tramonto</button><button data-filter="Architettura" aria-pressed="false">Architettura</button><button data-filter="Sport" aria-pressed="false">Sport</button><button data-filter="Persone" aria-pressed="false">Persone</button><button data-filter="Natura" aria-pressed="false">Natura</button><button data-filter="Dalla selezione" aria-pressed="false">Dal moodboard</button></div>
  <div class="study-grid" id="windowsGrid"></div><div class="study-counter" id="windowsGridCount">13 / 13</div>
 </section>
@@ -348,8 +351,8 @@
 <div class="object-workspace"><div class="object-proof" id="objectPreview"></div><div class="object-editor">
 <p id="objectDescription"></p>
 <label>Palette<select id="objectPalette"><option value="ice">Cobalto / ghiaccio</option><option value="orange">Arancio / notte</option><option value="paper">Carta / blu</option><option value="acid">Notte / acido</option></select></label>
-<label data-object-event>Titolo della serata<input id="objectEvent" maxlength="32" autocomplete="off"></label>
-<label data-object-event>Data e luogo<input id="objectDetail" maxlength="65" autocomplete="off"></label>
+<label data-object-event data-object-field="title">Titolo della serata<input id="objectEvent" maxlength="32" autocomplete="off"></label>
+<label data-object-event data-object-field="detail">Data e luogo<input id="objectDetail" maxlength="65" autocomplete="off"></label>
 <label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">Il QR viene creato qui. Il modello iniziale apre il sito HANGOVER.</small></label>
 <div class="object-export"><button data-export="svg">SCARICA SVG ↘</button><button data-export="png">SCARICA PNG ↘</button></div>
 <button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button><p role="status" id="objectStatus" aria-live="polite"></p>

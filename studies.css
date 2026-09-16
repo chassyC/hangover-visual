@@ -10,3 +10,7 @@
 
 /* Material collections keep the same quiet gallery controls. */
 .material-heading{scroll-margin-top:100px}.material-filters{margin:0 0 32px;flex-wrap:wrap}.material-filters button{border-color:#bce3f56b;min-height:44px}.material-filters button span{margin-left:8px;opacity:.58;font-size:.85em}.material-filters button[aria-pressed=true]{background:#bce3f5;color:#063376}.material-count{font:11px "Courier New",monospace;letter-spacing:.08em;margin-top:26px;text-align:right;opacity:.7}.materials-grid .study-card figcaption>span:first-of-type{letter-spacing:.02em}.materials-grid .study-card img{aspect-ratio:1;object-fit:contain}
+
+/* Brand-led title for the photographic identity studies. */
+.vibe-title .vibe-brand{display:block;font-family:"HANGOVER Display",sans-serif;font-size:clamp(32px,5.8vw,88px);font-weight:400;letter-spacing:0;line-height:1.18;margin-bottom:24px}
+@media(max-width:640px){.vibe-title .vibe-brand{font-size:clamp(27px,8.5vw,48px);margin-bottom:18px}}
