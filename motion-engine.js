@@ -3,6 +3,7 @@
 window.createHangoverStudio = function createHangoverStudio(data) {
  'use strict';
  const paths={}, pictures=new Map();
+ const renderers=Object.assign({},...['createHangoverEditorial','createHangoverSocial','createHangoverOverlays'].map(name=>typeof window[name]==='function'?window[name]():{}));
  for(const [name,g] of Object.entries(data.glyphs)){
   const p=new Path2D();
   for(const part of g.paths){const [x=0,y=0]=part.translate;p.addPath(new Path2D(part.d),new DOMMatrix().translate(x,y));}
@@ -18,7 +19,8 @@ window.createHangoverStudio = function createHangoverStudio(data) {
   entry.promise=new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{entry.image=image;resolve(image);};image.onerror=()=>{pictures.delete(src);reject(new Error('Immagine non leggibile'));};image.src=src;});
   pictures.set(src,entry);return entry.promise;
  }
- const ready=Promise.all(data.photos.map(p=>load(p.src)));
+ const fontReady=typeof FontFace==='function'&&document.fonts&&data.displayFont?new FontFace('HANGOVER Display','url('+data.displayFont+')').load().then(font=>document.fonts.add(font)):Promise.resolve();
+ const ready=Promise.all([...data.photos.map(p=>load(p.src)),fontReady]);
  const grain=document.createElement('canvas');grain.width=grain.height=160;
  const gc=grain.getContext('2d'),noise=gc.createImageData(160,160);let seed=9216;
  for(let i=0;i<noise.data.length;i+=4){seed=(seed*1664525+1013904223)>>>0;const n=seed>>>24;noise.data[i]=noise.data[i+1]=noise.data[i+2]=n;noise.data[i+3]=32;}
@@ -30,6 +32,7 @@ window.createHangoverStudio = function createHangoverStudio(data) {
   const title=(cfg.title||'ALL NIGHT').toUpperCase(),sub=(cfg.subtitle||'HANGOVER / AFTER DARK').toUpperCase();
   const chosen=data.photos.find(x=>x.id===cfg.photo)||data.photos[0],src=cfg.customImage||chosen.src;
   const image=pictures.get(src)?.image;
+  const transparent=Boolean(data.presets.find(x=>x.id===cfg.preset)?.transparent);
   ctx.save();ctx.setTransform(width/W,0,0,height/H,0,0);ctx.clearRect(0,0,W,H);
   const rect=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
   const line=(x,y,x2,y2,color=p.fg,width=1)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();};
@@ -45,8 +48,9 @@ window.createHangoverStudio = function createHangoverStudio(data) {
   function rules(label,accent=p.fg){text('HANGOVER / '+label,45,35,17,accent,730);text('MOTION SERIES',955,H-39,14,accent,400,'right');}
   function ribbon(y,w=1050,color=p.fg,direction=1){const h=w*141/1087,x=-phase(q*cycles*direction)*(w+24);for(let k=-1;k<3;k++)mark('hangover',x+k*(w+24),y,w,color);return h;}
   function tintedPhoto(x,y,w,h){photo(image,x,y,w,h,1.02+.02*Math.sin(theta));}
-  rect(0,0,W,H,p.bg);
-  switch(cfg.preset){
+  if(!transparent)rect(0,0,W,H,p.bg);
+  if(renderers[cfg.preset])renderers[cfg.preset]({ctx,W,H,p,cfg,time,q,theta,tall,square,title,sub,image,mark,text,headline,photo,line,rect,circle,ribbon,tintedPhoto,clamp,ease,smooth,phase,data});
+  else switch(cfg.preset){
    case 'nastro':{
     const a=tall?185:square?145:110,y=tall?H*.24:square?H*.18:55,ribbonWidth=tall?1250:square?1060:770;
     ctx.save();ctx.translate(W/2,H/2);ctx.rotate(-.09+Math.sin(theta)*.012);ctx.translate(-W/2,-H/2);
@@ -134,10 +138,27 @@ window.createHangoverStudio = function createHangoverStudio(data) {
     text(title,45,H-112,32,p.fg,900);text(sub,45,H-54,17,p.fg,900);rules('PRISMA');
    }
   }
-  if(cfg.effects?.includes('registration')){ctx.save();ctx.globalAlpha=.11;mark('hangover',45+Math.sin(theta)*5,H-27,910,p.accent);ctx.restore();}
+  // A selected surface also reaches typographic layouts; overlay pixels stay transparent.
+  if(chosen.kind==='surface'||cfg.customImage){ctx.save();ctx.globalCompositeOperation=transparent?'source-atop':'soft-light';ctx.globalAlpha=transparent?.28:.22;photo(image,0,0,W,H,1.01);ctx.restore();}
+  if(!transparent&&cfg.effects?.includes('registration')){ctx.save();ctx.globalAlpha=.11;mark('hangover',45+Math.sin(theta)*5,H-27,910,p.accent);ctx.restore();}
+  ctx.save();if(transparent)ctx.globalCompositeOperation='source-atop';
   if(cfg.effects?.includes('light')){const sweep=phase(q*cycles)*2000-500,g=ctx.createLinearGradient(sweep-220,0,sweep+220,H);g.addColorStop(0,'#ffffff00');g.addColorStop(.5,'#ffffff23');g.addColorStop(1,'#ffffff00');rect(0,0,W,H,g);}
   if(cfg.effects?.includes('grain')){ctx.save();ctx.globalAlpha=.48;ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.fillRect(0,0,W,H);ctx.restore();}
   ctx.restore();
+  ctx.restore();
  }
- return {render,load,ready,dimensions};
+ function preview(ctx,width,height,time,cfg,options={}){
+  render(ctx,width,height,time,cfg);
+  if(data.presets.find(x=>x.id===cfg.preset)?.transparent){
+   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='destination-over';
+   const chosen=data.photos.find(x=>x.id===cfg.photo)||data.photos[0],image=pictures.get(cfg.customImage||chosen.src)?.image;
+   if(options.background!=='checker'&&image){const k=Math.max(width/image.width,height/image.height);ctx.drawImage(image,(width-image.width*k)/2,(height-image.height*k)/2,image.width*k,image.height*k);}
+   else{for(let y=0;y<height;y+=24)for(let x=0;x<width;x+=24){ctx.fillStyle=(Math.floor(x/24)+Math.floor(y/24))%2?'#273238':'#39474e';ctx.fillRect(x,y,24,24);}}
+   ctx.restore();
+  }
+  if(options.guides&&cfg.format==='9:16'){
+   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#080c1466';ctx.beginPath();ctx.rect(0,0,width,height);ctx.rect(width*.08,height*.15,width*.76,height*.57);ctx.fill('evenodd');ctx.strokeStyle='#e5ff79';ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.strokeRect(width*.08,height*.15,width*.76,height*.57);ctx.restore();
+  }
+ }
+ return {render,preview,load,ready,dimensions};
 };

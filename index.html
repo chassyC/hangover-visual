@@ -11,11 +11,15 @@
 <link rel="stylesheet" href="style.css?v=20260916-g1">
 <link rel="stylesheet" href="interactions.css?v=20260916-e1">
 <link rel="stylesheet" href="foundation.css?v=20260916-shape1">
-<link rel="stylesheet" href="motion-lab.css?v=20260916-m2">
+<link rel="stylesheet" href="motion-lab.css?v=20260916-motion40">
 <script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-g1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-mat1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
-<script src="motion-data.js?v=20260916-m2" defer></script>
-<script src="motion-engine.js?v=20260916-v2" defer></script>
-<script src="motion-lab.js?v=20260916-m2" defer></script>
+<script src="motion-data.js?v=20260916-motion40" defer></script>
+<script src="motion-editorial.js?v=20260916-motion40" defer></script>
+<script src="motion-social.js?v=20260916-motion40" defer></script>
+<script src="motion-overlays.js?v=20260916-motion40" defer></script>
+<script src="motion-zip.js?v=20260916-motion40" defer></script>
+<script src="motion-engine.js?v=20260916-motion40" defer></script>
+<script src="motion-lab.js?v=20260916-motion40" defer></script>
 <link rel="stylesheet" href="objects.css?v=20260916-o1">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
 <script src="objects-engine.js?v=20260916-o1" defer></script>
@@ -196,9 +200,9 @@
 </section>
 
 <section id="motion" class="motion section">
-<div class="section-meta"><h2>In movimento</h2><span>12 STUDI / 3 FORMATI</span></div>
+<div class="section-meta"><h2>In movimento</h2><span>40 STUDI / 6 COLLEZIONI</span></div>
 <div id="motionLab" class="motion-lab" aria-label="Hangover Motion Studio">
- <div class="ml-heading"><div><p class="ml-eyebrow">HANGOVER / MOTION STUDIO</p><h3>La notte.<br>In ogni formato.</h3></div><p class="ml-intro">12 studi da mettere in movimento.<br>Scegli, modifica, fai tuo.</p></div>
+ <div class="ml-heading"><div><p class="ml-eyebrow">HANGOVER / MOTION STUDIO</p><h3>La notte.<br>In ogni formato.</h3></div><p class="ml-intro">40 studi da mettere in movimento.<br>Scegli, modifica, fai tuo.</p></div>
  <div class="ml-workspace">
   <div class="ml-preview-column">
    <div class="ml-stage" data-ml-stage>
@@ -213,14 +217,17 @@
     <label class="ml-scrub"><span class="ml-sr-only">Posizione nell’animazione</span><input data-ml-seek type="range" min="0" max="10" step="0.01" value="0" aria-valuetext="0 secondi"></label>
     <output data-ml-time>00:00 / 00:10</output>
    </div>
+   <div class="ml-preview-options"><label data-ml-guide-label hidden><input type="checkbox" data-ml-guide> Guide verticali</label><label data-ml-overlay-controls hidden>Sfondo di prova <select data-ml-overlay-background><option value="photo">Foto / materia</option><option value="checker">Trasparenza</option></select></label></div>
    <div class="ml-export">
+    <button type="button" data-ml-export="sequence" class="ml-primary" hidden>Overlay trasparente ↓</button>
     <button type="button" data-ml-export="video" class="ml-primary">Esporta video ↗</button>
     <button type="button" data-ml-export="png">Fotogramma PNG ↓</button>
     <button type="button" data-ml-export="template">Template modificabile ↓</button>
+    <a data-ml-clip download hidden>WebM originale · 6s ↓</a>
    </div>
    <div class="ml-export-state"><p data-ml-status role="status" aria-live="polite">Modifica un dettaglio, poi porta fuori il tuo loop.</p><button type="button" data-ml-cancel hidden>Annulla esportazione</button><a data-ml-download hidden>Scarica video ↓</a></div>
    <details class="ml-result" data-ml-result hidden><summary>Anteprima del file</summary><video data-ml-result-video controls playsinline preload="metadata" hidden></video><img data-ml-result-image alt="Fotogramma esportato" hidden><a data-ml-result-template target="_blank" rel="noopener" hidden>Apri il template ↗</a></details>
-   <p class="ml-note">Video senza audio · 30 fps · MP4 o WebM secondo il browser. Il template si apre e si modifica anche offline.</p>
+   <p class="ml-note" data-ml-export-note>Video senza audio · 30 fps · MP4 o WebM secondo il browser. Il template si apre e si modifica anche offline.</p>
   </div>
   <form class="ml-controls" data-ml-controls autocomplete="off">
    <fieldset><legend>01 / FORMATO</legend><div class="ml-segment" aria-label="Formato del video"><button type="button" data-ml-format="9:16" aria-pressed="false">9:16</button><button type="button" data-ml-format="1:1" aria-pressed="false">1:1</button><button type="button" data-ml-format="16:9" aria-pressed="true">16:9</button></div></fieldset>
@@ -233,14 +240,11 @@
    <div class="ml-preset-actions"><button type="button" data-ml-export="preset">Salva preset ↓</button><label class="ml-file-button">Importa preset ↗<input type="file" data-ml-preset-file accept="application/json,.json"></label></div>
   </form>
  </div>
- <div class="ml-library-heading"><h4>Scegli il movimento.</h4><div class="ml-filters" aria-label="Tipi di animazione"><button type="button" data-ml-filter="all" aria-pressed="true">Tutti <sup>12</sup></button><button type="button" data-ml-filter="compositions" aria-pressed="false">Composizioni <sup>6</sup></button><button type="button" data-ml-filter="stories" aria-pressed="false">Stories <sup>3</sup></button><button type="button" data-ml-filter="video" aria-pressed="false">Video <sup>3</sup></button></div></div>
+ <div class="ml-library-heading"><h4>Scegli il movimento.</h4><div class="ml-filters" aria-label="Tipi di animazione"><button type="button" data-ml-filter="all" aria-pressed="true">Tutti <sup>40</sup></button><button type="button" data-ml-filter="compositions" aria-pressed="false">Composizioni <sup>10</sup></button><button type="button" data-ml-filter="stories" aria-pressed="false">Stories <sup>6</sup></button><button type="button" data-ml-filter="video" aria-pressed="false">Video <sup>6</sup></button><button type="button" data-ml-filter="reels" aria-pressed="false">Reels <sup>6</sup></button><button type="button" data-ml-filter="tiktok" aria-pressed="false">TikTok <sup>6</sup></button><button type="button" data-ml-filter="overlays" aria-pressed="false">Overlay <sup>6</sup></button></div></div>
  <div class="ml-library" data-ml-library aria-label="Libreria dei preset"></div>
-
-
-<noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
+ <noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
 </div>
-
-<div class="motion-kit-bar"><span>Lo studio offline + tutti i 12 preset.</span><a href="downloads/HANGOVER-MOTION-KIT.zip" download>Scarica il Motion Kit ↓</a></div>
+<div class="motion-kit-bar"><span>Lo studio offline + tutti i 40 preset.</span><a href="downloads/HANGOVER-MOTION-KIT.zip" download>Scarica il Motion Kit ↓</a></div>
 <details class="motion-legacy"><summary>Prime prove / Chrome, Echo, Cut e carosello</summary>
 <div class="motion-layout">
 <div class="story-shell">

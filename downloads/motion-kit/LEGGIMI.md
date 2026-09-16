@@ -1,43 +1,29 @@
-# HANGOVER — Motion Studio
+# HANGOVER / Motion Studio
 
-12 composizioni animate e personalizzabili. Studio autonomo, senza account o connessione.
+Apri HANGOVER-MOTION-STUDIO.html nel browser. Funziona anche offline: il font HANGOVER Display, i tracciati originali e le materie sono inclusi.
 
-## Apri e personalizza
+40 studi: 10 composizioni, 6 stories, 6 video, 6 Reels, 6 TikTok e 6 overlay. I primi 22 studi funzionano in 9:16, 1:1 e 16:9; le tre nuove raccolte social sono progettate in verticale 9:16.
 
-1. Apri `HANGOVER-MOTION-STUDIO.html` in un browser moderno.
-2. Scegli uno dei 12 studi nella libreria. I file JSON numerati sono preset pronti, importabili con **Importa preset**.
-3. Modifica formato, palette, titolo, dettaglio, durata ed effetti. Line-up accetta fino a quattro nomi, uno per riga. La foto personale resta nel browser e nei file esportati: non viene inviata a servizi esterni.
-4. Usa il cursore per scegliere un fotogramma. **Fotogramma PNG** produce 1080 × 1920, 1080 × 1080 o 1920 × 1080 px.
-5. **Esporta video** registra l'intera sequenza da zero. Tieni la scheda aperta. Il file è senza audio, con obiettivo 30 fps; fluidità e tempi effettivi dipendono dal browser e dal dispositivo. Il formato è MP4 se supportato, altrimenti WebM. Il link di download indica il formato effettivo.
-6. **Template modificabile** genera una copia HTML autonoma con le modifiche; **Salva preset** conserva solo la configurazione in JSON, più l'eventuale foto caricata.
+## Crea
 
-Le anteprime rispettano il pulsante di pausa del sito e la preferenza del dispositivo per animazioni ridotte. In quest'ultimo caso puoi esplorare manualmente i fotogrammi ed esportare una sequenza su richiesta.
+Scegli uno studio, cambia parole, palette, materia, durata e velocità. Puoi caricare una tua foto. Salva un preset JSON per ritrovare le scelte o un template HTML per portare con te lo studio completo.
 
-## I 12 studi
+Le 12 materie comprendono le 4 scene originali e 8 nuove superfici: cromo liquido, alluminio spazzolato, titanio iridescente, vetro a onde, velluto prugna, scie neon, rete in tensione, carta in rilievo. La superficie entra nelle fotografie o colora i layout tipografici. Gli overlay mantengono la trasparenza.
 
-- **Prisma**: logo cromato, bande oblique, riflessi.
-- **Nastro**: tre righe di lettering a scorrimento alternato.
-- **Shutter**: pannelli che aprono e chiudono la fotografia.
-- **Orbita**: H, HG e HGR su traiettorie concentriche.
-- **Segnale**: onde di ritmo e lettering su due righe.
-- **Contact**: tre stampe fotografiche in un collage mobile.
-- **Annuncio**: story in tre scene, firma / fotografia / invito.
-- **Line-up**: manifesto con nomi modificabili in sequenza.
-- **Recap**: quattro scene fotografiche con apertura e chiusura.
-- **Intro**: costruzione del logo per l'apertura di un video.
-- **Titolo video**: nome e dettaglio sopra una foto, con entrata e uscita.
-- **Outro**: firma finale e invito.
+## Esporta
 
-Tutti gli studi sono adattabili ai tre formati. Le composizioni fotografiche usano quattro riferimenti selezionati dell'identità Hangover; negli altri preset la selezione della foto non cambia i segni. `Titolo video` è una demo composita su foto, non un file con trasparenza né un editor per montare un video caricato.
+- Video: 30 fps, MP4 o WebM secondo il browser. Nessun audio incluso; aggiungi musica e riprese nel tuo editor. Mantieni la scheda aperta durante l'esportazione.
+- WebM originale: i sei file 35–40 sono video VP9 con alpha, 1080×1920, 30 fps, 6 secondi. Usano parole e colori iniziali. Puoi metterli subito sopra una ripresa se il tuo editor supporta WebM con trasparenza; altrimenti usa la sequenza PNG.
+- PNG: il fotogramma corrente, a risoluzione piena.
+- Overlay: sequenza PNG RGBA 1080×1920 a 30 fps in uno ZIP. Importa `frames/00000.png` come sequenza a 30 fps e posizionala sopra il tuo video. Sono inclusi preset e istruzioni. È trasparente; foto e guide di anteprima non vengono esportate.
+- Il pulsante Annulla interrompe l'esportazione senza creare un risultato parziale.
 
-## Materiali e provenienza
+Le guide verticali sono un margine di composizione prudente (x8–84%, y15–72%), non una simulazione ufficiale dei comandi delle piattaforme. Controlla il montaggio nell'app scelta, perché didascalie e pulsanti variano.
 
-I contorni HANGOVER, HANG, OVER, H, HG e HGR sono estratti senza modifiche dai file SVG approvati del progetto. Le quattro anteprime fotografiche sono i riferimenti forniti e già presenti nella moodboard (01, 03, 17, 23); gli originali restano intatti. La loro presenza in un concept non prova diritti d'uso commerciale. Prima di pubblicare contenuti dell'evento usa fotografie autorizzate e sostituisci i campi tra parentesi con dati confermati.
+## Direzione creativa
 
-Testi di servizio: Arial/Helvetica e monospace di sistema. Nessun font esterno incluso o servizio a pagamento. Questo pacchetto contiene template web/JSON; non contiene progetti nativi After Effects, Premiere o CapCut.
+Reels: aperture fotografiche, slit reveal, match cut, tipografia mobile e chiusure leggibili. TikTok: gancio visivo iniziale, micro-sequenze, push, collage e testo contestuale. Gli overlay lasciano spazio a volti e azione al centro. Sono studi di identità visiva, non promesse di performance.
 
-## Sorgenti e manutenzione
+Font, lettere e monogrammi HANGOVER derivano dai tracciati canonici del progetto. Le superfici aggiunte sono grafiche procedurali originali. Le quattro immagini iniziali provengono dai riferimenti già presenti nell'archivio HANGOVER; il kit non cambia la provenienza o le autorizzazioni di quelle fonti. Usa foto e musica di cui hai i diritti nel montaggio finale.
 
-`motion-data.js`, `motion-engine.js`, `motion-lab.js`, `motion-lab.css` sono i sorgenti dello studio nel sito. `source/motion/build-data.py` aggiorna il pacchetto di vettori, immagini e CSS. `source/motion/build-kit.cjs` ricostruisce il kit autonomo.
-
-Riferimenti tecnici primari: [Canvas captureStream](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream), [MediaRecorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder), [formati supportati](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/isTypeSupported_static).
+Fonti consultate il 16/09/2026: [Meta Reels](https://www.facebook.com/business/ads/facebook-instagram-reels-ads), [TikTok Creative Codes](https://ads.tiktok.com/business/en/creative-codes), [TikTok creative best practices](https://ads.tiktok.com/resources/help/article/creative-best-practices?lang=en). Le scelte grafiche sono un'interpretazione HANGOVER dei principi, senza replicare marchi o template esterni.
