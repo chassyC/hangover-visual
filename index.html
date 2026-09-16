@@ -19,6 +19,9 @@
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
 <script src="objects-engine.js?v=20260916-o1" defer></script>
 <script src="objects.js?v=20260916-o1" defer></script>
+<link rel="stylesheet" href="signage.css?v=20260916-s1">
+<script src="signage-engine.js?v=20260916-s1" defer></script>
+<script src="signage.js?v=20260916-s1" defer></script>
 </head>
 <body>
 <a class="skip" href="#direzione">Vai alla direzione visiva</a>
@@ -181,11 +184,30 @@
 <div class="objects-heading"><h3>La notte,<span>in tasca.</span></h3><p>Un segno da indossare.<br>Un invito da far girare.<br>Qualcosa da tenere.</p></div>
 <div class="object-table" id="objectTable" aria-label="Banco dei materiali HANGOVER"><span class="table-note">TOCCA UN OGGETTO ↗</span></div>
 <div class="objects-catalogue">
-<div class="objects-catalogue-head"><h3>23 modi di esserci.</h3><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div>
+<div class="objects-catalogue-head"><h3>23 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#segnaletica">Segnaletica ↓</a><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div></div>
 <div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 23</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Volantini</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
 <div class="object-grid" id="objectGrid"></div><p class="object-filter-count" id="objectCount" aria-live="polite"></p>
 <div class="objects-bottom"><p>Apri un pezzo. Cambia palette, inserisci i dettagli e il link della tua serata. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
 </div>
+</section>
+
+<section id="segnaletica" class="signage-lab section" aria-labelledby="signageHeading">
+<div class="section-meta"><h2 id="signageHeading">Segnaletica</h2><span>12 STUDI / DIREZIONI DIVERSE</span></div>
+<div class="sg-heading"><h3>Segui<br>il segno<span>↗</span></h3><p>Dalla porta alla pista.<br>Ogni spazio, il suo mood.</p></div>
+<div class="sg-workbench">
+<div class="sg-display"><div class="sg-stage" id="sgStage" role="img" aria-label="Anteprima segnaletica"></div><div class="sg-caption"><strong id="sgName">Night / H</strong><span id="sgDimensions"></span></div></div>
+<div class="sg-editor">
+<label for="sgDesign">Composizione</label><select id="sgDesign"></select>
+<label for="sgPalette">Mood e colori</label><select id="sgPalette"></select>
+<label for="sgText">Dove si va?</label><input id="sgText" type="text" maxlength="22" value="DANCEFLOOR" autocomplete="off" spellcheck="false">
+<fieldset class="sg-directions"><legend>Direzione</legend><div id="sgArrows"></div></fieldset>
+<div class="sg-actions"><button id="sgMix">Mescola ↗</button><button id="sgReset">Ripristina</button></div>
+<div class="sg-downloads"><button id="sgSvg">SVG ↓</button><button id="sgPng">PNG ↓</button></div>
+<p id="sgStatus" role="status" aria-live="polite">Scegli uno studio o crea il tuo mix.</p>
+</div></div>
+<div class="sg-collection-head"><h4>Una notte.<br>Molte strade.</h4><a href="downloads/HANGOVER-SIGNAGE-KIT.zip" download>SCARICA I 12 STUDI ↘</a></div>
+<div class="sg-samples" id="sgSamples" role="group" aria-label="Studi di segnaletica"></div>
+<p class="sg-production">Studi visivi per pannelli, insegne, adesivi e totem. Dimensioni indicative; materiali, finiture e leggibilità nello spazio da verificare in produzione.</p>
 </section>
 
 <section id="campus" class="campus section">
