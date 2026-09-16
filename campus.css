@@ -13,5 +13,5 @@
 @media(hover:hover){.campus-study button:hover{transform:translateY(-6px)}}
 @media(max-width:650px){.campus-expansion-head{display:block;margin-top:64px;margin-bottom:36px;padding-top:28px}.campus-expansion-head>div{margin-top:28px;text-align:left;gap:10px;font-size:10px}.campus-expansion-head a{justify-self:start}.campus-studies{grid-template-columns:1fr;gap:36px}.campus-study:nth-child(even){margin-top:0}.campus-study figcaption{font-size:9px;margin-top:12px}}
 @media(prefers-reduced-motion:reduce){.campus-study button{transition:none}.campus-study button:hover{transform:none}}
-.motion-paused .campus-study button{transition:none}
-.motion-paused .campus-study button:hover{transform:none}
+body.paused .campus-study button{transition:none}
+body.paused .campus-study button:hover{transform:none}
