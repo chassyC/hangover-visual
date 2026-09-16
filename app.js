@@ -5,7 +5,7 @@ const catalog = window.HANGOVER_CATALOG;
 const byId = id => catalog.find(x => x.id === Number(id));
 const pad = n => String(n).padStart(2,'0');
 const Motion = window.HangoverMotion;
-const safeImage = (item, cls='') => { const b=document.createElement('button'); b.className=cls; b.dataset.image=item.id; b.setAttribute('aria-label','Apri '+item.title); const img=new Image(); img.src=item.src; img.alt=item.title; img.loading='lazy'; img.decoding='async'; b.append(img); return b; };
+const safeImage = (item, cls='') => { const b=document.createElement('button'); b.className=cls; b.dataset.image=item.id; b.setAttribute('aria-label','Apri '+item.title); const img=window.HangoverImage.create(item); b.append(img); return b; };
 
 // Each composition shares one set of vector glyphs.
 const preview=$('#identityPreview');
@@ -66,7 +66,7 @@ Motion.deck($('.poster-fan'));
 
 // Archive originals remain unchanged; display copies are compressed for the web.
 let filtered=catalog, lightboxItems=catalog, lightboxIndex=0, lastFocused=null;
-function renderArchive(category){filtered=category==='all'?catalog:catalog.filter(x=>x.category===category); const grid=$('#archiveGrid');grid.replaceChildren();filtered.forEach(item=>{const b=safeImage(item,'archive-item');const img=b.firstElementChild;const wrap=document.createElement('div');wrap.className='archive-image';wrap.append(img);const cap=document.createElement('figcaption');const title=document.createElement('span');title.textContent=item.title;const n=document.createElement('span');n.textContent=pad(item.id);cap.append(title,n);b.append(wrap,cap);grid.append(b);});$('#archiveCount').textContent=filtered.length+' / 39 immagini';}
+function renderArchive(category){filtered=category==='all'?catalog:catalog.filter(x=>x.category===category); const grid=$('#archiveGrid');grid.replaceChildren();filtered.forEach(item=>{const b=safeImage(item,'archive-item');const img=b.firstElementChild;const wrap=document.createElement('div');wrap.className='archive-image';if(item.viewport)wrap.style.aspectRatio=item.width+'/'+item.height;wrap.append(img);const cap=document.createElement('figcaption');const title=document.createElement('span');title.textContent=item.title;const n=document.createElement('span');n.textContent=item.displayNumber||pad(item.id);cap.append(title,n);b.append(wrap,cap);grid.append(b);});$('#archiveCount').textContent=filtered.length+' / '+catalog.length+' elementi';}
 $$('[data-filter]').forEach(b=>b.addEventListener('click',()=>{$$('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderArchive(b.dataset.filter);}));renderArchive('all');
 const lightbox=$('#lightbox'), lightboxViewport=$('#lightboxViewport');
 let imageRevision=0, activeImage=null, renderedIndex=0;
@@ -84,17 +84,17 @@ async function showLightboxImage(direction=0){
  }}
  if(revision!==imageRevision || !lightbox.open)return;
  $$('.is-outgoing',lightboxViewport).forEach(img=>img.remove());
- const old=activeImage, img=new Image();
- img.id='lightboxImage';img.className='lightbox-image';img.alt=item.title;img.src=source;img.draggable=false;img.decoding='async';
+ const old=activeImage, img=window.HangoverImage.create(item,source);
+ img.id='lightboxImage';img.classList.add('lightbox-image');
  if(old){old.removeAttribute('id');old.alt='';old.setAttribute('aria-hidden','true');old.classList.add('is-outgoing');}
  else $('#lightboxImage')?.remove();
  lightboxViewport.append(img);activeImage=img;renderedIndex=index;
- $('#lightboxCaption').textContent=item.title;$('#lightboxCounter').textContent=pad(index+1)+' / '+pad(lightboxItems.length);$('#lightboxDownload').href=item.original;$('#lightboxDownload').download='hangover-'+pad(item.id)+'.'+item.original.split('.').pop();
+ $('#lightboxCaption').textContent=item.title;$('#lightboxCounter').textContent=pad(index+1)+' / '+pad(lightboxItems.length);$('#lightboxDownload').textContent=item.viewport?'TAVOLA ORIGINALE ↗':'APRI ORIGINALE ↗';$('#lightboxDownload').href=item.original;$('#lightboxDownload').download='hangover-'+pad(item.id)+'.'+item.original.split('.').pop();
  lightboxViewport.removeAttribute('aria-busy');
  Motion.animate(img,[{opacity:0,transform:'translate3d('+direction*55+'px,0,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],340);
  if(old){const from=old.style.transform||'translate3d(0,0,0)';Motion.animate(old,[{opacity:1,transform:from},{opacity:0,transform:'translate3d('+(-direction*65)+'px,0,0)'}],300).then(()=>old.remove());}
  // Keep the decoded preview visible until the full image is ready.
- if(source!==item.original)Motion.loadImage(item.original).then(()=>{if(revision===imageRevision&&img===activeImage&&lightbox.open)img.src=item.original;}).catch(()=>{});
+ if(source!==item.original)Motion.loadImage(item.original).then(()=>{if(revision===imageRevision&&img===activeImage&&lightbox.open)window.HangoverImage.setSource(img,item.original);}).catch(()=>{});
  warmNeighbours();
 }
 document.addEventListener('click',e=>{

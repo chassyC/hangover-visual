@@ -3,11 +3,12 @@
  const root=document.querySelector('#direzione'), track=document.querySelector('#atlasTrack');
  const catalog=window.HANGOVER_FOUNDATION, Motion=window.HangoverMotion;
  const groups=[
-  {name:'Segno',theme:'signs',ids:[2,11,13,8,1],positions:[[3,11,50],[58,10,12],[72,10,12],[86,10,12],[58,40,40]]},
-  {name:'Materia',theme:'matter',ids:[3,14,4,15,5],positions:[[3,8,30],[37,6,25],[68,5,19],[69,53,19],[42,62,17]]},
-  {name:'Club',theme:'club',ids:[6,7,10,12,20],positions:[[3,27,21],[26,8,18],[46,20,28],[77,4,20],[77,54,18]]},
-  {name:'Finestre',theme:'windows',ids:[9,17,18,16,19],positions:[[2,3,24],[8,56,18],[32,8,34],[69,3,24],[76,56,18]]},
-  {name:'Nuove',theme:'new',ids:[21,22],positions:[[9,5,35],[53,17,35]]}
+  {name:'Segno',theme:'signs',ids:[2021,2022,2023,211,213,208],positions:[[3,7,24],[29,7,24],[55,7,24],[82,7,15],[82,38,15],[82,69,15]]},
+  {name:'Studio',theme:'studio',ids:[2011,2012,2013],positions:[[7,7,25],[38,7,25],[69,7,25]]},
+  {name:'Materia',theme:'matter',ids:[203,214,204,215,205],positions:[[3,8,30],[37,6,25],[68,5,19],[69,53,19],[42,62,17]]},
+  {name:'Club',theme:'club',ids:[206,207,210,212,220],positions:[[3,27,21],[26,8,18],[46,20,28],[77,4,20],[77,54,18]]},
+  {name:'Finestre',theme:'windows',ids:[209,217,218,216,219],positions:[[2,3,24],[8,56,18],[32,8,34],[69,3,24],[76,56,18]]},
+  {name:'Nuove',theme:'new',ids:[221,222],positions:[[9,5,35],[53,17,35]]}
  ];
  const nav=document.querySelector('#atlasNav');
  groups.forEach((group,index)=>{
@@ -15,12 +16,12 @@
   article.id='atlas-'+group.theme;article.setAttribute('aria-label',(index+1)+' / '+group.name);
   const label=document.createElement('span');label.className='atlas-board-label';label.textContent=String(index+1).padStart(2,'0')+' / '+group.name.toUpperCase();article.append(label);
   group.ids.forEach((n,i)=>{
-   const item=catalog.find(x=>x.number===n), [x,y,w]=group.positions[i];
+   const item=catalog.find(x=>x.id===n), [x,y,w]=group.positions[i];
    const button=document.createElement('button');button.className='atlas-image';button.dataset.foundation=item.id;
    button.style.cssText=`--x:${x}%;--y:${y}%;--w:${w}%;--ratio:${item.width}/${item.height}`;
    button.setAttribute('aria-label','Apri '+item.title);
-   const img=new Image();img.src=item.src;img.alt=item.title;img.loading='lazy';img.decoding='async';img.width=item.width;img.height=item.height;img.draggable=false;
-   const number=document.createElement('span');number.className='atlas-image-number';number.textContent=String(n).padStart(2,'0');
+   const img=window.HangoverImage.create(item);img.setAttribute('width',item.width);img.setAttribute('height',item.height);
+   const number=document.createElement('span');number.className='atlas-image-number';number.textContent=item.displayNumber||String(item.number).padStart(2,'0');
    button.append(img,number);article.append(button);
   });
   track.append(article);
@@ -32,7 +33,7 @@
  function setActive(index){
   active=index;
   tabs.forEach((b,i)=>b.setAttribute('aria-current',String(i===index)));
-  document.querySelector('#atlasCount').textContent=String(index+1).padStart(2,'0')+' / 05';
+  document.querySelector('#atlasCount').textContent=String(index+1).padStart(2,'0')+' / '+String(boards.length).padStart(2,'0');
   document.querySelector('#atlasPrev').disabled=index===0;
   document.querySelector('#atlasNext').disabled=index===boards.length-1;
   root.style.setProperty('--atlas-progress',(index+1)/boards.length);
@@ -51,7 +52,7 @@
  document.querySelector('#atlasNext').addEventListener('click',()=>go(active+1));
  nav.addEventListener('keydown',e=>{
   const index=tabs.indexOf(e.target);if(index<0)return;
-  const next=e.key==='ArrowRight'?Math.min(4,index+1):e.key==='ArrowLeft'?Math.max(0,index-1):e.key==='Home'?0:e.key==='End'?4:null;
+  const next=e.key==='ArrowRight'?Math.min(boards.length-1,index+1):e.key==='ArrowLeft'?Math.max(0,index-1):e.key==='Home'?0:e.key==='End'?boards.length-1:null;
   if(next===null)return;e.preventDefault();go(next);tabs[next].focus({preventScroll:true});
  });
  // Touch and trackpad retain native scrolling, momentum and pinch zoom.
