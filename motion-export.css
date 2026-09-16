@@ -1,0 +1,11 @@
+/* Resolution and isolated-wordmark controls; shared by live and portable studio. */
+.motion-lab .ml-output-settings{padding:18px 0 0;margin:8px 0 0;border:0;border-top:1px solid var(--ml-line);min-width:0}
+.motion-lab .ml-output-settings legend{padding:0 12px 0 0;font:10px/1.5 'Courier New',monospace;letter-spacing:.1em;text-transform:uppercase}
+.motion-lab .ml-output-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:5px 0 12px}
+.motion-lab .ml-output-grid label{display:flex;flex-direction:column;gap:7px;font-size:11px;min-width:0}
+.motion-lab .ml-output-grid select{width:100%;background:transparent;border:1px solid var(--ml-line);border-radius:0;padding:10px 8px;font:12px Arial,Helvetica,sans-serif;min-height:44px;cursor:pointer}
+.motion-lab .ml-output-summary{font:11px/1.5 'Courier New',monospace;margin-bottom:5px}
+.motion-lab .ml-output-settings:disabled{opacity:.6}
+.motion-lab .ml-result img,.motion-lab .ml-result video{background-color:#263037;background-image:conic-gradient(#39464e 25%,transparent 0 50%,#39464e 0 75%,transparent 0);background-size:24px 24px}
+@media(max-width:760px){.motion-lab .ml-output-grid{grid-template-columns:1fr 1fr}.motion-lab .ml-output-grid select{font-size:16px}}
+@media(max-width:430px){.motion-lab .ml-output-grid{grid-template-columns:1fr}}

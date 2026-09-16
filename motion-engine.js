@@ -26,29 +26,44 @@ window.createHangoverStudio = function createHangoverStudio(data) {
  for(let i=0;i<noise.data.length;i+=4){seed=(seed*1664525+1013904223)>>>0;const n=seed>>>24;noise.data[i]=noise.data[i+1]=noise.data[i+2]=n;noise.data[i+3]=32;}
  gc.putImageData(noise,0,0);
  function dimensions(format,short=1080){return format==='9:16'?[short,Math.round(short*16/9)]:format==='1:1'?[short,short]:[Math.round(short*16/9),short];}
+ function exportSettings(cfg){
+  const resolution=[1080,1440,2160].includes(Number(cfg.resolution))?Number(cfg.resolution):1080;
+  const [width,height]=dimensions(cfg.format,resolution),content=cfg.content==='wordmark'?'wordmark':'composition';
+  const transparent=cfg.background==='transparent'||(content==='composition'&&Boolean(data.presets.find(p=>p.id===cfg.preset)?.transparent));
+  return {width,height,resolution,content,transparent,fps:30,bitrate:{1080:12000000,1440:22000000,2160:45000000}[resolution]};
+ }
  function render(ctx,width,height,time,cfg){
   const W=1000,H=1000*height/width,tall=H>1150,square=H>850&&!tall,p=data.palettes[cfg.palette]||data.palettes.ice;
   const duration=Number(cfg.duration)||10, q=phase(time/duration), cycles=Number(cfg.speed)===.75?1:Number(cfg.speed)===1.25?3:2, theta=q*Math.PI*2*cycles;
   const title=(cfg.title||'ALL NIGHT').toUpperCase(),sub=(cfg.subtitle||'HANGOVER / AFTER DARK').toUpperCase();
   const chosen=data.photos.find(x=>x.id===cfg.photo)||data.photos[0],src=cfg.customImage||chosen.src;
   const image=pictures.get(src)?.image;
-  const transparent=Boolean(data.presets.find(x=>x.id===cfg.preset)?.transparent);
+  const output=exportSettings(cfg),transparent=output.transparent,isolated=output.content==='wordmark',removeBackground=cfg.background==='transparent';
   ctx.save();ctx.setTransform(width/W,0,0,height/H,0,0);ctx.clearRect(0,0,W,H);
-  const rect=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
+  const rect=(x,y,w,h,color)=>{if(removeBackground&&ctx.globalCompositeOperation!=='source-atop'&&x<=0&&y<=0&&x+w>=W&&y+h>=H)return;ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
   const line=(x,y,x2,y2,color=p.fg,width=1)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();};
   const circle=(x,y,r,color,stroke=false,width=2)=>{ctx.beginPath();ctx.arc(x,y,Math.max(0,r),0,Math.PI*2);ctx[stroke?'strokeStyle':'fillStyle']=color;if(stroke){ctx.lineWidth=width;ctx.stroke();}else ctx.fill();};
-  function mark(name,x,y,w,color=p.fg){const g=data.glyphs[name];ctx.save();ctx.translate(x,y);ctx.scale(w/g.width,w/g.width);ctx.fillStyle=color;ctx.fill(paths[name],'evenodd');ctx.restore();return w*g.height/g.width;}
+  function mark(name,x,y,w,color=p.fg){const g=data.glyphs[name];ctx.save();ctx.translate(x,y);ctx.scale(w/g.width,w/g.width);if(removeBackground&&!isolated&&cfg.preset==='shutter'&&name==='hangover'){ctx.beginPath();for(let i=0;i<6;i++){const visible=.12+((Math.sin(theta-i*.24)+1)/2)*.88;ctx.rect(i*g.width/6,g.height*(1-visible)/2,g.width/6+1,g.height*visible);}ctx.clip();}ctx.fillStyle=color;ctx.fill(paths[name],'evenodd');ctx.restore();return w*g.height/g.width;}
   function text(s,x,y,size=22,color=p.fg,max=900,align='left',weight=400,font='monospace'){
    ctx.save();ctx.textAlign=align;ctx.textBaseline='top';ctx.font=`${weight} ${size}px ${font}`;
    if(ctx.measureText(s).width>max){size*=max/ctx.measureText(s).width;ctx.font=`${weight} ${size}px ${font}`;}
    ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore();return size;
   }
   function headline(s,x,y,w,size=100,color=p.fg){return text(s,x,y,size,color,w,'left',800,'Arial, sans-serif');}
-  function photo(img,x,y,w,h,zoom=1){if(!img){rect(x,y,w,h,p.muted);return;}ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const k=Math.max(w/img.width,h/img.height)*zoom,iw=img.width*k,ih=img.height*k;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);ctx.restore();}
+  function photo(img,x,y,w,h,zoom=1){if(removeBackground&&ctx.globalCompositeOperation!=='source-atop')return;if(!img){rect(x,y,w,h,p.muted);return;}ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const k=Math.max(w/img.width,h/img.height)*zoom,iw=img.width*k,ih=img.height*k;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);ctx.restore();}
   function rules(label,accent=p.fg){text('HANGOVER / '+label,45,35,17,accent,730);text('MOTION SERIES',955,H-39,14,accent,400,'right');}
   function ribbon(y,w=1050,color=p.fg,direction=1){const h=w*141/1087,x=-phase(q*cycles*direction)*(w+24);for(let k=-1;k<3;k++)mark('hangover',x+k*(w+24),y,w,color);return h;}
   function tintedPhoto(x,y,w,h){photo(image,x,y,w,h,1.02+.02*Math.sin(theta));}
   if(!transparent)rect(0,0,W,H,p.bg);
+  if(isolated){
+   // A dedicated output layer: no secondary marks, copy, panels, pictures or guide pixels.
+   const motion=['drift','reveal','pulse'].includes(cfg.wordmarkMotion)?cfg.wordmarkMotion:'drift';
+   const w=motion==='pulse'?860*(.94+.06*Math.sin(theta)):860,h=w*data.glyphs.hangover.height/data.glyphs.hangover.width;
+   const x=(W-w)/2,y=(H-h)/2+(motion==='drift'?Math.sin(theta)*Math.min(24,H*.04):0);
+   ctx.save();
+   if(motion==='reveal'){const visible=.12+.88*smooth((1-Math.cos(theta))/2);ctx.beginPath();ctx.rect(x-1,y-2,(w+2)*visible,h+4);ctx.clip();}
+   mark('hangover',x,y,w,p.fg);ctx.restore();ctx.restore();return;
+  }
   if(renderers[cfg.preset])renderers[cfg.preset]({ctx,W,H,p,cfg,time,q,theta,tall,square,title,sub,image,mark,text,headline,photo,line,rect,circle,ribbon,tintedPhoto,clamp,ease,smooth,phase,data});
   else switch(cfg.preset){
    case 'nastro':{
@@ -149,7 +164,7 @@ window.createHangoverStudio = function createHangoverStudio(data) {
  }
  function preview(ctx,width,height,time,cfg,options={}){
   render(ctx,width,height,time,cfg);
-  if(data.presets.find(x=>x.id===cfg.preset)?.transparent){
+  if(exportSettings(cfg).transparent){
    ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='destination-over';
    const chosen=data.photos.find(x=>x.id===cfg.photo)||data.photos[0],image=pictures.get(cfg.customImage||chosen.src)?.image;
    if(options.background!=='checker'&&image){const k=Math.max(width/image.width,height/image.height);ctx.drawImage(image,(width-image.width*k)/2,(height-image.height*k)/2,image.width*k,image.height*k);}
@@ -160,5 +175,5 @@ window.createHangoverStudio = function createHangoverStudio(data) {
    ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#080c1466';ctx.beginPath();ctx.rect(0,0,width,height);ctx.rect(width*.08,height*.15,width*.76,height*.57);ctx.fill('evenodd');ctx.strokeStyle='#e5ff79';ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.strokeRect(width*.08,height*.15,width*.76,height*.57);ctx.restore();
   }
  }
- return {render,preview,load,ready,dimensions};
+ return {render,preview,load,ready,dimensions,exportSettings};
 };

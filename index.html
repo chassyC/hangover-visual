@@ -12,14 +12,14 @@
 <link rel="stylesheet" href="interactions.css?v=20260916-e1">
 <link rel="stylesheet" href="foundation.css?v=20260916-shape1">
 <link rel="stylesheet" href="motion-lab.css?v=20260916-motion40">
-<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-g1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-mat1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
+<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-g1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-library1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
 <script src="motion-data.js?v=20260916-motion40" defer></script>
 <script src="motion-editorial.js?v=20260916-motion40" defer></script>
 <script src="motion-social.js?v=20260916-motion40" defer></script>
 <script src="motion-overlays.js?v=20260916-motion40" defer></script>
 <script src="motion-zip.js?v=20260916-motion40" defer></script>
-<script src="motion-engine.js?v=20260916-motion40" defer></script>
-<script src="motion-lab.js?v=20260916-motion40" defer></script>
+<script src="motion-engine.js?v=20260916-export29" defer></script>
+<script src="motion-lab.js?v=20260916-export29" defer></script>
 <link rel="stylesheet" href="objects.css?v=20260916-text1">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
 <script src="qr-engine.js?v=20260916-maker1" defer></script>
@@ -53,12 +53,19 @@
 <script src="maker-engine.js?v=20260916-text1" defer></script>
 <script src="maker.js?v=20260916-maker1" defer></script>
 <script src="qr-lab.js?v=20260916-maker1" defer></script>
+<link rel="stylesheet" href="artwork-downloads.css?v=20260916-library1">
+<script src="artwork-downloads.js?v=20260916-library1" defer></script>
+<link rel="stylesheet" href="motion-export.css?v=20260916-export29">
+<link rel="stylesheet" href="library.css?v=20260916-library29">
+<script src="library-data.js?v=20260916-library29" defer></script>
+<script src="library.js?v=20260916-library29" defer></script>
 </head>
 <body>
 <a class="skip" href="#segni">Vai ai segni dell’identità</a>
+<div class="author-credit" aria-label="Firma: Chançard Cammisa">Chançard Cammisa</div>
 <header class="navigation">
 <a href="#inizio" class="home" aria-label="HANGOVER, inizio"><i class="mark h" aria-hidden="true"></i></a>
-<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#maker">Maker</a><a href="#qr-studio">QR</a><a href="#artisti">Artisti</a><a href="#finestre">Vibe</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
+<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#maker">Maker</a><a href="#qr-studio">QR</a><a href="#artisti">Artisti</a><a href="#finestre">Vibe</a><a href="#moodboard">Moodboard <span>263</span></a></nav>
 <button id="motionToggle" class="motion-toggle" aria-pressed="false" aria-label="Metti in pausa le animazioni">Ⅱ</button>
 </header>
 <main>
@@ -230,6 +237,19 @@
     <output data-ml-time>00:00 / 00:10</output>
    </div>
    <div class="ml-preview-options"><label data-ml-guide-label hidden><input type="checkbox" data-ml-guide> Guide verticali</label><label data-ml-overlay-controls hidden>Sfondo di prova <select data-ml-overlay-background><option value="photo">Foto / materia</option><option value="checker">Trasparenza</option></select></label></div>
+   <!-- Insert before .ml-export inside .ml-preview-column; pair with motion-export.css. -->
+<fieldset class="ml-output-settings" data-ml-output-settings>
+ <legend>Esporta a modo tuo</legend>
+ <div class="ml-output-grid">
+  <label>Risoluzione<select data-ml-output="resolution"><option value="1080">Full HD · 1920 × 1080</option><option value="1440">2K / QHD · 2560 × 1440</option><option value="2160">4K / UHD · 3840 × 2160</option></select></label>
+  <label>Contenuto<select data-ml-output="content"><option value="composition">Composizione completa</option><option value="wordmark">Solo HANGOVER</option></select></label>
+  <label>Sfondo<select data-ml-output="background"><option value="preset">Sfondo del preset</option><option value="transparent">Trasparente / overlay</option></select></label>
+  <label data-ml-wordmark-controls hidden>Movimento della firma<select data-ml-output="wordmarkMotion"><option value="drift">Fluttua</option><option value="reveal">Rivelazione</option><option value="pulse">Respiro</option></select></label>
+ </div>
+ <p class="ml-output-summary" data-ml-output-summary>1920 × 1080 px · 30 fps</p>
+ <p class="ml-note" data-ml-alpha-status>Il PNG mantiene la trasparenza. Il supporto WebM alpha viene verificato nel browser prima dell’export.</p>
+</fieldset>
+
    <div class="ml-export">
     <button type="button" data-ml-export="sequence" class="ml-primary" hidden>Overlay trasparente ↓</button>
     <button type="button" data-ml-export="video" class="ml-primary">Esporta video ↗</button>
@@ -390,14 +410,29 @@
  <div class="study-grid" id="windowsGrid"></div><div class="study-counter" id="windowsGridCount">13 / 13</div>
 </section>
 
-<section id="moodboard" class="archive section">
-<div class="section-meta"><h2>Moodboard</h2><span>45 ELEMENTI / SELEZIONE CHASSY</span></div>
-<div class="archive-controls" aria-label="Filtra la moodboard"><button data-filter="all" aria-pressed="true">Tutte <span>45</span></button><button data-filter="segni" aria-pressed="false">Segni</button><button data-filter="club" aria-pressed="false">Club</button><button data-filter="artisti" aria-pressed="false">Artisti</button><button data-filter="campus" aria-pressed="false">Campus</button></div>
-<div class="archive-grid" id="archiveGrid"></div><div class="archive-count" id="archiveCount" aria-live="polite">45 elementi</div>
+<section id="moodboard" class="section library-section" aria-labelledby="libraryHeading">
+<div id="library" class="library">
+  <div class="library-heading"><div><p class="library-eyebrow">HANGOVER / VISUAL COLLECTION</p><h2 id="libraryHeading">The<br><em>locker room.</em></h2></div><div class="library-intro"><span class="library-room-tag">ROOM / 029</span><p>Tutti i segni, tutti i mondi.<br>Apri un armadietto. Trova il tuo pezzo.</p><p id="libraryTotal" class="library-total" aria-live="polite"></p></div></div>
+  <div id="libraryLockers" class="library-lockers" aria-label="Collezioni di materiali"></div>
+  <p class="library-bank-caption"><span>COLLECT / OPEN / KEEP</span><span>HANGOVER VISUAL DEPARTMENT ↗</span></p>
+  <section id="libraryPanel" class="library-panel" aria-labelledby="libraryCollectionTitle" hidden>
+    <header class="library-panel-head"><div><p class="library-breadcrumb">RACCOLTA <span aria-hidden="true">/</span> <span id="libraryBreadcrumb"></span></p><h3 id="libraryCollectionTitle" tabindex="-1"></h3><p id="libraryCollectionSubtitle"></p></div><button id="libraryCloseCollection" type="button" class="library-close">Chiudi <span aria-hidden="true">×</span></button></header>
+    <div class="library-search-row"><label for="librarySearch">Cerca in questa collezione<input id="librarySearch" type="search" placeholder="Un nome, un colore, un’idea…" autocomplete="off"></label><p id="libraryCount" role="status" aria-live="polite"></p></div>
+    <div id="libraryGrid" class="library-grid"></div>
+    <div id="libraryEmpty" class="library-empty" hidden><span aria-hidden="true">↗</span><h4>Nessun pezzo con questo nome.</h4><p>Prova una parola più semplice o torna a vedere tutta la collezione.</p><button id="libraryClearSearch" type="button">Azzera la ricerca</button></div>
+    <button id="libraryMore" class="library-more" type="button" hidden>Mostra altri 12 <span aria-hidden="true">↓</span></button>
+  </section>
+  <p id="libraryStatus" class="library-status" role="status" aria-live="polite"></p>
+  <dialog id="libraryDialog" class="library-dialog" aria-labelledby="libraryDialogTitle" aria-describedby="libraryDialogNote">
+    <div class="library-dialog-head"><div><p id="libraryDialogCollection" class="library-eyebrow"></p><h3 id="libraryDialogTitle"></h3></div><button id="libraryDialogClose" class="library-close" type="button" aria-label="Chiudi anteprima">Chiudi <span aria-hidden="true">×</span></button></div>
+    <div id="libraryDialogArt" class="library-dialog-art" aria-busy="false"></div>
+    <div class="library-dialog-footer"><p id="libraryDialogNote"></p><div class="library-downloads"><a id="libraryOriginal" download hidden>Scarica originale ↘</a><a id="libraryVideoOriginal" download hidden>Scarica clip originale ↘</a><button id="libraryPNG" type="button" hidden>Scarica PNG ↘</button><button id="libraryStudio" type="button" hidden>Personalizzalo ↗</button></div><p id="libraryDialogStatus" role="status" aria-live="polite"></p></div>
+  </dialog>
+</div>
 </section>
 </main>
-<footer class="site-footer"><i class="mark word" aria-hidden="true"></i><div><span>HANGOVER</span><span>VISUAL IDENTITY / 2026</span><a href="#inizio">TORNA SU ↑</a></div></footer>
-<dialog id="lightbox" aria-label="Immagine della moodboard"><div class="lightbox-top"><span id="lightboxCaption"></span><button id="lightboxClose" aria-label="Chiudi immagine">CHIUDI ×</button></div><div class="lightbox-stage"><button id="lightboxPrev" aria-label="Immagine precedente">←</button><div class="lightbox-viewport" id="lightboxViewport"><img id="lightboxImage" class="lightbox-image" alt="" draggable="false"><span id="lightboxStatus" class="lightbox-status" role="status"></span></div><button id="lightboxNext" aria-label="Immagine successiva">→</button></div><div class="lightbox-bottom"><span id="lightboxCounter"></span><a id="lightboxDownload" download>APRI ORIGINALE ↗</a></div></dialog>
+<footer class="site-footer"><i class="mark word" aria-hidden="true"></i><div><span>HANGOVER</span><span class="author-signature">Chançard Cammisa</span><a href="#inizio">TORNA SU ↑</a></div></footer>
+<dialog id="lightbox" aria-label="Immagine della moodboard"><div class="lightbox-top"><span id="lightboxCaption"></span><button id="lightboxClose" aria-label="Chiudi immagine">CHIUDI ×</button></div><div class="lightbox-stage"><button id="lightboxPrev" aria-label="Immagine precedente">←</button><div class="lightbox-viewport" id="lightboxViewport"><img id="lightboxImage" class="lightbox-image" alt="" draggable="false"><span id="lightboxStatus" class="lightbox-status" role="status"></span></div><button id="lightboxNext" aria-label="Immagine successiva">→</button></div><div class="lightbox-bottom"><span id="lightboxCounter"></span><div class="lightbox-downloads"><button id="lightboxPNG" type="button">SCARICA PNG ↘</button><a id="lightboxDownload" download>SCARICA ORIGINALE ↘</a></div></div></dialog>
 <dialog id="objectDialog" aria-labelledby="objectTitle">
 <div class="object-dialog-top"><h3 id="objectTitle">Oggetto HANGOVER</h3><button id="objectClose" aria-label="Chiudi oggetto">CHIUDI ×</button></div>
 <div class="object-workspace"><div class="object-proof" id="objectPreview"></div><div class="object-editor">

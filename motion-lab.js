@@ -6,9 +6,9 @@ window.initHangoverLab = async function initHangoverLab(){
  const $=s=>root.querySelector(s),$$=s=>Array.from(root.querySelectorAll(s));
  const canvas=$('[data-ml-canvas]'),ctx=canvas.getContext('2d'),stage=$('[data-ml-stage]'),status=$('[data-ml-status]');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const defaults={preset:'prisma',palette:'ice',format:'16:9',title:'ALL NIGHT',subtitle:'HANGOVER / AFTER DARK',lineup:'[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]',duration:10,speed:1,photo:'01',effects:['grain'],customImage:null};
+ const defaults={preset:'prisma',palette:'ice',format:'16:9',title:'ALL NIGHT',subtitle:'HANGOVER / AFTER DARK',lineup:'[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]',duration:10,speed:1,photo:'01',effects:['grain'],customImage:null,resolution:1080,content:'composition',background:'preset',wordmarkMotion:'drift'};
  let cfg={...defaults},time=2.4,playing=!reduced.matches,inView=false,frame=0,last=0,exporting=false,job=null,photoRevision=0;
- let previewBackground='photo',showGuides=false;
+ let previewBackground='photo',showGuides=false,alphaSupport={state:'unknown',mime:null};
  let videoURL=null;const fileURLs=new Set();
  const stamp=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
  function report(message){status.textContent=message;}
@@ -17,7 +17,8 @@ window.initHangoverLab = async function initHangoverLab(){
   const c={...defaults};
   if(!data.presets.some(x=>x.id===value.preset)||!Object.hasOwn(data.palettes,value.palette)||!['9:16','1:1','16:9'].includes(value.format))throw Error('Preset o formato non riconosciuto.');
   for(const k of ['preset','palette','format'])c[k]=value[k];
-  const supported=data.presets.find(p=>p.id===c.preset).formats;if(supported&&!supported.includes(c.format))throw Error('Questo studio è pensato per il formato verticale 9:16.');
+  for(const [key,allowed] of [['resolution',[1080,1440,2160]],['content',['composition','wordmark']],['background',['preset','transparent']],['wordmarkMotion',['drift','reveal','pulse']]]){if(value[key]!=null){const v=key==='resolution'?Number(value[key]):value[key];if(!allowed.includes(v))throw Error('Impostazione di export non riconosciuta.');c[key]=v;}}
+  const supported=data.presets.find(p=>p.id===c.preset).formats;if(c.content!=='wordmark'&&supported&&!supported.includes(c.format))throw Error('Questo studio è pensato per il formato verticale 9:16.');
   for(const [k,n] of [['title',42],['subtitle',72],['lineup',160]]){if(typeof value[k]!=='string'||value[k].length>n)throw Error('Il testo del preset non è valido.');c[k]=value[k];}
   if(![6,10,15].includes(value.duration)||![.75,1,1.25].includes(value.speed))throw Error('Durata o movimento non riconosciuti.');
   c.duration=value.duration;c.speed=value.speed;
@@ -37,17 +38,25 @@ window.initHangoverLab = async function initHangoverLab(){
   const preset=data.presets.find(x=>x.id===cfg.preset),ix=data.presets.indexOf(preset)+1;
   $('[data-ml-name]').textContent=String(ix).padStart(2,'0')+' / '+preset.name.toUpperCase();
   $('[data-ml-description]').textContent=preset.description;
-  $('[data-ml-dimensions]').textContent=engine.dimensions(cfg.format).join(' × ');
-  canvas.setAttribute('aria-label','Anteprima '+preset.name+' — '+cfg.format);
-  $$('[data-ml-format]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.mlFormat===cfg.format));b.disabled=Boolean(preset.formats&&!preset.formats.includes(b.dataset.mlFormat));});
-  $('[data-ml-overlay-controls]').hidden=!preset.transparent;$('[data-ml-export=sequence]').hidden=!preset.transparent;$('[data-ml-export=video]').hidden=Boolean(preset.transparent);
+  const output=engine.exportSettings(cfg);$('[data-ml-dimensions]').textContent=output.width+' × '+output.height;
+  if(cfg.content==='wordmark'){$('[data-ml-name]').textContent='HANGOVER / FIRMA ANIMATA';$('[data-ml-description]').textContent='Solo il nome · contorni originali';}
+  canvas.setAttribute('aria-label','Anteprima '+(cfg.content==='wordmark'?'firma HANGOVER':preset.name)+' — '+cfg.format);
+  $$('[data-ml-format]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.mlFormat===cfg.format));b.disabled=Boolean(cfg.content!=='wordmark'&&preset.formats&&!preset.formats.includes(b.dataset.mlFormat));});
+  $('[data-ml-overlay-controls]').hidden=!output.transparent;$('[data-ml-export=sequence]').hidden=false;$('[data-ml-export=video]').hidden=false;
+  $('[data-ml-export=sequence]').textContent=output.transparent?'Sequenza PNG alpha · ZIP ↓':'Sequenza PNG · ZIP ↓';
+  const videoButton=$('[data-ml-export=video]');videoButton.textContent=output.transparent?(alphaSupport.state==='verified'?'Video WebM alpha ↗':'Verifica video WebM alpha ↗'):'Esporta video ↗';videoButton.disabled=exporting||(output.transparent&&alphaSupport.state==='unsupported');
   $('[data-ml-guide-label]').hidden=cfg.format!=='9:16';
-  const clip=$('[data-ml-clip]');clip.hidden=!preset.clipSrc;if(preset.clipSrc){clip.href=preset.clipSrc;clip.download=preset.clipName;}else clip.removeAttribute('href');
-  $('[data-ml-export-note]').textContent=preset.transparent?'Overlay senza sfondo · sequenza PNG a 30 fps o singolo PNG. Foto e guide sono solo in anteprima.':'Video senza audio · 30 fps · MP4 o WebM secondo il browser. Aggiungi la musica nel tuo editor. Il template funziona anche offline.';
+  const clip=$('[data-ml-clip]');clip.hidden=!preset.clipSrc||cfg.content==='wordmark';if(preset.clipSrc){clip.href=preset.clipSrc;clip.download=preset.clipName;clip.textContent='WebM originale · 1080 × 1920 · 6 s ↓';clip.title='Clip originale fisso: non include le modifiche o la risoluzione selezionata.';}else clip.removeAttribute('href');
+  $('[data-ml-export-note]').textContent=output.transparent?'PNG e sequenza PNG conservano il canale alpha. Lo sfondo di prova e le guide non vengono esportati. WebM disponibile solo se la trasparenza supera la verifica.':'Video senza audio · 30 fps · MP4 o WebM secondo il browser. La sequenza PNG esporta ogni fotogramma alla risoluzione scelta.';
+  $$('[data-ml-output]').forEach(el=>{el.value=cfg[el.dataset.mlOutput];if(el.dataset.mlOutput==='resolution')Array.from(el.options).forEach(option=>{const d=engine.dimensions(cfg.format,Number(option.value));option.textContent=({'1080':'Full HD','1440':'2K / QHD','2160':'4K / UHD'}[option.value])+' · '+d.join(' × ');});});
+  const wordmarkControls=$('[data-ml-wordmark-controls]');if(wordmarkControls)wordmarkControls.hidden=cfg.content!=='wordmark';
+  const summary=$('[data-ml-output-summary]');if(summary)summary.textContent=output.width+' × '+output.height+' px · 30 fps · '+(output.transparent?'alpha / senza sfondo':'sfondo incluso')+(cfg.resolution===2160?' · la sequenza 4K richiede più tempo e memoria':'');
+  const alphaStatus=$('[data-ml-alpha-status]');if(alphaStatus)alphaStatus.textContent=output.transparent?(alphaSupport.state==='verified'?'WebM alpha verificato in questo browser; anche il file finale viene controllato.':alphaSupport.state==='unsupported'?'Questo browser non conserva la trasparenza nel video. Usa PNG o sequenza PNG; i WebM originali restano file separati.':'PNG e sequenza PNG con alpha reale. Per il video, verifico prima che questo browser conservi la trasparenza.'):(cfg.content==='wordmark'?'Firma animata isolata: nessun titolo, foto, pannello o secondo logo.':'Trasparente rimuove sfondo e fotografie e conserva testi, segni e pannelli grafici.');
   $$('[data-ml-palette]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mlPalette===cfg.palette)));
   $$('[data-ml-field]').forEach(el=>el.value=cfg[el.dataset.mlField]);
-  $$('[data-ml-effect]').forEach(el=>{el.checked=cfg.effects.includes(el.dataset.mlEffect);el.closest('label').hidden=Boolean(preset.transparent&&el.dataset.mlEffect==='registration');});
+  $$('[data-ml-effect]').forEach(el=>{el.checked=cfg.effects.includes(el.dataset.mlEffect);el.closest('label').hidden=Boolean((output.transparent&&el.dataset.mlEffect==='registration')||cfg.content==='wordmark');});
   $$('[data-ml-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mlPreset===cfg.preset)));
+  const copyControls=$('.ml-copy');if(copyControls)copyControls.hidden=cfg.content==='wordmark';const photoControls=$('[data-ml-photo]').closest('fieldset');if(photoControls)photoControls.hidden=cfg.content==='wordmark';
   $('[data-ml-lineup-label]').hidden=!(cfg.preset==='lineup'||preset.usesLineup);$('[data-ml-photo]').value=cfg.photo;$('[data-ml-reset-photo]').hidden=!cfg.customImage;
   $('[data-ml-photo-note]').textContent=cfg.customImage?'La tua foto resta nel browser e nei file che scarichi.':preset.transparent?'La materia colora il segno; lo sfondo è solo una prova.':'La materia entra nelle foto e crea riflessi nei layout tipografici.';
   $('[data-ml-seek]').max=cfg.duration;time=Math.min(time,cfg.duration-.01);resize();playerState();
@@ -65,62 +74,101 @@ window.initHangoverLab = async function initHangoverLab(){
   else if(type==='text/html'){template.href=url;template.hidden=false;box.hidden=false;}
  }
 
- const fileName=ext=>'hangover-'+cfg.preset+'-'+cfg.format.replace(':','x')+'.'+ext;
+ const outputName=(snapshot,ext)=>'hangover-'+(snapshot.content==='wordmark'?'wordmark-'+snapshot.wordmarkMotion:snapshot.preset)+'-'+snapshot.format.replace(':','x')+'-'+(snapshot.resolution||1080)+'p'+(engine.exportSettings(snapshot).transparent?'-alpha':'')+'.'+ext;
+ const fileName=ext=>outputName(cfg,ext);
  function presetFile(){save(new Blob([JSON.stringify({schema:'hangover.motion.preset',version:1,config:cfg},null,2)],{type:'application/json'}),fileName('json'));report('Preset pronto: testi, formato, palette, foto ed effetti.');}
  function templateFile(){
   const json=v=>JSON.stringify(v).replace(/</g,'\\u003c'),end='<'+'/script>';
   const extensions=['createHangoverEditorial','createHangoverSocial','createHangoverOverlays','createHangoverZip'].map(k=>'window.'+k+'='+window[k].toString()+';').join('');
-  const html='<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hangover — Motion Studio</title><style>'+data.styles+'</style></head><body class="h-motion-template">'+pristine+'<script>window.HANGOVER_STUDIO_DATA='+json(data)+';window.HANGOVER_INITIAL_CONFIG='+json(cfg)+';'+end+'<script>'+extensions+end+'<script>window.createHangoverStudio='+window.createHangoverStudio.toString()+';'+end+'<script>window.initHangoverLab='+window.initHangoverLab.toString()+';window.initHangoverLab();'+end+'</body></html>';
+  let exportStyles=data.exportStyles||'';if(!exportStyles)for(const sheet of Array.from(document.styleSheets)){try{if(sheet.href&&sheet.href.includes('motion-export.css'))exportStyles+=Array.from(sheet.cssRules,r=>r.cssText).join('\n');}catch(_error){}}
+  const portableData={...data,exportStyles};
+  const html='<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hangover — Motion Studio</title><style>'+data.styles+exportStyles+'</style></head><body class="h-motion-template">'+pristine+'<script>window.HANGOVER_STUDIO_DATA='+json(portableData)+';window.HANGOVER_INITIAL_CONFIG='+json(cfg)+';'+end+'<script>'+extensions+end+'<script>window.createHangoverStudio='+window.createHangoverStudio.toString()+';'+end+'<script>window.initHangoverLab='+window.initHangoverLab.toString()+';window.initHangoverLab();'+end+'</body></html>';
   save(new Blob([html],{type:'text/html'}),fileName('html'));report('Template pronto. Scarica e apri il file HTML per ritrovare questo studio, modificarlo ed esportarlo offline.');
  }
  async function pngFile(){
-  const target=document.createElement('canvas');[target.width,target.height]=engine.dimensions(cfg.format);engine.render(target.getContext('2d'),target.width,target.height,time,cfg);
-  const blob=await new Promise(r=>target.toBlob(r,'image/png'));if(!blob)throw Error('Il fotogramma non è stato creato. Riprova.');save(blob,fileName('png'));report('Fotogramma pronto: '+target.width+' × '+target.height+' px.');
+  const snapshot=JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),target=document.createElement('canvas'),current={type:'png',cancelled:false};job=current;setExporting(true);
+  try{[target.width,target.height]=[output.width,output.height];const context=target.getContext('2d');engine.render(context,target.width,target.height,time,snapshot);if(output.transparent&&!frameHasAlpha(context,target.width,target.height))throw Error('Il fotogramma non conserva la trasparenza. Riprova con Solo HANGOVER.');
+   const blob=await new Promise(r=>target.toBlob(r,'image/png'));if(!blob)throw Error('Il fotogramma non è stato creato. Riprova.');if(current.cancelled)return;save(blob,outputName(snapshot,'png'));report('Fotogramma pronto: '+target.width+' × '+target.height+' px'+(output.transparent?' · alpha reale.':'.'));
+  }finally{target.width=target.height=1;if(job===current)job=null;setExporting(false);}
  }
- function setExporting(v){exporting=v;$$('[data-ml-export], [data-ml-preset], [data-ml-filter], .ml-controls fieldset, [data-ml-preset-file]').forEach(b=>b.disabled=v);$('[data-ml-cancel]').hidden=!v;root.setAttribute('aria-busy',String(v));schedule();}
+ function setExporting(v){exporting=v;$$('[data-ml-export], [data-ml-preset], [data-ml-filter], .ml-controls fieldset, [data-ml-output-settings], [data-ml-preset-file]').forEach(b=>b.disabled=v);$('[data-ml-cancel]').hidden=!v;root.setAttribute('aria-busy',String(v));if(!v)sync();schedule();}
+ function frameHasAlpha(context,width,height){const pixels=context.getImageData(0,0,width,height).data;for(let i=3;i<pixels.length;i+=4)if(pixels[i]<255)return true;return false;}
  async function sequenceFile(){
-  const snapshot=JSON.parse(JSON.stringify(cfg)),target=document.createElement('canvas');[target.width,target.height]=engine.dimensions(snapshot.format);const context=target.getContext('2d');
-  const current={cancelled:false,type:'sequence'};job=current;setExporting(true);const frames=snapshot.duration*30,entries=[];
-  try{for(let i=0;i<frames;i++){if(current.cancelled)return;engine.render(context,target.width,target.height,i/30,snapshot);const blob=await new Promise(resolve=>target.toBlob(resolve,'image/png'));if(!blob)throw Error('Fotogramma non disponibile.');const bytes=new Uint8Array(await blob.arrayBuffer());if(current.cancelled)return;entries.push({name:'frames/'+String(i).padStart(5,'0')+'.png',bytes});if(i%15===0)report('Creo la sequenza trasparente… '+Math.round(i/frames*100)+'%');}
-   if(current.cancelled)return;entries.push({name:'LEGGIMI.txt',bytes:'HANGOVER / '+snapshot.preset+'\n'+target.width+' x '+target.height+' / 30 fps / '+snapshot.duration+' s\nImporta frames/00000.png come sequenza di immagini a 30 fps nel tuo editor. Posizionala sopra il tuo video. Mantieni il canale alpha. Nessuna foto di anteprima e nessuna guida sono incluse.\n'});
-   entries.push({name:'preset.json',bytes:JSON.stringify({schema:'hangover.motion.preset',version:1,config:snapshot},null,2)});save(window.createHangoverZip(entries),'hangover-'+snapshot.preset+'-alpha-30fps.zip');report('Overlay pronto: '+frames+' PNG trasparenti · 1080 × 1920 · 30 fps. Importali come sequenza sopra il tuo video.');
-  }finally{if(job===current)job=null;setExporting(false);}
- }
- function recordVideo(){
-  if(typeof MediaRecorder==='undefined'||typeof HTMLCanvasElement.prototype.captureStream!=='function'){report('Questo browser non esporta video. Puoi salvare il template e aprirlo in Chrome, oppure scaricare il fotogramma.');return;}
-  const mime=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t));
-  if(!mime){report('Formato video non supportato in questo browser. Salva il template o il fotogramma.');return;}
-  const snapshot=JSON.parse(JSON.stringify(cfg)),target=document.createElement('canvas');[target.width,target.height]=engine.dimensions(snapshot.format);
-  const context=target.getContext('2d');engine.render(context,target.width,target.height,0,snapshot);
-  const stream=target.captureStream(30),chunks=[];let rec;
-  try{rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:9000000});}catch(e){stream.getTracks().forEach(t=>t.stop());throw Error('Il browser non riesce ad avviare il video. Prova un altro formato.');}
-  const current={rec,stream,frame:0,cancelled:false};job=current;setExporting(true);
-  if(videoURL){URL.revokeObjectURL(videoURL);videoURL=null;}$('[data-ml-download]').hidden=true;
-  const ext=mime.includes('mp4')?'mp4':'webm',name='hangover-'+snapshot.preset+'-'+snapshot.format.replace(':','x')+'.'+ext;
-  rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
-  rec.onerror=()=>{current.cancelled=true;report('Esportazione interrotta dal browser. Riprova.');if(rec.state!=='inactive')rec.stop();};
-  rec.onstop=()=>{
-   cancelAnimationFrame(current.frame);stream.getTracks().forEach(t=>t.stop());if(job===current)job=null;setExporting(false);
+  const snapshot=JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),target=document.createElement('canvas');[target.width,target.height]=[output.width,output.height];const context=target.getContext('2d');
+  const current={cancelled:false,type:'sequence'};job=current;setExporting(true);const frames=snapshot.duration*output.fps,entries=[];let storedBytes=0;
+  try{for(let i=0;i<frames;i++){if(current.cancelled)return;engine.render(context,target.width,target.height,i/output.fps,snapshot);if(i===0&&output.transparent&&!frameHasAlpha(context,target.width,target.height))throw Error('Questa composizione non conserva l’alpha. Usa Solo HANGOVER o cambia studio.');const blob=await new Promise(resolve=>target.toBlob(resolve,'image/png'));if(!blob)throw Error('Fotogramma non disponibile.');storedBytes+=blob.size;if(storedBytes>1024*1024*1024)throw Error('La sequenza supera 1 GB nel browser. Scegli 6 secondi o una risoluzione più bassa e riprova.');const bytes=new Uint8Array(await blob.arrayBuffer());if(current.cancelled)return;entries.push({name:'frames/'+String(i).padStart(5,'0')+'.png',bytes});if(i%10===0)report('Creo la sequenza PNG'+(output.transparent?' alpha':'')+'… '+Math.round(i/frames*100)+'% · '+output.width+' × '+output.height);}
    if(current.cancelled)return;
-   const blob=new Blob(chunks,{type:rec.mimeType||mime});if(!blob.size){report('Il video è vuoto. Riprova con il template in Chrome.');return;}
-   videoURL=URL.createObjectURL(blob);const link=$('[data-ml-download]');link.href=videoURL;link.download=name;link.textContent='Scarica '+ext.toUpperCase()+' ↓';link.hidden=false;showResult(blob.type,videoURL);
-   report('Video pronto · '+target.width+' × '+target.height+' · '+snapshot.duration+' s · senza audio.');
+   entries.push({name:'LEGGIMI.txt',bytes:'HANGOVER / '+(snapshot.content==='wordmark'?'SOLO FIRMA / '+snapshot.wordmarkMotion:snapshot.preset)+'\n'+target.width+' x '+target.height+' / '+output.fps+' fps / '+snapshot.duration+' s\n'+(output.transparent?'RGBA con trasparenza reale. Importa frames/00000.png come sequenza di immagini a 30 fps e posizionala sopra il tuo video. Mantieni il canale alpha.':'PNG con sfondo. Importa frames/00000.png come sequenza di immagini a 30 fps.')+'\nNessuna guida o sfondo di prova è incluso.\n'});
+   entries.push({name:'preset.json',bytes:JSON.stringify({schema:'hangover.motion.preset',version:1,config:snapshot},null,2)});save(window.createHangoverZip(entries),outputName(snapshot,'zip'));report('Sequenza pronta: '+frames+' PNG'+(output.transparent?' con alpha':'')+' · '+target.width+' × '+target.height+' · 30 fps.');
+  }finally{entries.length=0;target.width=target.height=1;if(job===current)job=null;setExporting(false);}
+ }
+ function decodeAlpha(blob,fraction=.37){
+  return new Promise((resolve,reject)=>{
+   const video=document.createElement('video'),url=URL.createObjectURL(blob);let finished=false,seekTime=.12;
+   const timer=setTimeout(()=>finish(Error('Il browser non riesce a verificare il canale alpha del video.')),6500);
+   function finish(error,result){if(finished)return;finished=true;clearTimeout(timer);video.pause();video.removeAttribute('src');video.load();URL.revokeObjectURL(url);error?reject(error):resolve(result);}
+   function inspect(){if(finished||video.readyState<2||video.seeking)return;try{const target=document.createElement('canvas');target.width=128;target.height=Math.max(32,Math.round(128*(video.videoHeight||1)/(video.videoWidth||1)));const context=target.getContext('2d');context.clearRect(0,0,target.width,target.height);context.drawImage(video,0,0,target.width,target.height);const pixels=context.getImageData(0,0,target.width,target.height).data;let min=255,max=0;for(let i=3;i<pixels.length;i+=4){min=Math.min(min,pixels[i]);max=Math.max(max,pixels[i]);}finish(null,{verified:min===0&&max>16,alphaMin:min,alphaMax:max});}catch(error){finish(error);}}
+   video.muted=true;video.playsInline=true;video.preload='auto';video.onerror=()=>finish(Error('Il browser non decodifica questo video.'));
+   video.onloadedmetadata=()=>{if(Number.isFinite(video.duration)&&video.duration>0)seekTime=Math.min(video.duration*.8,Math.max(.01,video.duration*fraction));try{video.currentTime=seekTime;}catch(_error){inspect();}};
+   video.onloadeddata=()=>{if(video.currentTime>=seekTime-.01)inspect();};video.onseeked=inspect;video.src=url;video.load();
+  });
+ }
+ async function verifyAlphaSupport(){
+  if(alphaSupport.state!=='unknown')return alphaSupport.mime;
+  if(typeof MediaRecorder==='undefined'||typeof HTMLCanvasElement.prototype.captureStream!=='function'){alphaSupport={state:'unsupported',mime:null};return null;}
+  for(const mime of ['video/webm;codecs=vp9','video/webm;codecs=vp8']){
+   if(!MediaRecorder.isTypeSupported(mime))continue;
+   try{
+    const sample=document.createElement('canvas');sample.width=sample.height=64;const context=sample.getContext('2d');let count=0;
+    const draw=()=>{context.clearRect(0,0,64,64);context.fillStyle='#ff5028';context.fillRect(32+(count++%2),16,24,32);};draw();
+    const blob=await new Promise((resolve,reject)=>{
+     const stream=sample.captureStream(30),chunks=[];let recorder,interval,timer,watchdog,done=false;
+     const end=error=>{if(done)return;done=true;clearInterval(interval);clearTimeout(timer);clearTimeout(watchdog);if(recorder&&recorder.state!=='inactive'){try{recorder.stop();}catch(_error){}}stream.getTracks().forEach(track=>track.stop());if(error)reject(error);else resolve(new Blob(chunks,{type:recorder.mimeType||mime}));};
+     try{recorder=new MediaRecorder(stream,{mimeType:mime});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};recorder.onerror=()=>end(Error('Encoder alpha non disponibile.'));recorder.onstop=()=>end();recorder.start();interval=setInterval(draw,32);timer=setTimeout(()=>{if(recorder.state!=='inactive')recorder.stop();},450);watchdog=setTimeout(()=>end(Error('Verifica encoder scaduta.')),2200);}catch(error){end(error);}
+    });
+    const evidence=await decodeAlpha(blob,.3);if(evidence.verified){alphaSupport={state:'verified',mime,...evidence};return mime;}
+   }catch(_error){/* A MIME claim alone is not proof of transparent decoded pixels. */}
+  }
+  alphaSupport={state:'unsupported',mime:null};return null;
+ }
+ async function recordVideo(){
+  if(typeof MediaRecorder==='undefined'||typeof HTMLCanvasElement.prototype.captureStream!=='function'){report('Questo browser non esporta video. Puoi scaricare PNG e sequenza PNG o aprire il template in un altro browser.');return;}
+  const snapshot=JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),current={type:'video',frame:0,cancelled:false};job=current;setExporting(true);let mime;
+  if(output.transparent){report('Verifico la trasparenza WebM in questo browser…');mime=await verifyAlphaSupport();if(current.cancelled||!mime){if(job===current)job=null;setExporting(false);if(!current.cancelled)report('Il browser appiattisce o non verifica l’alpha WebM. Usa PNG o sequenza PNG: mantengono la trasparenza.');return;}}
+  else mime=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(type=>MediaRecorder.isTypeSupported(type));
+  if(!mime){if(job===current)job=null;setExporting(false);report('Formato video non supportato. Usa la sequenza PNG.');return;}
+  let target,context,stream;try{target=document.createElement('canvas');[target.width,target.height]=[output.width,output.height];context=target.getContext('2d');engine.render(context,target.width,target.height,0,snapshot);stream=target.captureStream(output.fps);}catch(_error){if(job===current)job=null;setExporting(false);throw Error('Il browser non prepara questa risoluzione video. Usa la sequenza PNG o una risoluzione inferiore.');}
+  const chunks=[];let rec;
+  try{rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:output.bitrate});}catch(_error){stream.getTracks().forEach(track=>track.stop());if(job===current)job=null;setExporting(false);throw Error('Il browser non avvia questa risoluzione video. Usa la sequenza PNG o una risoluzione inferiore.');}
+  current.rec=rec;current.stream=stream;
+  if(videoURL){URL.revokeObjectURL(videoURL);videoURL=null;}$('[data-ml-download]').hidden=true;
+  rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+  rec.onerror=()=>{current.cancelled=true;report('Esportazione interrotta dal browser. Usa la sequenza PNG o una risoluzione inferiore.');if(rec.state!=='inactive')rec.stop();};
+  rec.onstop=async()=>{
+   cancelAnimationFrame(current.frame);stream.getTracks().forEach(track=>track.stop());
+   try{if(current.cancelled)return;const blob=new Blob(chunks,{type:rec.mimeType||mime});if(!blob.size)throw Error('Il video è vuoto. Usa la sequenza PNG.');
+    if(output.transparent){report('Controllo il canale alpha del video finale…');const evidence=await decodeAlpha(blob);if(!evidence.verified)throw Error('Il video finale ha perso la trasparenza. Scarica la sequenza PNG con alpha.');}
+    if(current.cancelled)return;const ext=blob.type.includes('mp4')?'mp4':'webm';save(blob,outputName(snapshot,ext));report('Video pronto · '+output.width+' × '+output.height+' · '+snapshot.duration+' s · '+(output.transparent?'alpha verificato · ':'')+'senza audio.');
+   }catch(error){report(error.message||'Verifica video non riuscita. Usa la sequenza PNG.');}
+   finally{target.width=target.height=1;if(job===current)job=null;setExporting(false);}
   };
-  rec.start();const started=performance.now();let previous=-100,lastReport=-1;
+  try{rec.start();}catch(error){stream.getTracks().forEach(track=>track.stop());if(job===current)job=null;setExporting(false);throw error;}
+  const started=performance.now();let previous=-100,lastReport=-1;
   function next(now){
    if(current.cancelled)return;const elapsed=Math.max(0,(now-started)/1000);
-   if(elapsed>=snapshot.duration){engine.render(context,target.width,target.height,snapshot.duration-1/30,snapshot);rec.stop();return;}
-   if(now-previous>=1000/30-2){engine.render(context,target.width,target.height,elapsed,snapshot);previous=now;}
-   const percent=Math.floor(elapsed/snapshot.duration*10)*10;if(percent!==lastReport){report('Creo il video… '+percent+'% · Tieni aperta questa scheda.');lastReport=percent;}
+   if(elapsed>=snapshot.duration){engine.render(context,target.width,target.height,snapshot.duration-1/output.fps,snapshot);rec.stop();return;}
+   if(now-previous>=1000/output.fps-2){engine.render(context,target.width,target.height,elapsed,snapshot);previous=now;}
+   const percent=Math.floor(elapsed/snapshot.duration*10)*10;if(percent!==lastReport){report('Creo il video… '+percent+'% · '+output.width+' × '+output.height+' · Tieni aperta questa scheda.');lastReport=percent;}
    current.frame=requestAnimationFrame(next);
   }
   current.frame=requestAnimationFrame(next);
  }
  function cancelExport(message='Esportazione annullata.'){if(!job)return;job.cancelled=true;cancelAnimationFrame(job.frame);if(job.rec&&job.rec.state!=='inactive')job.rec.stop();report(message);}
  $('[data-ml-cancel]').addEventListener('click',()=>cancelExport());
- $$('[data-ml-export]').forEach(b=>b.addEventListener('click',async()=>{try{switch(b.dataset.mlExport){case'preset':presetFile();break;case'template':templateFile();break;case'png':await pngFile();break;case'video':recordVideo();break;case'sequence':await sequenceFile();break;}}catch(e){report(e.message||'Non è stato possibile salvare il file.');}}));
+ $$('[data-ml-export]').forEach(b=>b.addEventListener('click',async()=>{try{switch(b.dataset.mlExport){case'preset':presetFile();break;case'template':templateFile();break;case'png':await pngFile();break;case'video':await recordVideo();break;case'sequence':await sequenceFile();break;}}catch(e){report(e.message||'Non è stato possibile salvare il file.');}}));
  $('[data-ml-controls]').addEventListener('submit',e=>e.preventDefault());
  $$('[data-ml-format]').forEach(b=>b.addEventListener('click',()=>{cfg.format=b.dataset.mlFormat;sync();}));
+ $$('[data-ml-output]').forEach(el=>el.addEventListener('change',()=>{const key=el.dataset.mlOutput;cfg[key]=key==='resolution'?Number(el.value):el.value;if(key==='content'){if(cfg.content==='wordmark'){cfg.background='transparent';previewBackground='checker';}else{const p=data.presets.find(x=>x.id===cfg.preset);if(p.formats&&!p.formats.includes(cfg.format))cfg.format=p.format;}}if(key==='background'&&cfg.background==='transparent')previewBackground='checker';$('[data-ml-overlay-background]').value=previewBackground;sync();}));
  $$('[data-ml-palette]').forEach(b=>b.addEventListener('click',()=>{cfg.palette=b.dataset.mlPalette;sync();}));
  $$('[data-ml-field]').forEach(el=>el.addEventListener('input',()=>{const key=el.dataset.mlField;cfg[key]=['duration','speed'].includes(key)?Number(el.value):el.value;time=Math.min(time,cfg.duration-.01);$('[data-ml-seek]').max=cfg.duration;render();}));
  $$('[data-ml-effect]').forEach(el=>el.addEventListener('change',()=>{cfg.effects=$$('[data-ml-effect]:checked').map(x=>x.dataset.mlEffect);render();}));
@@ -158,7 +206,7 @@ window.initHangoverLab = async function initHangoverLab(){
    const thumb=document.createElement('span');thumb.className='ml-thumb';const c=document.createElement('canvas');const size=engine.dimensions(preset.format,240);[c.width,c.height]=size;c.setAttribute('aria-hidden','true');engine.preview(c.getContext('2d'),c.width,c.height,2.4,{...defaults,preset:preset.id,palette:preset.palette,format:preset.format,photo:preset.photo});thumb.append(c);
    const title=document.createElement('span');title.className='ml-preset-title';title.append(document.createTextNode(preset.name));const number=document.createElement('small');number.textContent=String(i+1).padStart(2,'0');title.append(number);
    const description=document.createElement('span');description.className='ml-preset-desc';description.textContent=preset.format+' / '+({compositions:'COMPOSIZIONE',stories:'STORY',video:'VIDEO',reels:'REEL',tiktok:'TIKTOK',overlays:'OVERLAY / ALPHA'}[preset.category]);b.append(thumb,title,description);
-   b.addEventListener('click',()=>{cfg={...cfg,preset:preset.id,format:preset.format,palette:preset.palette,photo:preset.photo};time=0;last=0;sync();report(preset.name+' · '+preset.description+'.');stage.scrollIntoView({behavior:blocked()?'instant':'smooth',block:'center'});});library.append(b);
+   b.addEventListener('click',()=>{cfg={...cfg,content:'composition',preset:preset.id,format:preset.format,palette:preset.palette,photo:preset.photo};time=0;last=0;sync();report(preset.name+' · '+preset.description+'.');stage.scrollIntoView({behavior:blocked()?'instant':'smooth',block:'center'});});library.append(b);
   });
   $('[data-ml-loading]').hidden=true;sync();schedule();
  }catch(error){$('[data-ml-loading]').textContent='Anteprima non disponibile. Ricarica la pagina.';report(error.message);}

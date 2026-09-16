@@ -14,8 +14,13 @@ Le 12 materie comprendono le 4 scene originali e 8 nuove superfici: cromo liquid
 
 - Video: 30 fps, MP4 o WebM secondo il browser. Nessun audio incluso; aggiungi musica e riprese nel tuo editor. Mantieni la scheda aperta durante l'esportazione.
 - WebM originale: i sei file 35–40 sono video VP9 con alpha, 1080×1920, 30 fps, 6 secondi. Usano parole e colori iniziali. Puoi metterli subito sopra una ripresa se il tuo editor supporta WebM con trasparenza; altrimenti usa la sequenza PNG.
-- PNG: il fotogramma corrente, a risoluzione piena.
-- Overlay: sequenza PNG RGBA 1080×1920 a 30 fps in uno ZIP. Importa `frames/00000.png` come sequenza a 30 fps e posizionala sopra il tuo video. Sono inclusi preset e istruzioni. È trasparente; foto e guide di anteprima non vengono esportate.
+- Risoluzione: Full HD (1920×1080), QHD / 2K (2560×1440), UHD / 4K (3840×2160). Il verticale scambia altezza e larghezza; il quadrato usa 1080, 1440 o 2160 pixel.
+- Contenuto: composizione completa oppure solo il nome HANGOVER, con movimento fluttuante, rivelazione o respiro. Il nome isolato funziona in tutti i rapporti.
+- Sfondo: quello del preset oppure trasparente. La trasparenza rimuove fondi e fotografie; mantiene gli elementi grafici della composizione. Per avere solo il nome, scegli Solo HANGOVER.
+- PNG: il fotogramma corrente, alla risoluzione selezionata, con alpha quando lo sfondo è trasparente.
+- Sequenza PNG: fotogrammi RGBA alla risoluzione selezionata, a 30 fps in uno ZIP, per tutti i 40 preset. Importa `frames/00000.png` come sequenza a 30 fps e posizionala sopra il tuo video. Sono inclusi preset e istruzioni. È trasparente; foto e guide di anteprima non vengono esportate.
+- WebM trasparente personalizzato: disponibile solo quando il browser supera il controllo reale di codifica e lettura della trasparenza. Se non lo supporta, usa la sequenza PNG. MP4 con trasparenza non è proposto.
+- Le sequenze oltre 1 GiB vengono fermate: riduci durata o risoluzione. Le varianti sono generate su richiesta, senza archiviare preventivamente esportazioni pesanti.
 - Il pulsante Annulla interrompe l'esportazione senza creare un risultato parziale.
 
 Le guide verticali sono un margine di composizione prudente (x8–84%, y15–72%), non una simulazione ufficiale dei comandi delle piattaforme. Controlla il montaggio nell'app scelta, perché didascalie e pulsanti variano.
