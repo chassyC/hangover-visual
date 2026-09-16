@@ -22,6 +22,7 @@
 <script src="motion-lab.js?v=20260916-motion40" defer></script>
 <link rel="stylesheet" href="objects.css?v=20260916-o60">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
+<script src="qr-engine.js?v=20260916-maker1" defer></script>
 <script src="objects-wear.js?v=20260916-o60" defer></script>
 <script src="objects-print.js?v=20260916-o60" defer></script>
 <script src="objects-club.js?v=20260916-o60" defer></script>
@@ -44,12 +45,18 @@
 <link rel="stylesheet" href="art-lab.css?v=20260916-f1">
 <link rel="stylesheet" href="blueprint-font.css?v=20260916-f1">
 <script src="art-lab.js?v=20260916-f1" defer></script>
+<link rel="stylesheet" href="maker.css?v=20260916-maker1">
+<link rel="stylesheet" href="qr-lab.css?v=20260916-maker1">
+<script src="maker-data.js?v=20260916-maker1" defer></script>
+<script src="maker-engine.js?v=20260916-maker1" defer></script>
+<script src="maker.js?v=20260916-maker1" defer></script>
+<script src="qr-lab.js?v=20260916-maker1" defer></script>
 </head>
 <body>
 <a class="skip" href="#segni">Vai ai segni dell’identità</a>
 <header class="navigation">
 <a href="#inizio" class="home" aria-label="HANGOVER, inizio"><i class="mark h" aria-hidden="true"></i></a>
-<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#artisti">Artisti</a><a href="#finestre">Vibe</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
+<nav aria-label="Sezioni"><a href="#segni">Identità</a><a href="#tipografia">Font</a><a href="#stile">Stile</a><a href="#blueprint">Blueprint</a><a href="#direzione">Applicazioni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#maker">Maker</a><a href="#qr-studio">QR</a><a href="#artisti">Artisti</a><a href="#finestre">Vibe</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
 <button id="motionToggle" class="motion-toggle" aria-pressed="false" aria-label="Metti in pausa le animazioni">Ⅱ</button>
 </header>
 <main>
@@ -284,11 +291,54 @@
 <div class="objects-heading"><h3 class="objects-name">HANGOVER</h3><p>Un segno da indossare.<br>Un invito da far girare.<br>Qualcosa da tenere.</p></div>
 <div class="object-table" id="objectTable" aria-label="Banco dei materiali HANGOVER"><span class="table-note">TOCCA UN OGGETTO ↗</span></div>
 <div class="objects-catalogue">
-<div class="objects-catalogue-head"><h3>60 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#segnaletica">Segnaletica ↓</a><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div></div>
+<div class="objects-catalogue-head"><h3>60 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#segnaletica">Segnaletica ↓</a><a class="objects-kit" href="#maker">Crea il tuo ↗</a><a class="objects-kit" href="#qr-studio">Crea un QR ↗</a><a class="objects-kit" href="downloads/HANGOVER-OBJECTS-KIT.zip" download>Scarica la collezione ↘</a></div></div>
 <div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 60</button><button data-object-filter="new" aria-pressed="false">Nuovi / 37</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Stampati</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
 <div class="object-grid" id="objectGrid"></div><p class="object-filter-count" id="objectCount" aria-live="polite"></p>
 <div class="objects-bottom"><p>Apri un pezzo. Cambia palette, inserisci i dettagli e il link della tua serata. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
 </div>
+<section id="maker" class="maker" aria-labelledby="makerTitle">
+  <div class="maker-heading"><div><span class="maker-kicker">HANGOVER / OBJECT MAKER</span><h3 id="makerTitle">Make it<br><em>yours.</em></h3></div><p>Un’idea, mille forme.<br>Scegli il supporto. Trova la tua vibe.<br>Il resto lo decidi tu.</p></div>
+  <div class="maker-workspace">
+    <div class="maker-canvas-column">
+      <div class="maker-stage"><div class="maker-stage-meta"><span id="makerFormat">STICKER</span><span>LIVE PREVIEW ↗</span></div><div id="makerPreview" class="maker-preview" aria-label="Anteprima del tuo oggetto"></div><div class="maker-stage-foot"><span id="makerDimensions"></span><span id="makerTreatment"></span></div></div>
+      <div class="maker-actions"><button type="button" class="maker-primary" data-maker-export="png">Scarica PNG ↘</button><button type="button" data-maker-export="svg">Scarica SVG ↘</button><button type="button" id="makerUndo" disabled aria-label="Annulla ultima modifica">Annulla ↶</button></div>
+      <p class="maker-feedback" id="makerStatus" role="status" aria-live="polite"></p><p class="maker-hint" id="makerHint"></p>
+      <div class="maker-sample-heading"><div><h4>Possibilità.</h4><span id="makerSuggestionsContext"></span></div><button type="button" id="makerGenerate">Altre 4 proposte ↻</button></div>
+      <div id="makerSamples" class="maker-samples" role="group" aria-label="Proposte per il tuo oggetto"></div>
+      <div class="maker-project"><button type="button" id="makerSave">Salva progetto ↓</button><label class="maker-import">Apri progetto ↑<input id="makerImport" type="file" accept=".json,application/json" aria-label="Apri progetto HANGOVER"></label><button type="button" id="makerNew">Nuovo oggetto +</button></div>
+      <p class="maker-note">PNG con trasparenza, lato lungo 3000 px. SVG vettoriale con lettering HANGOVER in tracciati. Il progetto salva le scelte per riprenderle qui.</p>
+    </div>
+    <form class="maker-controls" aria-label="Personalizza il tuo oggetto">
+      <label class="maker-preset-label">Punto di partenza<select id="makerPreset"><option value="">Il tuo mix</option></select></label>
+      <fieldset><legend>01 / Supporto</legend><div class="maker-pair"><label>Oggetto<select id="makerType" data-maker-field="type"></select></label><label>Sagoma<select id="makerShape" data-maker-field="shape"></select></label></div><p class="maker-control-note" id="makerTypeNote"></p></fieldset>
+      <fieldset><legend>02 / Le tue parole</legend><label>Scritta principale<textarea id="makerText" data-maker-field="title" maxlength="48" rows="2" autocomplete="off" spellcheck="false">AFTER HOURS</textarea></label><label>Seconda riga<input id="makerDetail" data-maker-field="detail" maxlength="100" autocomplete="off" value="AROUND THE VIBE"></label><div class="maker-pair"><label>Carattere<select id="makerFont" data-maker-field="font"></select></label><label>Firma<select id="makerMark" data-maker-field="mark"><option value="hangover">HANGOVER</option><option value="h">H</option><option value="hg">HG</option><option value="hgr">HGR</option><option value="hang">HANG</option><option value="over">OVER</option><option value="none">Nessuna</option></select></label></div></fieldset>
+      <fieldset><legend>03 / Vibe</legend><div class="maker-pair"><label>Contesto<select id="makerContext" data-maker-field="context"></select></label><label>Mood<select id="makerMood" data-maker-field="mood"></select></label></div><p class="maker-control-note">Le proposte si adattano al mood e al contesto. Tocca quella che ti piace.</p><label>Composizione<select id="makerLayout" data-maker-field="layout"></select></label></fieldset>
+      <fieldset><legend>04 / Colore e materia</legend><div id="makerPalettes" class="maker-palettes" role="group" aria-label="Palette per il tuo oggetto"></div><div class="maker-colors"><label>Fondo<input id="makerBackground" type="color" data-maker-field="bg" value="#063c9a"></label><label>Segno<input id="makerForeground" type="color" data-maker-field="fg" value="#c3e3f3"></label><label>Accento<input id="makerAccent" type="color" data-maker-field="accent" value="#ff552d"></label></div><label>Effetto<select id="makerEffect" data-maker-field="effect"></select></label><label class="maker-range">Intensità <output for="makerIntensity" id="makerIntensityValue">55%</output><input id="makerIntensity" type="range" data-maker-field="intensity" min="0" max="100" value="55"></label></fieldset>
+      <fieldset><legend>05 / Un link da portare con sé</legend><label class="maker-check"><input id="makerQrEnabled" type="checkbox" data-maker-field="qrEnabled"> Aggiungi un QR</label><label id="makerQrURLLabel">Link del QR<input id="makerQrURL" type="url" data-maker-field="qrURL" maxlength="1200" autocomplete="off" spellcheck="false" placeholder="https://…" aria-describedby="makerQrNote"></label><p class="maker-control-note" id="makerQrNote"></p><a class="maker-qr-link" href="#qr-studio">Crea e scarica solo il QR ↗</a></fieldset>
+    </form>
+  </div>
+  <div class="maker-footer"><span>YOUR WORDS. YOUR SHAPE. HANGOVER.</span><a href="downloads/HANGOVER-OBJECT-MAKER.html" download data-maker-offline>Porta l’editor con te ↘</a></div>
+</section>
+<section id="qr-studio" class="qr-studio section" aria-labelledby="qrStudioHeading">
+ <div class="section-meta"><h2 id="qrStudioHeading">QR Studio</h2><span>UN LINK / UN CODICE</span></div>
+ <div class="qr-heading"><h3>Apri la prossima.</h3><p>Il tuo link, pronto da scansionare.<br>Gratis, senza account.</p></div>
+ <div class="qr-workspace">
+  <form class="qr-editor" id="qrStudioForm" novalidate>
+   <label class="qr-url-label" for="qrStudioURL">Link da aprire</label>
+   <input id="qrStudioURL" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="1200" placeholder="https://…" aria-describedby="qrStudioHelp qrStudioStatus" required>
+   <p class="qr-help" id="qrStudioHelp">Incolla l’indirizzo completo. Il QR porta direttamente lì.</p>
+   <div class="qr-size-head"><label for="qrStudioSize">Dimensione SVG</label><div class="qr-size-number"><input id="qrStudioSizeNumber" type="number" min="25" max="120" step="1" value="40" inputmode="numeric" aria-label="Lato del QR in millimetri" aria-describedby="qrStudioSizeHelp"><span aria-hidden="true">mm</span></div></div>
+   <input id="qrStudioSize" type="range" min="25" max="120" step="1" value="40" aria-label="Lato del QR in millimetri" aria-describedby="qrStudioSizeHelp">
+   <p class="qr-help" id="qrStudioSizeHelp">Il file SVG conserva queste misure. Il PNG è ad alta risoluzione.</p>
+   <div class="qr-downloads"><button type="button" id="qrStudioSVG" disabled>Scarica SVG ↗</button><button type="button" id="qrStudioPNG" disabled>Scarica PNG ↗</button></div>
+   <p id="qrStudioStatus" class="qr-status" role="status" aria-live="polite" aria-atomic="true">Preparazione del generatore…</p>
+  </form>
+  <figure class="qr-proof"><div id="qrStudioPreview" class="qr-preview" aria-label="Anteprima del QR"><span>Il tuo QR appare qui.</span></div><figcaption><span id="qrStudioDimensions">40 × 40 mm</span><span id="qrStudioPixels"></span></figcaption></figure>
+ </div>
+ <div class="qr-destination"><span>Destinazione</span><output id="qrStudioDestination" for="qrStudioURL">—</output></div>
+ <div class="qr-notes"><p>Creato nel browser. Nessun abbonamento, servizio di reindirizzamento o tracciamento aggiunto.</p><p>Mantieni il bordo bianco. Prima di stampare, prova la scansione nella misura e sul supporto scelti.</p></div>
+ <noscript><p class="qr-noscript">Per creare e scaricare il QR, attiva JavaScript nel browser.</p></noscript>
+</section>
 </section>
 
 <section id="segnaletica" class="signage-lab section" aria-labelledby="signageHeading">

@@ -41,10 +41,9 @@ for(const extension of extensions)for(const item of extension.items){
 const palettes={ice:{name:'Cobalto / ghiaccio',bg:'#063c9a',fg:'#c3e3f3',accent:'#ff552d'},orange:{name:'Arancio / notte',bg:'#ff552d',fg:'#091726',accent:'#f0ecdf'},paper:{name:'Carta / blu',bg:'#f0ecdf',fg:'#07284e',accent:'#ff552d'},acid:{name:'Notte / acido',bg:'#0b151b',fg:'#e6ef46',accent:'#beddec'}};
 const defaults={title:'ALL NIGHT',detail:'DATA · LUOGO',url:'https://chassyc.github.io/hangover-visual/',palette:'ice'};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
-function validatedURL(s){const u=new URL(s);if(!/^https?:$/.test(u.protocol)||u.username||u.password)throw Error('Inserisci un link completo http o https.');if(u.href.length>240)throw Error('Usa un link più breve (massimo 240 caratteri).');return u.href;}
-function matrix(url){const qr=root.qrcode(0,'M');qr.addData(validatedURL(url),'Byte');qr.make();return Array.from({length:qr.getModuleCount()},(_,y)=>Array.from({length:qr.getModuleCount()},(_,x)=>qr.isDark(y,x)));}
-let cachedURL='',cachedQR;
-function qrGroup(url,x,y,size){if(cachedURL!==url){cachedQR=matrix(url);cachedURL=url;}const a=cachedQR,n=a.length,s=size/(n+8);let d='';a.forEach((r,yy)=>r.forEach((v,xx)=>{if(v)d+=`M${xx+4},${yy+4}h1v1h-1z`;}));return `<g transform="translate(${x} ${y}) scale(${s})" shape-rendering="crispEdges"><rect width="${n+8}" height="${n+8}" fill="#fff"/><path d="${d}" fill="#080b0d"/></g>`;}
+function validatedURL(s){const url=root.HangoverQR.validate(s);if(url.length>240)throw Error('Usa un link più breve (massimo 240 caratteri).');return url;}
+function matrix(url){return root.HangoverQR.matrix(validatedURL(url));}
+function qrGroup(url,x,y,size){return root.HangoverQR.group(validatedURL(url),x,y,size);}
 function render(id,options={}){
  const it=items.find(o=>o.id===id);if(!it)throw Error('Oggetto non disponibile');
  const o={...defaults,...options},p=palettes[o.palette]||palettes.ice,W=1000,H=it.mmh/it.mmw*W,uid='ob-'+id+'-'+(options.uid||'preview');

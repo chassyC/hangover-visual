@@ -1,0 +1,39 @@
+/* Direct-link QR studio. Black-on-white codes keep their complete quiet zone. */
+#qr-studio{background:#beddec;color:#091726;scroll-margin-top:95px}
+#qr-studio *{box-sizing:border-box}
+.qr-heading{display:flex;align-items:end;justify-content:space-between;gap:32px;margin:55px 0 42px}
+.qr-heading h3{margin:0;font-size:clamp(42px,6.6vw,104px);line-height:.95;letter-spacing:-.06em;font-weight:800;max-width:780px}
+.qr-heading p{margin:0;max-width:260px;font:12px/1.65 'Courier New',monospace}
+.qr-workspace{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(220px,.85fr);gap:clamp(28px,6vw,100px);align-items:start}
+.qr-editor{display:flex;flex-direction:column;min-width:0;margin:0}
+.qr-url-label,.qr-size-head>label{font:12px/1.5 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}
+#qrStudioURL{display:block;width:100%;min-width:0;min-height:56px;margin-top:12px;border:1px solid #09172680;border-radius:0;background:#dcecf3;color:#091726;padding:15px;font:16px/1.4 Arial,Helvetica,sans-serif}
+#qrStudioURL::placeholder{color:#465d6b}
+#qrStudioURL[aria-invalid=true]{border:2px solid #942b1c;padding:14px}
+.qr-help{font:11px/1.55 'Courier New',monospace;margin:9px 0 0;color:#344d5c;max-width:580px}
+.qr-size-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:30px}
+.qr-size-number{display:flex;align-items:center;gap:7px;font:12px 'Courier New',monospace}
+#qrStudioSizeNumber{width:76px;min-height:44px;border:1px solid #09172680;border-radius:0;background:#dcecf3;color:#091726;padding:9px;font:16px Arial,Helvetica,sans-serif}
+#qrStudioSize{display:block;width:100%;min-width:0;min-height:44px;margin:4px 0 0;accent-color:#091726;cursor:pointer}
+.qr-downloads{display:flex;gap:12px;flex-wrap:wrap;margin-top:29px}
+.qr-downloads button{min-height:48px;border:1px solid #091726;border-radius:0;background:#091726;color:#e6f2f8;padding:14px 22px;font:12px 'Courier New',monospace;text-transform:uppercase;cursor:pointer}
+.qr-downloads button+button{background:transparent;color:#091726}
+.qr-downloads button:disabled{opacity:.42;cursor:not-allowed}
+#qr-studio input:focus-visible,#qr-studio button:focus-visible{outline:3px solid #d34323;outline-offset:4px}
+.qr-status{min-height:36px;margin:16px 0 0;font:12px/1.5 'Courier New',monospace;overflow-wrap:anywhere}
+.qr-status[data-error=true]{color:#842719}
+.qr-proof{margin:0;min-width:0;width:100%;max-width:360px;justify-self:end}
+.qr-preview{aspect-ratio:1;width:100%;background:#fff;display:grid;place-items:center;overflow:hidden}
+.qr-preview svg{display:block;width:100%;height:100%}
+.qr-preview>span{padding:24px;text-align:center;color:#4c5960;font:12px/1.6 'Courier New',monospace}
+.qr-proof figcaption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:15px;font:10px/1.5 'Courier New',monospace}
+.qr-destination{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;border-top:1px solid #09172640;border-bottom:1px solid #09172640;padding:21px 0;margin-top:28px;font:11px/1.6 'Courier New',monospace}
+.qr-destination>span{text-transform:uppercase;letter-spacing:.06em}
+.qr-destination output{min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.qr-notes{display:flex;justify-content:space-between;gap:40px;margin-top:24px;font:10px/1.6 'Courier New',monospace}
+.qr-notes p{max-width:470px;margin:0}
+.qr-noscript{font:13px/1.6 Arial,sans-serif}
+@media(max-width:760px){.qr-heading{align-items:start;flex-direction:column;gap:23px;margin-top:34px}.qr-heading h3{font-size:clamp(42px,10vw,72px)}.qr-heading p{max-width:none}.qr-workspace{grid-template-columns:minmax(0,1fr);gap:24px}.qr-proof{justify-self:center;max-width:310px}.qr-destination{grid-template-columns:minmax(0,1fr);gap:8px}.qr-notes{flex-direction:column;gap:15px}}
+@media(max-width:380px){.qr-downloads{gap:8px}.qr-downloads button{flex:1;padding:13px 10px;font-size:11px}.qr-size-head{gap:10px}}
+
+#qr-studio .section-meta{display:flex;justify-content:space-between;gap:20px;font:11px/1.5 'Courier New',monospace}#qr-studio .section-meta h2{font:inherit;text-transform:uppercase;margin:0}.h-maker-template #qr-studio{padding:clamp(25px,4vw,60px);margin:24px auto 60px;max-width:1500px}
