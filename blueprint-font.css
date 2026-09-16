@@ -1,0 +1,24 @@
+/* Complete registry controls. SVG previews preserve the font's actual contours. */
+.blueprint-section .bp-controls{min-width:0}
+.blueprint-section .bp-letter{display:block;width:116px;height:104px;margin-bottom:20px}
+.blueprint-section .bp-letter svg{display:block;width:100%;height:100%;overflow:visible}
+.blueprint-section .bp-categories{display:flex;gap:6px;margin:22px 0 12px}
+.blueprint-section .bp-categories button{flex:1;min-width:0;min-height:44px;padding:9px 4px;border:1px solid #bce3f580;font:12px/1.2 'Courier New',monospace;white-space:nowrap}
+.blueprint-section .bp-categories button[aria-selected=true]{background:#bce3f5;color:#0848cc}
+.blueprint-section .bp-letters{display:block;margin:0}
+.blueprint-section .bp-glyph-panel{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:6px}
+.blueprint-section .bp-glyph-panel[hidden]{display:none}
+.blueprint-section .bp-letters button{display:flex;align-items:center;justify-content:center;aspect-ratio:1;min-width:44px;min-height:44px;max-height:68px;padding:9px;color:inherit}
+.blueprint-section .bp-letters button[aria-pressed=true]{color:#0848cc}
+.blueprint-section .bp-letters button svg{display:block;width:36px;height:42px;max-width:100%;max-height:100%;pointer-events:none}
+.blueprint-section .bp-selection-status{min-height:30px;margin:12px 0 17px;font:10px/1.5 'Courier New',monospace;letter-spacing:.025em}
+.blueprint-section .bp-controls button:focus-visible{outline:3px solid #ff602e;outline-offset:3px}
+.blueprint-section .bp-download{margin:20px 0}
+@media(max-width:640px){
+ .blueprint-section .bp-controls{display:block}
+ .blueprint-section .bp-categories{margin-top:0;max-width:420px}
+ .blueprint-section .bp-glyph-panel{grid-template-columns:repeat(8,minmax(44px,1fr));gap:6px}
+ .blueprint-section .bp-note{max-width:none}
+}
+@media(max-width:440px){.blueprint-section .bp-glyph-panel{grid-template-columns:repeat(6,minmax(44px,1fr));gap:4px}}
+@media(max-width:350px){.blueprint-section .bp-glyph-panel{grid-template-columns:repeat(5,minmax(44px,1fr))}}

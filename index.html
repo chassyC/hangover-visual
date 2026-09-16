@@ -7,11 +7,12 @@
 <title>HANGOVER — Visual Identity</title>
 <link rel="icon" href="assets/h.svg" type="image/svg+xml">
 <link rel="preload" href="assets/hangover.svg" as="image">
+<link rel="preload" href="assets/fonts/HANGOVER-Display.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css?v=20260916-motion">
 <link rel="stylesheet" href="interactions.css?v=20260916-e1">
 <link rel="stylesheet" href="foundation.css?v=20260916-e1">
 <link rel="stylesheet" href="motion-lab.css?v=20260916-m2">
-<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-e1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-v1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
+<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-e1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-f1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
 <script src="motion-data.js?v=20260916-m2" defer></script>
 <script src="motion-engine.js?v=20260916-v2" defer></script>
 <script src="motion-lab.js?v=20260916-m2" defer></script>
@@ -24,11 +25,18 @@
 <script src="signage.js?v=20260916-s1" defer></script>
 <link rel="stylesheet" href="campus.css?v=20260916-c1">
 <link rel="stylesheet" href="studies.css?v=20260916-v1">
-<script src="studies-data.js?v=20260916-v1" defer></script>
+<script src="studies-data.js?v=20260916-f1" defer></script>
 <script src="artists-catalog.js?v=20260916-v1" defer></script>
-<script src="studies.js?v=20260916-v1" defer></script>
+<script src="font-data.js?v=20260916-f1" defer></script>
+<script src="studies.js?v=20260916-f1" defer></script>
 <link rel="stylesheet" href="identity-first.css?v=20260916-i1">
 <script src="identity-first.js?v=20260916-i1" defer></script>
+<link rel="stylesheet" href="font-lab.css?v=20260916-f1">
+<link rel="stylesheet" href="logo-controls.css?v=20260916-f1">
+<script src="logo-controls.js?v=20260916-f1" defer></script>
+<link rel="stylesheet" href="art-lab.css?v=20260916-f1">
+<link rel="stylesheet" href="blueprint-font.css?v=20260916-f1">
+<script src="art-lab.js?v=20260916-f1" defer></script>
 </head>
 <body>
 <a class="skip" href="#segni">Vai ai segni dell’identità</a>
@@ -53,7 +61,7 @@
   <span class="intro-caption">LETTERING / SANS / MONO</span>
  </a>
  <a class="intro-panel intro-art" href="#stile" aria-label="Esplora lo stile artistico, la materia e i colori">
-  <img src="assets/foundation/reference-08.webp" width="1254" height="1254" alt="Monogramma HGR blu materico su arancio" fetchpriority="high">
+  <img src="assets/fonts/hgr-material.svg" width="1254" height="1254" alt="Monogramma HGR blu materico su arancio" fetchpriority="high">
   <div class="intro-label"><span>03 / LA MATERIA</span><span aria-hidden="true">↗</span></div>
   <span class="intro-caption">GRANA / COLORE / CONTRASTO</span>
  </a>
@@ -71,7 +79,27 @@
 <div class="identity-controls">
 <div class="choice-group" aria-label="Composizione del logo"><button data-lockup="word" aria-pressed="true">HANGOVER</button><button data-lockup="split" aria-pressed="false">HANG / OVER</button><button data-lockup="h" aria-pressed="false">H</button><button data-lockup="hg" aria-pressed="false">HG</button><button data-lockup="hgr" aria-pressed="false">HGR</button></div>
 <div class="swatches" aria-label="Palette del lettering"><button data-palette="blue" style="--swatch:#acd9f4" aria-label="Blu e argento" aria-pressed="true"></button><button data-palette="paper" style="--swatch:#efece2" aria-label="Carta e nero" aria-pressed="false"></button><button data-palette="orange" style="--swatch:#ff5028" aria-label="Arancio e blu" aria-pressed="false"></button><button data-palette="wine" style="--swatch:#952638" aria-label="Bordeaux e metallo rosa" aria-pressed="false"></button><button data-palette="acid" style="--swatch:#d9f92c" aria-label="Acido e prugna" aria-pressed="false"></button></div>
-<label class="width-control">LARGHEZZA <input id="letterWidth" type="range" min="58" max="100" value="100" aria-label="Larghezza del lettering"></label>
+<fieldset class="logo-dimensions">
+  <legend>Dimensioni del logo</legend>
+  <div class="logo-dimension-grid">
+    <label class="logo-dimension" for="letterWidth">
+      <span class="logo-dimension-heading"><span>LARGHEZZA</span><output id="letterWidthValue" for="letterWidth">100%</output></span>
+      <input id="letterWidth" type="range" min="50" max="150" step="1" value="100" aria-label="Larghezza del logo" aria-describedby="logoDimensionsHelp">
+    </label>
+    <label class="logo-dimension" for="letterHeight">
+      <span class="logo-dimension-heading"><span>ALTEZZA</span><output id="letterHeightValue" for="letterHeight">100%</output></span>
+      <input id="letterHeight" type="range" min="50" max="150" step="1" value="100" aria-label="Altezza del logo" aria-describedby="logoDimensionsHelp">
+    </label>
+    <label class="logo-dimension" for="letterDepth">
+      <span class="logo-dimension-heading"><span>PROFONDITÀ</span><output id="letterDepthValue" for="letterDepth">0%</output></span>
+      <input id="letterDepth" type="range" min="0" max="100" step="1" value="0" aria-label="Profondità del logo" aria-describedby="logoDimensionsHelp">
+    </label>
+  </div>
+  <div class="logo-dimension-footer">
+    <p id="logoDimensionsHelp">Larghezza e altezza al 100%: proporzioni originali. Profondità a 0%: piatto.</p>
+    <button type="button" data-logo-reset>Ripristina dimensioni ↺</button>
+  </div>
+</fieldset>
 </div>
 <div class="sign-family">
 <div class="sign-tile"><i class="mark h"></i><span>H</span></div>
@@ -83,10 +111,11 @@
 
 <section id="tipografia" class="type-section section" aria-labelledby="typeHeading">
  <div class="section-meta"><h2 id="typeHeading">Il carattere</h2><span>LETTERING / SANS / MONO</span></div>
- <div class="type-title"><h3>Una voce.<br><span>Tre registri.</span></h3><span class="type-punctuation" aria-hidden="true">Aa↗</span></div>
- <div class="custom-type"><div class="type-meta"><span>01 / HANGOVER</span><span>LETTERING DISEGNATO</span></div><i class="mark word" role="img" aria-label="Lettering originale HANGOVER"></i><div class="custom-type-footer"><span>OTTO LETTERE. TAGLI, CURVE, PIENI E VUOTI.</span><a href="#blueprint">ESPLORA I TRACCIATI ↗</a></div></div>
+ <div class="type-title"><h3>Una voce.<br><span>Tre registri.</span></h3><span class="type-punctuation" aria-hidden="true">Aa</span></div>
+ <div class="custom-type"><div class="type-meta"><span>01 / HANGOVER</span><span>HANGOVER DISPLAY</span></div><i class="mark word" role="img" aria-label="Lettering originale HANGOVER"></i><div class="custom-type-footer"><span>IL NOSTRO CARATTERE.</span><a href="#blueprint">ESPLORA I TRACCIATI ↗</a></div></div>
  <div class="type-input-row"><label for="typeSample">PROVA I CARATTERI</label><input id="typeSample" maxlength="28" value="Hangover, all night." autocomplete="off" spellcheck="false"><span id="typeCount" aria-hidden="true">20 / 28</span></div>
  <div class="type-specimens">
+  <article class="type-specimen type-display"><div class="type-meta"><h4>01 / HANGOVER DISPLAY</h4><span>UNICASE · 400</span></div><p class="type-live" data-type-live>Hangover, all night.</p><div class="type-alphabet">ABCDEFGHIJKLM<br>NOPQRSTUVWXYZ<br>0123456789 &amp;?! / +</div><div class="type-downloads"><a href="downloads/HANGOVER-DISPLAY.zip" download>SCARICA IL FONT ↘</a><a href="assets/fonts/HANGOVER-Display.otf" download>OTF ↘</a><a href="assets/fonts/HANGOVER-Display.ttf" download>TTF ↘</a></div></article>
   <article class="type-specimen type-sans"><div class="type-meta"><h4>02 / ARIAL</h4><span>BOLD · 700</span></div><p class="type-live" data-type-live>Hangover, all night.</p><div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp;?!</div><span class="type-role">TITOLI / MESSAGGI</span></article>
   <article class="type-specimen type-mono"><div class="type-meta"><h4>03 / COURIER NEW</h4><span>REGULAR · 400</span></div><p class="type-live" data-type-live>Hangover, all night.</p><div class="type-alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 &amp;?!</div><span class="type-role">DETTAGLI / DIDASCALIE</span></article>
  </div>
@@ -94,17 +123,35 @@
 
 <section id="stile" class="art-section section" aria-labelledby="artHeading">
  <div class="section-meta"><h2 id="artHeading">Stile artistico</h2><span>LA NOSTRA FIRMA</span></div>
- <div class="art-direction">
-  <div class="art-form" role="img" aria-label="G originale in grande, tra cobalto e arancio"><div class="art-grid" aria-hidden="true"></div><i class="mark g" aria-hidden="true"></i><i class="mark g art-form-echo" aria-hidden="true"></i><span>FORMA / 01</span></div>
-  <div class="art-statement"><h3>Cromo.<br>Grana.<br>Contrasto.</h3><div class="art-palette" aria-label="Palette base"><span style="--tone:#b7dff5">GHIACCIO</span><span style="--tone:#064ccc">COBALTO</span><span style="--tone:#ff5028">ARANCIO</span><span style="--tone:#080b0d">NOTTE</span></div></div>
+ <div class="art-direction art-lab">
+  <div class="art-lab-work">
+   <div class="art-form art-lab-stage" data-art-stage role="img" aria-label="Lettera G, cobalto, ghiaccio e arancio. Segno completo con echi di colore.">
+    <div data-art-canvas><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" aria-hidden="true" focusable="false"><defs><pattern id="art-lab-grid" width="75" height="75" patternUnits="userSpaceOnUse"><path d="M75 0H0V75" fill="none" stroke="#ffffff" stroke-width="0.7" opacity="0.13"/></pattern><linearGradient id="art-lab-chrome" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.1"/><stop offset="0.24" stop-color="#ffffff" stop-opacity="0.56"/><stop offset="0.3" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.46" stop-color="#080b0d" stop-opacity="0.5"/><stop offset="0.485" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.1"/><stop offset="0.74" stop-color="#080b0d" stop-opacity="0.24"/><stop offset="0.85" stop-color="#ffffff" stop-opacity="0.65"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient><filter id="art-lab-grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.78" numOctaves="2" seed="17" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></defs><rect data-art-layer="background" width="600" height="600" fill="#064ccc"/><rect width="600" height="600" fill="url(#art-lab-grid)"/><g fill-rule="evenodd"><path data-art-layer="echo" fill="#b7dff5" transform="translate(78.0000 137.3793) scale(2.689655) translate(-3 -3)" d="M 20.640 4.632 C 14.211 6.607, 6.930 13.823, 4.667 20.463 C 3.202 24.765, 3.001 31.169, 3.006 73.428 C 3.009 103.458, 3.399 122.898, 4.046 125.225 C 5.680 131.108, 10.894 137.185, 16.936 140.250 L 22.359 143 80.031 143 L 137.704 143 141.001 140.750 C 147.789 136.117, 148 134.943, 148 101.900 C 148 73.564, 147.911 72.156, 145.955 69.669 C 143.208 66.177, 138.623 65.048, 131.640 66.143 C 126.172 67.001, 109.079 71.287, 68.500 81.976 C 58.050 84.729, 48.465 86.986, 47.200 86.991 C 43.638 87.005, 39.190 84.268, 37.517 81.033 C 35.380 76.900, 35.605 70.376, 38.019 66.469 C 41.989 60.046, 42.414 60, 98.020 60 L 148 60 148 31.500 L 148 3 86.750 3.070 C 35.420 3.128, 24.713 3.381, 20.640 4.632 M 54.499 90.998 C 54.810 91.501, 58.537 94.315, 62.782 97.251 C 67.027 100.187, 78.825 108.396, 89 115.493 C 112.899 132.163, 119.072 136.261, 119.556 135.778 C 119.772 135.561, 120.009 132.035, 120.082 127.942 C 120.225 119.903, 119.127 116.432, 115.627 113.850 C 114.396 112.943, 102.165 108.094, 88.445 103.074 C 74.725 98.054, 61.348 93.078, 58.717 92.015 C 56.086 90.953, 54.188 90.495, 54.499 90.998"/><path data-art-layer="main" fill="#ff5028" transform="translate(132.0000 83.3793) scale(2.689655) translate(-3 -3)" d="M 20.640 4.632 C 14.211 6.607, 6.930 13.823, 4.667 20.463 C 3.202 24.765, 3.001 31.169, 3.006 73.428 C 3.009 103.458, 3.399 122.898, 4.046 125.225 C 5.680 131.108, 10.894 137.185, 16.936 140.250 L 22.359 143 80.031 143 L 137.704 143 141.001 140.750 C 147.789 136.117, 148 134.943, 148 101.900 C 148 73.564, 147.911 72.156, 145.955 69.669 C 143.208 66.177, 138.623 65.048, 131.640 66.143 C 126.172 67.001, 109.079 71.287, 68.500 81.976 C 58.050 84.729, 48.465 86.986, 47.200 86.991 C 43.638 87.005, 39.190 84.268, 37.517 81.033 C 35.380 76.900, 35.605 70.376, 38.019 66.469 C 41.989 60.046, 42.414 60, 98.020 60 L 148 60 148 31.500 L 148 3 86.750 3.070 C 35.420 3.128, 24.713 3.381, 20.640 4.632 M 54.499 90.998 C 54.810 91.501, 58.537 94.315, 62.782 97.251 C 67.027 100.187, 78.825 108.396, 89 115.493 C 112.899 132.163, 119.072 136.261, 119.556 135.778 C 119.772 135.561, 120.009 132.035, 120.082 127.942 C 120.225 119.903, 119.127 116.432, 115.627 113.850 C 114.396 112.943, 102.165 108.094, 88.445 103.074 C 74.725 98.054, 61.348 93.078, 58.717 92.015 C 56.086 90.953, 54.188 90.495, 54.499 90.998" stroke="#ffffff" stroke-width="0.65"/></g><rect data-art-layer="grain" width="600" height="600" filter="url(#art-lab-grain)" opacity="0.09"/><g fill="none" stroke="#ffffff" stroke-width="1" opacity="0.65"><path d="M24 42V24H42M558 24H576V42M24 558V576H42M558 576H576V558"/></g></svg></div>
+    <div class="art-lab-stage-top" aria-hidden="true"><span>HANGOVER / ART LAB</span><span>01—08</span></div>
+    <div class="art-lab-stage-label" aria-hidden="true"><span data-art-letter-label>G / IN THE MIX</span><span>FORMA + COLORE</span></div>
+   </div>
+   <div class="art-lab-controls">
+    <p class="art-lab-label" id="artLetterLabel"><span>SCEGLI IL SEGNO</span><span>08 LETTERE</span></p>
+    <div class="art-letters" role="group" aria-labelledby="artLetterLabel"><button type="button" data-art-letter="H" aria-label="Lettera H" aria-pressed="false">H</button><button type="button" data-art-letter="A" aria-label="Lettera A" aria-pressed="false">A</button><button type="button" data-art-letter="N" aria-label="Lettera N" aria-pressed="false">N</button><button type="button" data-art-letter="G" aria-label="Lettera G" aria-pressed="true">G</button><button type="button" data-art-letter="O" aria-label="Lettera O" aria-pressed="false">O</button><button type="button" data-art-letter="V" aria-label="Lettera V" aria-pressed="false">V</button><button type="button" data-art-letter="E" aria-label="Lettera E" aria-pressed="false">E</button><button type="button" data-art-letter="R" aria-label="Lettera R" aria-pressed="false">R</button></div>
+   </div>
+  </div>
+  <div class="art-statement">
+   <h3>Cromo.<br>Grana.<br>Contrasto.</h3>
+   <div class="art-color-controls">
+    <p class="art-lab-label" id="artPaletteLabel"><span>COMBINA I COLORI</span><span data-art-color-count>3 COLORI</span></p>
+    <div class="art-colors" role="group" aria-labelledby="artPaletteLabel"><button type="button" class="art-color" data-art-color="cobalt" aria-label="Cobalto" aria-pressed="true" aria-disabled="false" style="--art-swatch:#064ccc;--art-swatch-ink:#ffffff"><span class="art-color-swatch" aria-hidden="true"></span><span class="art-color-name" aria-hidden="true">COBALTO</span></button><button type="button" class="art-color" data-art-color="ice" aria-label="Ghiaccio" aria-pressed="true" aria-disabled="false" style="--art-swatch:#b7dff5;--art-swatch-ink:#080b0d"><span class="art-color-swatch" aria-hidden="true"></span><span class="art-color-name" aria-hidden="true">GHIACCIO</span></button><button type="button" class="art-color" data-art-color="orange" aria-label="Arancio" aria-pressed="true" aria-disabled="false" style="--art-swatch:#ff5028;--art-swatch-ink:#080b0d"><span class="art-color-swatch" aria-hidden="true"></span><span class="art-color-name" aria-hidden="true">ARANCIO</span></button><button type="button" class="art-color" data-art-color="night" aria-label="Notte" aria-pressed="false" aria-disabled="false" style="--art-swatch:#080b0d;--art-swatch-ink:#ffffff"><span class="art-color-swatch" aria-hidden="true"></span><span class="art-color-name" aria-hidden="true">NOTTE</span></button><button type="button" class="art-color" data-art-color="paper" aria-label="Carta" aria-pressed="false" aria-disabled="false" style="--art-swatch:#efece2;--art-swatch-ink:#080b0d"><span class="art-color-swatch" aria-hidden="true"></span><span class="art-color-name" aria-hidden="true">CARTA</span></button><button type="button" class="art-color" data-art-color="acid" aria-label="Acido" aria-pressed="false" aria-disabled="false" style="--art-swatch:#d9f92c;--art-swatch-ink:#080b0d"><span class="art-color-swatch" aria-hidden="true"></span><span class="art-color-name" aria-hidden="true">ACIDO</span></button></div>
+   </div>
+   <div class="art-effects" role="group" aria-label="Effetti del segno"><span class="art-lab-label" aria-hidden="true">MATERIA</span><button type="button" data-art-effect="chrome" aria-pressed="false">Cromo</button><button type="button" data-art-effect="grain" aria-pressed="true">Grana</button></div>
+  </div>
+  <p class="art-lab-status" data-art-status role="status" aria-live="polite" aria-atomic="true"></p>
  </div>
- <div class="art-textures"><figure><img src="assets/materials/material-4.webp" width="1254" height="1254" alt="H in argento con texture su nero" loading="lazy"><figcaption>LUCE FREDDA / ARGENTO</figcaption></figure><div class="art-contrast"><i class="mark hgr" aria-hidden="true"></i><span>STESSO SEGNO.<br>UN’ALTRA TEMPERATURA.</span></div><figure><img src="assets/materials/material-1.webp" width="1254" height="1254" alt="HG oro materico su petrolio" loading="lazy"><figcaption>LUCE CALDA / ORO</figcaption></figure></div>
+ <div class="art-textures"><figure><img src="assets/materials/material-4.webp" width="1254" height="1254" alt="H in argento con texture su nero" loading="lazy"><figcaption>LUCE FREDDA / ARGENTO</figcaption></figure><div class="art-contrast"><i class="mark hgr" aria-hidden="true"></i><span>IN THE MIX.</span></div><figure><img src="assets/materials/material-1.webp" width="1254" height="1254" alt="HG oro materico su petrolio" loading="lazy"><figcaption>LUCE CALDA / ORO</figcaption></figure></div>
  <a class="art-next" href="#blueprint"><span>DAL SEGNO AL SISTEMA</span><span aria-hidden="true">↓</span></a>
 </section>
 
 <section id="blueprint" class="blueprint-section section" aria-labelledby="blueprintHeading">
  <div class="section-meta"><h2 id="blueprintHeading">Blueprint</h2><span>FORMA / SISTEMA / MATERIA</span></div>
- <div class="chapter-heading"><h3>Dentro<br>la matrice.</h3><div>OTTO LETTERE.<br>UN SOLO LINGUAGGIO.</div></div>
+ <div class="chapter-heading"><h3>Dentro<br>la matrice.</h3><div>A–Z / 0–9 / &amp;?!</div></div>
  <div class="blueprint-intro"><div class="bp-live" id="blueprintBoard"></div><div class="bp-controls"><div><p class="bp-label">ANATOMIA DEL SEGNO</p><span id="blueprintLetter" class="bp-letter">G</span></div><div class="bp-letters" aria-label="Lettera del blueprint"><button data-blueprint-letter="H" aria-pressed="false">H</button><button data-blueprint-letter="A" aria-pressed="false">A</button><button data-blueprint-letter="N" aria-pressed="false">N</button><button data-blueprint-letter="G" aria-pressed="true">G</button><button data-blueprint-letter="O" aria-pressed="false">O</button><button data-blueprint-letter="V" aria-pressed="false">V</button><button data-blueprint-letter="E" aria-pressed="false">E</button><button data-blueprint-letter="R" aria-pressed="false">R</button></div><div class="bp-modes" aria-label="Vista del blueprint"><button data-blueprint-mode="construction" aria-pressed="true">Griglia</button><button data-blueprint-mode="outline" aria-pressed="false">Contorno</button><button data-blueprint-mode="solid" aria-pressed="false">Pieno</button></div><button id="blueprintExport" class="bp-download">Scarica lo studio in SVG ↘</button><p class="bp-note">Tagli obliqui, curve tese, pieni e vuoti. Le proporzioni dei tracciati diventano una griglia da esplorare.</p></div></div>
  <div class="study-grid bp-gallery" id="blueprintGallery"></div>
  <div class="chapter-heading material-heading"><h3>Materia.</h3><div>NOVE SUPERFICI.<br>H / HG / HGR.</div></div>
@@ -186,17 +233,7 @@
  </div>
  <div class="ml-library-heading"><h4>Scegli il movimento.</h4><div class="ml-filters" aria-label="Tipi di animazione"><button type="button" data-ml-filter="all" aria-pressed="true">Tutti <sup>12</sup></button><button type="button" data-ml-filter="compositions" aria-pressed="false">Composizioni <sup>6</sup></button><button type="button" data-ml-filter="stories" aria-pressed="false">Stories <sup>3</sup></button><button type="button" data-ml-filter="video" aria-pressed="false">Video <sup>3</sup></button></div></div>
  <div class="ml-library" data-ml-library aria-label="Libreria dei preset"></div>
- <dialog id="objectDialog" aria-labelledby="objectTitle">
-<div class="object-dialog-top"><h3 id="objectTitle">Oggetto HANGOVER</h3><button id="objectClose" aria-label="Chiudi oggetto">CHIUDI ×</button></div>
-<div class="object-workspace"><div class="object-proof" id="objectPreview"></div><div class="object-editor">
-<p id="objectDescription"></p>
-<label>Palette<select id="objectPalette"><option value="ice">Cobalto / ghiaccio</option><option value="orange">Arancio / notte</option><option value="paper">Carta / blu</option><option value="acid">Notte / acido</option></select></label>
-<label data-object-event>Titolo della serata<input id="objectEvent" maxlength="32" autocomplete="off"></label>
-<label data-object-event>Data e luogo<input id="objectDetail" maxlength="65" autocomplete="off"></label>
-<label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">Il QR viene creato qui. Il modello iniziale apre il sito HANGOVER.</small></label>
-<div class="object-export"><button data-export="svg">SCARICA SVG ↘</button><button data-export="png">SCARICA PNG ↘</button></div>
-<button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button><p role="status" id="objectStatus" aria-live="polite"></p>
-</div></div></dialog>
+
 
 <noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
 </div>

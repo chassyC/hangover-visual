@@ -1,0 +1,55 @@
+/* Load after the site's existing styles. Rules stay inside the identity section. */
+#identityCanvas {
+  --logo-side: #183e78;
+  --logo-edge: #608fbe;
+  --logo-shadow: #021a54;
+  min-width: 0;
+  min-height: 0;
+  padding: 82px clamp(16px, 4vw, 60px) 56px;
+  overflow: hidden;
+}
+#identityCanvas[data-palette="paper"] { --logo-side: #58594f; --logo-edge: #8c8b7d; --logo-shadow: #77766b; }
+#identityCanvas[data-palette="orange"] { --logo-side: #101c40; --logo-edge: #2e587b; --logo-shadow: #a82b20; }
+#identityCanvas[data-palette="wine"] { --logo-side: #873c67; --logo-edge: #b97f9c; --logo-shadow: #180618; }
+#identityCanvas[data-palette="acid"] { --logo-side: #6e3961; --logo-edge: #975783; --logo-shadow: #869725; }
+#identityPreview {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 0;
+  height: clamp(210px, 24vw, 310px);
+  min-height: 0;
+  flex: 1 1 0%;
+  display: block;
+  transition: none;
+}
+#identityPreview .logo-control-svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+#identityPreview .logo-control-shadow { fill: var(--logo-shadow); opacity: .48; }
+#segni .identity-controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 25px; }
+#segni .identity-controls > * { min-width: 0; }
+#segni .choice-group { width: auto; }
+#segni .choice-group button { min-height: 44px; }
+#segni .swatches { flex-wrap: wrap; gap: 13px; padding: 5px; }
+#segni .swatches button { width: 30px; height: 30px; flex: 0 0 30px; }
+#segni .logo-dimensions { grid-column: 1 / -1; min-width: 0; width: 100%; margin: 0; padding: 22px 0 0; border: 0; border-top: 1px solid #18181830; }
+#segni .logo-dimensions legend { padding: 0 12px 0 0; font: 10px/1.4 'Courier New', monospace; letter-spacing: .1em; text-transform: uppercase; }
+#segni .logo-dimension-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+#segni .logo-dimension { min-width: 0; display: block; font: 10px/1.5 'Courier New', monospace; letter-spacing: .06em; }
+#segni .logo-dimension-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+#segni .logo-dimension-heading output { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+#segni .logo-dimension input { display: block; width: 100%; min-width: 0; height: 44px; margin: 0; accent-color: var(--blue); cursor: ew-resize; }
+#segni .logo-dimension-footer { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-top: 5px; }
+#segni .logo-dimension-footer p { font: 10px/1.5 'Courier New', monospace; opacity: .65; }
+#segni .logo-dimension-footer button { min-height: 44px; font: 10px/1.5 'Courier New', monospace; text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+  #segni .identity-controls { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  #segni .swatches { justify-self: start; }
+  #segni .logo-dimension-grid { gap: 20px; }
+}
+@media (max-width: 560px) {
+  #segni .logo-dimension-grid { grid-template-columns: minmax(0, 1fr); gap: 7px; }
+  #segni .logo-dimensions { padding-top: 18px; }
+  #segni .logo-dimension { font-size: 11px; }
+  #segni .choice-group { gap: 5px; }
+  #segni .choice-group button { padding: 9px; }
+  #segni .logo-dimension-footer { gap: 3px; }
+}

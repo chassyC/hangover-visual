@@ -7,23 +7,6 @@ const pad = n => String(n).padStart(2,'0');
 const Motion = window.HangoverMotion;
 const safeImage = (item, cls='') => { const b=document.createElement('button'); b.className=cls; b.dataset.image=item.id; b.setAttribute('aria-label','Apri '+item.title); const img=window.HangoverImage.create(item); b.append(img); return b; };
 
-// Each composition shares one set of vector glyphs.
-const preview=$('#identityPreview');
-$$('[data-lockup]').forEach(b=>b.addEventListener('click',()=>{
- $$('[data-lockup]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
- const lockup=b.dataset.lockup;
- preview.replaceChildren();
- const el=document.createElement(lockup==='split'?'div':'i');
- if(lockup==='split'){el.className='split';['hang','over'].forEach(t=>{const i=document.createElement('i');i.className='mark '+t;el.append(i);});}
- else el.className='mark '+lockup;
- preview.append(el); preview.setAttribute('aria-label',b.textContent);
-}));
-$$('button[data-palette]').forEach(b=>b.addEventListener('click',()=>{
- $('#identityCanvas').dataset.palette=b.dataset.palette;
- $$('button[data-palette]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
-}));
-$('#letterWidth').addEventListener('input',e=>preview.style.width=e.target.value+'%');
-
 const moods={
  club:{title:'CLUB',images:[6,23,17],colors:['#b7dff5','#064ccc','#ff5028','#080b0d']},
  trap:{title:'TRAP / RAP',images:[25,33,29],colors:['#b7dff5','#d02b23','#181119','#9471be']},
