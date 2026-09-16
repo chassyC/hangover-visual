@@ -7,6 +7,7 @@ function gallery(id,items,name){const container=$(id);if(!container)return;conta
 gallery('#windowsGrid',data.windows,'windows');gallery('#materialsGrid',data.materials,'materials');gallery('#blueprintGallery',data.blueprint,'blueprint');
 function wireFilters(container,items,grid,group,field){$$(container+' button').forEach(b=>b.addEventListener('click',()=>{const selected=b.dataset.filter;const filtered=selected==='all'?items:items.filter(x=>x[field]===selected);$$(container+' button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));window.HANGOVER_GALLERIES[group]=filtered;gallery(grid,filtered,group);const count=$(grid+'Count');if(count)count.textContent=filtered.length+' / '+items.length;}));}
 wireFilters('#windowsFilters',data.windows,'#windowsGrid','windows','theme');
+wireFilters('#materialsFilters',data.materials,'#materialsGrid','materials','materialGroup');
 const artists=window.HANGOVER_ARTISTS||[];gallery('#artistsGrid',artists,'artists');wireFilters('#artistsFilters',artists,'#artistsGrid','artists','region');
 const board=$('#blueprintBoard');if(!board)return;
 const registry=window.HANGOVER_FONT||{glyphs:data.alphabet,groups:data.blueprintFont&&data.blueprintFont.groups};

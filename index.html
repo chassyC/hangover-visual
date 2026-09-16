@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="interactions.css?v=20260916-e1">
 <link rel="stylesheet" href="foundation.css?v=20260916-e1">
 <link rel="stylesheet" href="motion-lab.css?v=20260916-m2">
-<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-g1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-f1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
+<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-g1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-mat1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
 <script src="motion-data.js?v=20260916-m2" defer></script>
 <script src="motion-engine.js?v=20260916-v2" defer></script>
 <script src="motion-lab.js?v=20260916-m2" defer></script>
@@ -24,11 +24,11 @@
 <script src="signage-engine.js?v=20260916-s1" defer></script>
 <script src="signage.js?v=20260916-s1" defer></script>
 <link rel="stylesheet" href="campus.css?v=20260916-c1">
-<link rel="stylesheet" href="studies.css?v=20260916-v1">
-<script src="studies-data.js?v=20260916-g1" defer></script>
+<link rel="stylesheet" href="studies.css?v=20260916-mat1">
+<script src="studies-data.js?v=20260916-mat1" defer></script>
 <script src="artists-catalog.js?v=20260916-v1" defer></script>
 <script src="font-data.js?v=20260916-f1" defer></script>
-<script src="studies.js?v=20260916-f1" defer></script>
+<script src="studies.js?v=20260916-mat1" defer></script>
 <link rel="stylesheet" href="identity-first.css?v=20260916-i1">
 <script src="identity-first.js?v=20260916-i1" defer></script>
 <link rel="stylesheet" href="font-lab.css?v=20260916-f1">
@@ -154,8 +154,10 @@
  <div class="chapter-heading"><h3>Dentro<br>la matrice.</h3><div>A–Z / 0–9 / &amp;?!</div></div>
  <div class="blueprint-intro"><div class="bp-live" id="blueprintBoard"></div><div class="bp-controls"><div><p class="bp-label">ANATOMIA DEL SEGNO</p><span id="blueprintLetter" class="bp-letter">G</span></div><div class="bp-letters" aria-label="Lettera del blueprint"><button data-blueprint-letter="H" aria-pressed="false">H</button><button data-blueprint-letter="A" aria-pressed="false">A</button><button data-blueprint-letter="N" aria-pressed="false">N</button><button data-blueprint-letter="G" aria-pressed="true">G</button><button data-blueprint-letter="O" aria-pressed="false">O</button><button data-blueprint-letter="V" aria-pressed="false">V</button><button data-blueprint-letter="E" aria-pressed="false">E</button><button data-blueprint-letter="R" aria-pressed="false">R</button></div><div class="bp-modes" aria-label="Vista del blueprint"><button data-blueprint-mode="construction" aria-pressed="true">Griglia</button><button data-blueprint-mode="outline" aria-pressed="false">Contorno</button><button data-blueprint-mode="solid" aria-pressed="false">Pieno</button></div><button id="blueprintExport" class="bp-download">Scarica lo studio in SVG ↘</button><p class="bp-note">Tagli obliqui, curve tese, pieni e vuoti. Le proporzioni dei tracciati diventano una griglia da esplorare.</p></div></div>
  <div class="study-grid bp-gallery" id="blueprintGallery"></div>
- <div class="chapter-heading material-heading"><h3>Materia.</h3><div>NOVE SUPERFICI.<br>H / HG / HGR.</div></div>
+ <div class="chapter-heading material-heading" id="materia"><h3>Materia.</h3><div>21 SUPERFICI.<br>LUCE / RIFLESSI / FORMA.</div></div>
+ <div class="study-filters material-filters" id="materialsFilters" role="group" aria-label="Tipi di materia"><button type="button" data-filter="all" aria-pressed="true">Tutti <span>21</span></button><button type="button" data-filter="metal" aria-pressed="false">Metalli <span>6</span></button><button type="button" data-filter="surface" aria-pressed="false">Luce &amp; superfici <span>6</span></button><button type="button" data-filter="original" aria-pressed="false">Prime prove <span>9</span></button></div>
  <div class="study-grid materials-grid" id="materialsGrid"></div>
+ <p class="material-count" id="materialsGridCount" role="status" aria-live="polite">21 / 21</p>
  <a class="visual-book-link" href="downloads/HANGOVER-VISUAL-BOOK.pdf" download><span>HANGOVER / VISUAL BOOK — PDF</span><span>↘</span></a>
 </section>
 

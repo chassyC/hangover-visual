@@ -50,7 +50,7 @@ Motion.deck($('.poster-fan'));
 // Archive originals remain unchanged; display copies are compressed for the web.
 let filtered=catalog, lightboxItems=catalog, lightboxIndex=0, lastFocused=null;
 function renderArchive(category){filtered=category==='all'?catalog:catalog.filter(x=>x.category===category); const grid=$('#archiveGrid');grid.replaceChildren();filtered.forEach(item=>{const b=safeImage(item,'archive-item');const img=b.firstElementChild;const wrap=document.createElement('div');wrap.className='archive-image';if(item.viewport)wrap.style.aspectRatio=item.width+'/'+item.height;wrap.append(img);const cap=document.createElement('figcaption');const title=document.createElement('span');title.textContent=item.title;const n=document.createElement('span');n.textContent=item.displayNumber||pad(item.id);cap.append(title,n);b.append(wrap,cap);grid.append(b);});$('#archiveCount').textContent=filtered.length+' / '+catalog.length+' elementi';}
-$$('[data-filter]').forEach(b=>b.addEventListener('click',()=>{$$('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderArchive(b.dataset.filter);}));renderArchive('all');
+$$('.archive-controls [data-filter]').forEach(b=>b.addEventListener('click',()=>{$$('.archive-controls [data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderArchive(b.dataset.filter);}));renderArchive('all');
 const lightbox=$('#lightbox'), lightboxViewport=$('#lightboxViewport');
 let imageRevision=0, activeImage=null, renderedIndex=0;
 function warmNeighbours(){
