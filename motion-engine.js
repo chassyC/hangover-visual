@@ -48,11 +48,12 @@ window.createHangoverStudio = function createHangoverStudio(data) {
   rect(0,0,W,H,p.bg);
   switch(cfg.preset){
    case 'nastro':{
-    const a=140+(square?50:0),y=tall?H*.24:H*.23;
+    const a=tall?185:square?145:110,y=tall?H*.24:square?H*.18:55,ribbonWidth=tall?1250:square?1060:770;
     ctx.save();ctx.translate(W/2,H/2);ctx.rotate(-.09+Math.sin(theta)*.012);ctx.translate(-W/2,-H/2);
     rect(-W,y-18,W*3,a*3+70,p.fg);
-    ribbon(y,1250,p.bg,1);ribbon(y+a,1250,p.bg,-1);ribbon(y+a*2,1250,p.bg,1);ctx.restore();
-    mark('h',45,95,tall?135:65,p.accent);headline(title,45,H-150,900,tall?92:58,p.fg);text(sub,47,H-56,16,p.fg,875);break;
+    ribbon(y,ribbonWidth,p.bg,1);ribbon(y+a,ribbonWidth,p.bg,-1);ribbon(y+a*2,ribbonWidth,p.bg,1);ctx.restore();
+    rect(0,H-(tall?210:square?185:145),W,tall?210:square?185:145,p.bg);
+    mark('h',45,tall||square?95:22,tall?135:square?65:32,p.accent);headline(title,45,H-(tall||square?150:126),900,tall?92:square?58:48,p.fg);text(sub,47,H-56,16,p.fg,875);break;
    }
    case 'shutter':{
     const py=tall?H*.21:0,ph=tall?H*.63:H;
@@ -62,16 +63,17 @@ window.createHangoverStudio = function createHangoverStudio(data) {
     rect(35,H-96,930,61,p.bg);text(sub,50,H-75,21,p.fg,900);break;
    }
    case 'orbita':{
-    const cy=tall?H*.51:H*.49,r=Math.min(W*.35,H*.34);
+    const cy=tall?H*.51:H*.52,r=Math.min(W*.35,H*(tall?.34:square?.25:.22)),centerWidth=tall?240:square?200:120,disc=tall||square?64:45;
     for(let i=0;i<3;i++){ctx.save();ctx.translate(500,cy);ctx.scale(1,.72+i*.18);circle(0,0,r+i*26,p.muted,true,1.4);ctx.restore();}
-    const mh=mark('h',380,cy-130,240,p.fg);
-    ['h','hg','hgr'].forEach((name,i)=>{const a=theta+i*Math.PI*2/3,x=500+Math.cos(a)*r,y=cy+Math.sin(a)*r*.78;circle(x,y,64,i===1?p.accent:p.fg);const g=data.glyphs[name],mw=90,mhh=mw*g.height/g.width;mark(name,x-mw/2,y-mhh/2,mw,i===1?p.bg:p.bg);});
-    mark('hangover',50,tall?H*.13:70,900,p.fg);headline(title,45,H-156,900,tall?86:54);text(sub,45,H-56,18,p.fg,900);break;
+    mark('h',500-centerWidth/2,cy-centerWidth*141/131/2,centerWidth,p.fg);
+    ['h','hg','hgr'].forEach((name,i)=>{const a=theta+i*Math.PI*2/3,x=500+Math.cos(a)*r,y=cy+Math.sin(a)*r*.78;circle(x,y,disc,i===1?p.accent:p.fg);const g=data.glyphs[name],mw=disc*1.4,mhh=mw*g.height/g.width;mark(name,x-mw/2,y-mhh/2,mw,p.bg);});
+    mark('hangover',50,tall?H*.13:square?70:35,tall||square?900:700,p.fg);headline(title,45,H-(tall||square?156:118),900,tall?86:square?54:45);text(sub,45,H-56,18,p.fg,900);break;
    }
    case 'segnale':{
     const cx=tall?700:760,cy=tall?H*.57:H*.54,maxR=Math.max(W,H)*.83;
     for(let i=0;i<12;i++){const r=(phase(i/12+q*cycles))*maxR;circle(cx,cy,r,i%4===0?p.accent:p.fg,true,i%4===0?7:2);}
-    rect(34,H*.34,930,tall?400:235,p.bg);mark('hang',55,H*.36,720,p.fg);mark('over',225,H*.36+720*141/543+14,720,p.fg);
+    const mw=tall||square?720:480,my=H*(tall||square?.36:.29),mh=mw*141/543;
+    rect(34,my-15,930,mh*2+44,p.bg);mark('hang',55,my,mw,p.fg);mark('over',945-mw,my+mh+14,mw,p.fg);
     text(title,45,78,34,p.fg,890);text(sub,45,H-68,22,p.fg,900);break;
    }
    case 'contact':{

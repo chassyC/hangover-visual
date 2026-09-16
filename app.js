@@ -98,12 +98,16 @@ async function showLightboxImage(direction=0){
  warmNeighbours();
 }
 document.addEventListener('click',e=>{
- const b=e.target.closest('[data-image], [data-foundation], [data-campus]');if(!b)return;
- const foundation=b.hasAttribute('data-foundation'), campus=b.hasAttribute('data-campus');
- lastFocused=b;lightboxItems=campus?window.HANGOVER_CAMPUS:foundation?window.HANGOVER_FOUNDATION:b.closest('#archiveGrid')?filtered:catalog;lightboxIndex=lightboxItems.findIndex(x=>x.id===Number(campus?b.dataset.campus:foundation?b.dataset.foundation:b.dataset.image));
- lightbox.setAttribute('aria-label',campus?'Fuori / Campus':foundation?'Direzione visiva fondamentale':'Immagine della moodboard');
+ const b=e.target.closest('[data-image], [data-foundation], [data-campus], [data-gallery]');if(!b)return;
+ const foundation=b.hasAttribute('data-foundation'),campus=b.hasAttribute('data-campus'),group=b.dataset.gallery;
+ const items=group?window.HANGOVER_GALLERIES?.[group]:campus?window.HANGOVER_CAMPUS:foundation?window.HANGOVER_FOUNDATION:b.closest('#archiveGrid')?filtered:catalog;
+ const id=Number(group?b.dataset.galleryId:campus?b.dataset.campus:foundation?b.dataset.foundation:b.dataset.image);
+ const index=items?.findIndex(x=>x.id===id);if(index==null||index<0||!items.length)return;
+ lastFocused=b;lightboxItems=items;lightboxIndex=index;
+ lightbox.setAttribute('aria-label',group?({windows:'Finestre fotografiche',materials:'Materia',blueprint:'Blueprint',artists:'Artisti / In rotazione'}[group]||'Galleria'):campus?'Fuori / Campus':foundation?'Direzione visiva fondamentale':'Immagine della moodboard');
  lightbox.showModal();document.body.classList.add('modal-open');showLightboxImage();$('#lightboxClose').focus();
 });
+
 function shiftImage(n){lightboxIndex=(lightboxIndex+n+lightboxItems.length)%lightboxItems.length;showLightboxImage(n);}
 $('#lightboxPrev').addEventListener('click',()=>shiftImage(-1));$('#lightboxNext').addEventListener('click',()=>shiftImage(1));$('#lightboxClose').addEventListener('click',()=>lightbox.close());
 function settleImage(){if(!activeImage)return;const from=activeImage.style.transform;activeImage.style.removeProperty('transform');Motion.animate(activeImage,[{transform:from||'translateX(0)'},{transform:'translateX(0)'}],280);}

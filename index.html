@@ -11,9 +11,9 @@
 <link rel="stylesheet" href="interactions.css?v=20260916-e1">
 <link rel="stylesheet" href="foundation.css?v=20260916-e1">
 <link rel="stylesheet" href="motion-lab.css?v=20260916-m2">
-<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-e1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-e1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
+<script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-e1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260916-v1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
 <script src="motion-data.js?v=20260916-m2" defer></script>
-<script src="motion-engine.js?v=20260916-m2" defer></script>
+<script src="motion-engine.js?v=20260916-v2" defer></script>
 <script src="motion-lab.js?v=20260916-m2" defer></script>
 <link rel="stylesheet" href="objects.css?v=20260916-o1">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
@@ -23,12 +23,16 @@
 <script src="signage-engine.js?v=20260916-s1" defer></script>
 <script src="signage.js?v=20260916-s1" defer></script>
 <link rel="stylesheet" href="campus.css?v=20260916-c1">
+<link rel="stylesheet" href="studies.css?v=20260916-v1">
+<script src="studies-data.js?v=20260916-v1" defer></script>
+<script src="artists-catalog.js?v=20260916-v1" defer></script>
+<script src="studies.js?v=20260916-v1" defer></script>
 </head>
 <body>
 <a class="skip" href="#direzione">Vai alla direzione visiva</a>
 <header class="navigation">
 <a href="#inizio" class="home" aria-label="HANGOVER, inizio"><i class="mark h" aria-hidden="true"></i></a>
-<nav aria-label="Sezioni"><a href="#direzione">Direzione</a><a href="#segni">Segni</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
+<nav aria-label="Sezioni"><a href="#direzione">Direzione</a><a href="#segni">Segni</a><a href="#blueprint">Blueprint</a><a href="#serate">Mood</a><a href="#motion">Motion</a><a href="#oggetti">Oggetti</a><a href="#artisti">Artisti</a><a href="#finestre">Finestre</a><a href="#moodboard">Moodboard <span>45</span></a></nav>
 <button id="motionToggle" class="motion-toggle" aria-pressed="false" aria-label="Metti in pausa le animazioni">Ⅱ</button>
 </header>
 <main>
@@ -75,6 +79,16 @@
 <div class="sign-tile"><i class="mark hgr"></i><span>HGR</span></div>
 </div>
 <div class="letter-detail"><span>G</span><i class="mark g"></i><span>E</span><i class="mark e"></i><span>R</span><i class="mark r"></i></div>
+</section>
+
+<section id="blueprint" class="blueprint-section section" aria-labelledby="blueprintHeading">
+ <div class="section-meta"><h2 id="blueprintHeading">Blueprint</h2><span>FORMA / SISTEMA / MATERIA</span></div>
+ <div class="chapter-heading"><h3>Dentro<br>la matrice.</h3><div>OTTO LETTERE.<br>UN SOLO LINGUAGGIO.</div></div>
+ <div class="blueprint-intro"><div class="bp-live" id="blueprintBoard"></div><div class="bp-controls"><div><p class="bp-label">ANATOMIA DEL SEGNO</p><span id="blueprintLetter" class="bp-letter">G</span></div><div class="bp-letters" aria-label="Lettera del blueprint"><button data-blueprint-letter="H" aria-pressed="false">H</button><button data-blueprint-letter="A" aria-pressed="false">A</button><button data-blueprint-letter="N" aria-pressed="false">N</button><button data-blueprint-letter="G" aria-pressed="true">G</button><button data-blueprint-letter="O" aria-pressed="false">O</button><button data-blueprint-letter="V" aria-pressed="false">V</button><button data-blueprint-letter="E" aria-pressed="false">E</button><button data-blueprint-letter="R" aria-pressed="false">R</button></div><div class="bp-modes" aria-label="Vista del blueprint"><button data-blueprint-mode="construction" aria-pressed="true">Griglia</button><button data-blueprint-mode="outline" aria-pressed="false">Contorno</button><button data-blueprint-mode="solid" aria-pressed="false">Pieno</button></div><button id="blueprintExport" class="bp-download">Scarica lo studio in SVG ↘</button><p class="bp-note">Tagli obliqui, curve tese, pieni e vuoti. Le proporzioni dei tracciati diventano una griglia da esplorare.</p></div></div>
+ <div class="study-grid bp-gallery" id="blueprintGallery"></div>
+ <div class="chapter-heading material-heading"><h3>Materia.</h3><div>NOVE SUPERFICI.<br>H / HG / HGR.</div></div>
+ <div class="study-grid materials-grid" id="materialsGrid"></div>
+ <a class="visual-book-link" href="downloads/HANGOVER-VISUAL-BOOK.pdf" download><span>HANGOVER / VISUAL BOOK — PDF</span><span>↘</span></a>
 </section>
 
 <section id="serate" class="nights section" data-mood="club">
@@ -223,6 +237,20 @@
 <figure class="campus-study campus-study-4"><button data-campus="4" aria-label="Apri Court culture"><img src="assets/campus/court-culture.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Campo da basket azzurro, linee del campo, titolo Court culture e segno H arancio"></button><figcaption><span>Court culture</span><span>Basket / outdoor ↗</span></figcaption></figure>
 <figure class="campus-study campus-study-5"><button data-campus="5" aria-label="Apri Ci vediamo fuori"><img src="assets/campus/ci-vediamo-fuori.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Quattro persone insieme dopo lo sport, cornice carta e fascia arancio Ci vediamo fuori"></button><figcaption><span>Ci vediamo fuori</span><span>Persone / incontro ↗</span></figcaption></figure>
 <figure class="campus-study campus-study-6"><button data-campus="6" aria-label="Apri Open air"><img src="assets/campus/open-air.webp" width="1080" height="1350" loading="lazy" decoding="async" alt="Prato e cielo reale del campus, finestra HG e grandi parole Open air verde e lime"></button><figcaption><span>Open air</span><span>Prato / pausa ↗</span></figcaption></figure></div>
+</section>
+
+<section id="artisti" class="artists-section section" aria-labelledby="artistsHeading">
+ <div class="section-meta"><h2 id="artistsHeading">Artisti / In rotazione</h2><span>ITALIA / USA / WORLD</span></div>
+ <div class="chapter-heading"><h3>Alza<br>il volume.</h3><div>RAP / TRAP / DJ CULTURE<br>IMMAGINARI CHE SI INCONTRANO.</div></div>
+ <div class="study-filters" id="artistsFilters" aria-label="Filtra gli artisti"><button data-filter="all" aria-pressed="true">Tutti</button><button data-filter="Italia" aria-pressed="false">Italia</button><button data-filter="USA" aria-pressed="false">USA</button><button data-filter="World" aria-pressed="false">World / DJ</button></div>
+ <div class="study-grid" id="artistsGrid"></div><div class="study-counter" id="artistsGridCount">09 / 09</div>
+ <p class="artists-note">Studi visivi con ritratti generati. Gli artisti sono riferimenti musicali della serie “In rotazione”.</p>
+</section>
+<section id="finestre" class="windows-section section" aria-labelledby="windowsHeading">
+ <div class="section-meta"><h2 id="windowsHeading">Finestre</h2><span>LETTERE / AMBIENTI / VIBE</span></div>
+ <div class="chapter-heading"><h3>Il mondo<br>dentro il segno.</h3><div>DAL CAMPUS AL CLUB.<br>OTTO NUOVI STUDI + CINQUE RIFERIMENTI.</div></div>
+ <div class="study-filters" id="windowsFilters" aria-label="Filtra le finestre fotografiche"><button data-filter="all" aria-pressed="true">Tutte</button><button data-filter="Giorno" aria-pressed="false">Giorno</button><button data-filter="Tramonto" aria-pressed="false">Tramonto</button><button data-filter="Architettura" aria-pressed="false">Architettura</button><button data-filter="Sport" aria-pressed="false">Sport</button><button data-filter="Persone" aria-pressed="false">Persone</button><button data-filter="Natura" aria-pressed="false">Natura</button><button data-filter="Dalla selezione" aria-pressed="false">Dal moodboard</button></div>
+ <div class="study-grid" id="windowsGrid"></div><div class="study-counter" id="windowsGridCount">13 / 13</div>
 </section>
 
 <section id="moodboard" class="archive section">
