@@ -39,7 +39,7 @@ function load(it){
  for(const [key,input]of Object.entries(colorInputs)){input.value=settings[key];input.parentElement.hidden=!it.colorFields.includes(key);}selectedPalette();url.value=settings.url;makeFields();update();
 }
 section.addEventListener('click',event=>{
- const object=event.target.closest('[data-object]');if(object){active=object.dataset.object;opener=object;load(A.items.find(i=>i.id===active));dialog.showModal();dialog.scrollTop=0;return;}
+ const object=event.target.closest('[data-object]');if(object){active=object.dataset.object;opener=object;load(A.items.find(i=>i.id===active));dialog.showModal();document.body.classList.add('modal-open');dialog.scrollTop=0;return;}
  const filter=event.target.closest('[data-object-filter]');if(filter){section.querySelectorAll('[data-object-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===filter)));catalogue(filter.dataset.objectFilter);}
 });
 function lum(c){const a=c.slice(1).match(/../g).map(x=>{const v=parseInt(x,16)/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return a[0]*.2126+a[1]*.7152+a[2]*.0722;}
@@ -73,5 +73,5 @@ dialog.addEventListener('click',async event=>{const type=event.target.closest('[
 $('objectQr').addEventListener('click',()=>{if(!update())return;const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="40mm" height="40mm" viewBox="0 0 400 400">${A.qrGroup(settings.url,0,0,400)}</svg>`;download(new Blob([svg],{type:'image/svg+xml'}),'HANGOVER-QR.svg');status.textContent='QR pronto in SVG.';});
 $('objectClose').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-dialog.addEventListener('close',()=>{update();opener?.focus();});catalogue();
+dialog.addEventListener('close',()=>{if(dialog.open)return;if(!document.querySelector('dialog[open]'))document.body.classList.remove('modal-open');update();opener?.focus({preventScroll:true});});catalogue();
 })();

@@ -6,6 +6,9 @@ const byId = id => catalog.find(x => x.id === Number(id));
 const pad = n => String(n).padStart(2,'0');
 const Motion = window.HangoverMotion;
 const safeImage = (item, cls='') => { const b=document.createElement('button'); b.className=cls; b.dataset.image=item.id; b.setAttribute('aria-label','Apri '+item.title); const img=window.HangoverImage.create(item); b.append(img); return b; };
+$$('a[href="#inizio"]').forEach(link=>link.addEventListener('click',()=>{
+ const navigation=$('.navigation nav');if(navigation)navigation.scrollLeft=0;
+}));
 
 const moods={
  club:{title:'CLUB',images:[6,23,17],colors:['#b7dff5','#064ccc','#ff5028','#080b0d']},

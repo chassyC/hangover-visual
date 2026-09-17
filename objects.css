@@ -84,3 +84,6 @@
 .object-editor #objectFitHint,.object-editor #objectColorHint{color:#f7c090}
 .object-reset{align-self:flex-start;min-height:44px;border:0;background:none;padding:4px 0;color:#beddec;text-decoration:underline;text-underline-offset:4px;font:11px 'Courier New',monospace;cursor:pointer}
 @media(min-width:601px){.object-proof{position:sticky;top:81px;align-self:start;height:min(650px,calc(100dvh - 122px))}.object-proof svg{max-height:100%}}
+
+/* Keep the canvas behind a preview still, including the standalone studio. */
+body.modal-open{overflow:hidden}#objectDialog{overscroll-behavior:contain}

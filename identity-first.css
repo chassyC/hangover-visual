@@ -35,5 +35,6 @@
  .foundation .poster-fan{margin-top:5px;margin-bottom:25px}
 }
 @media(max-width:360px){.intro-panel{min-height:168px}.intro-art{min-height:162px}.intro-caption{font-size:7px}.intro-family{padding:14px 2%}.identity-first .hero-logo{margin:28px 0 24px}.identity-first .hero-bottom>a:last-child{display:none}}
+@media(min-width:641px) and (max-width:1100px){.intro-art>img{object-fit:contain}}
 body.paused .intro-panel *{transition:none!important}
 @media(prefers-reduced-motion:reduce){.intro-panel *{transition:none!important}}

@@ -85,6 +85,9 @@
 .object-reset{align-self:flex-start;min-height:44px;border:0;background:none;padding:4px 0;color:#beddec;text-decoration:underline;text-underline-offset:4px;font:11px 'Courier New',monospace;cursor:pointer}
 @media(min-width:601px){.object-proof{position:sticky;top:81px;align-self:start;height:min(650px,calc(100dvh - 122px))}.object-proof svg{max-height:100%}}
 
+/* Keep the canvas behind a preview still, including the standalone studio. */
+body.modal-open{overflow:hidden}#objectDialog{overscroll-behavior:contain}
+
 /* HANGOVER Object Maker — scoped to the workbench. */
 .maker{--mk-ink:#082b50;--mk-paper:#edf0e8;--mk-line:#082b5033;color:var(--mk-ink);padding:64px 0 42px;border-top:1px solid #082b5055;scroll-margin-top:90px;min-width:0}
 .maker *{box-sizing:border-box}.maker [hidden]{display:none!important}.maker button,.maker input,.maker select,.maker textarea{font:inherit;touch-action:manipulation}.maker button{cursor:pointer}.maker button:disabled{opacity:.4;cursor:not-allowed}.maker :focus-visible{outline:3px solid #063c9a;outline-offset:4px}.maker h3,.maker h4,.maker p{margin:0}
@@ -174,7 +177,7 @@ body.h-maker-template{margin:0;background:#d4e1e4;font-family:Arial,Helvetica,sa
       <fieldset><legend>05 / Un link da portare con sé</legend><label class="maker-check"><input id="makerQrEnabled" type="checkbox" data-maker-field="qrEnabled"> Aggiungi un QR</label><label id="makerQrURLLabel">Link del QR<input id="makerQrURL" type="url" data-maker-field="qrURL" maxlength="1200" autocomplete="off" spellcheck="false" placeholder="https://…" aria-describedby="makerQrNote"></label><p class="maker-control-note" id="makerQrNote"></p><a class="maker-qr-link" href="#qr-studio">Crea e scarica solo il QR ↗</a></fieldset>
     </form>
   </div>
-  <div class="maker-footer"><span>YOUR WORDS. YOUR SHAPE. HANGOVER.</span><a href="downloads/HANGOVER-OBJECT-MAKER.html" download data-maker-offline>Porta l’editor con te ↘</a></div>
+  <div class="maker-footer"><span>YOUR WORDS. YOUR SHAPE. HANGOVER.</span></div>
 </section>
 <section id="qr-studio" class="qr-studio section" aria-labelledby="qrStudioHeading">
  <div class="section-meta"><h2 id="qrStudioHeading">QR Studio</h2><span>UN LINK / UN CODICE</span></div>
@@ -3477,7 +3480,7 @@ function load(it){
  for(const [key,input]of Object.entries(colorInputs)){input.value=settings[key];input.parentElement.hidden=!it.colorFields.includes(key);}selectedPalette();url.value=settings.url;makeFields();update();
 }
 section.addEventListener('click',event=>{
- const object=event.target.closest('[data-object]');if(object){active=object.dataset.object;opener=object;load(A.items.find(i=>i.id===active));dialog.showModal();dialog.scrollTop=0;return;}
+ const object=event.target.closest('[data-object]');if(object){active=object.dataset.object;opener=object;load(A.items.find(i=>i.id===active));dialog.showModal();document.body.classList.add('modal-open');dialog.scrollTop=0;return;}
  const filter=event.target.closest('[data-object-filter]');if(filter){section.querySelectorAll('[data-object-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===filter)));catalogue(filter.dataset.objectFilter);}
 });
 function lum(c){const a=c.slice(1).match(/../g).map(x=>{const v=parseInt(x,16)/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return a[0]*.2126+a[1]*.7152+a[2]*.0722;}
@@ -3511,7 +3514,7 @@ dialog.addEventListener('click',async event=>{const type=event.target.closest('[
 $('objectQr').addEventListener('click',()=>{if(!update())return;const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="40mm" height="40mm" viewBox="0 0 400 400">${A.qrGroup(settings.url,0,0,400)}</svg>`;download(new Blob([svg],{type:'image/svg+xml'}),'HANGOVER-QR.svg');status.textContent='QR pronto in SVG.';});
 $('objectClose').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-dialog.addEventListener('close',()=>{update();opener?.focus();});catalogue();
+dialog.addEventListener('close',()=>{if(dialog.open)return;if(!document.querySelector('dialog[open]'))document.body.classList.remove('modal-open');update();opener?.focus({preventScroll:true});});catalogue();
 })();
 </script><script>/* HANGOVER Maker — physical formats, curated directions and local deterministic suggestions. */
 (function(root){
