@@ -809,9 +809,24 @@ window.initHangoverLab=async function initHangoverLab(){
   }
   alphaSupport={state:'unsupported',mime:null};return null;
  }
- async function recordVideo(){
+ function inspectVideo(blob){
+  return new Promise((resolve,reject)=>{
+   const video=document.createElement('video'),url=URL.createObjectURL(blob);let finished=false,seekedToEnd=false;
+   const timer=setTimeout(()=>finish(Error('Il browser non riesce a verificare la durata del video. Usa la sequenza PNG.')),12000);
+   function finish(error,result){if(finished)return;finished=true;clearTimeout(timer);video.pause();video.removeAttribute('src');video.load();URL.revokeObjectURL(url);error?reject(error):resolve(result);}
+   function inspect(){
+    if(finished)return;
+    if(Number.isFinite(video.duration)&&video.duration>0&&video.videoWidth&&video.videoHeight){finish(null,{duration:video.duration,width:video.videoWidth,height:video.videoHeight});return;}
+    // MediaRecorder WebM files can omit the duration header. A seek resolves the final timestamp.
+    if(video.readyState>=1&&!seekedToEnd){seekedToEnd=true;try{video.currentTime=1e10;}catch(error){finish(error);}}
+   }
+   video.muted=true;video.playsInline=true;video.preload='auto';video.onerror=()=>finish(Error('Il browser non decodifica il video esportato. Usa la sequenza PNG.'));
+   video.onloadedmetadata=inspect;video.ondurationchange=inspect;video.onseeked=inspect;video.src=url;video.load();
+  });
+ }
+ async function recordVideo(attempt=0,frozen=null){
   if(typeof MediaRecorder==='undefined'||typeof HTMLCanvasElement.prototype.captureStream!=='function'){report('Questo browser non esporta video. Puoi scaricare PNG e sequenza PNG o aprire il template in un altro browser.');return;}
-  const snapshot=JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),current={type:'video',frame:0,cancelled:false};job=current;setExporting(true);let mime;
+  const snapshot=frozen||JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),current={type:'video',frame:0,cancelled:false};job=current;setExporting(true);let mime;
   if(output.transparent){report('Verifico la trasparenza WebM in questo browser…');mime=await verifyAlphaSupport();if(current.cancelled||!mime){if(job===current)job=null;setExporting(false);if(!current.cancelled)report('Il browser appiattisce o non verifica l’alpha WebM. Usa PNG o sequenza PNG: mantengono la trasparenza.');return;}}
   else mime=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(type=>MediaRecorder.isTypeSupported(type));
   if(!mime){if(job===current)job=null;setExporting(false);report('Formato video non supportato. Usa la sequenza PNG.');return;}
@@ -823,25 +838,33 @@ window.initHangoverLab=async function initHangoverLab(){
   rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
   rec.onerror=()=>{current.cancelled=true;report('Esportazione interrotta dal browser. Usa la sequenza PNG o una risoluzione inferiore.');if(rec.state!=='inactive')rec.stop();};
   rec.onstop=async()=>{
-   cancelAnimationFrame(current.frame);stream.getTracks().forEach(track=>track.stop());
+   cancelAnimationFrame(current.frame);clearTimeout(current.stopTimer);stream.getTracks().forEach(track=>track.stop());let retry=false;
    try{if(current.cancelled)return;const blob=new Blob(chunks,{type:rec.mimeType||mime});if(!blob.size)throw Error('Il video è vuoto. Usa la sequenza PNG.');
+    report('Controllo risoluzione e durata del video finale…');const metadata=await inspectVideo(blob);
+    if(current.cancelled)return;
+    if(metadata.width!==output.width||metadata.height!==output.height)throw Error('Il browser ha cambiato la risoluzione. Usa la sequenza PNG per conservarla.');
+    if(Math.abs(metadata.duration-snapshot.duration)>.15){
+     if(attempt===0){retry=true;report('Il video è risultato incompleto. Ripeto l’esportazione…');}
+     else throw Error('Il browser non ha mantenuto la durata. Scarica la sequenza PNG: conserva tutti i '+snapshot.duration*output.fps+' fotogrammi alla risoluzione scelta.');
+    }
+    if(retry)return;
     if(output.transparent){report('Controllo il canale alpha del video finale…');const evidence=await decodeAlpha(blob);if(!evidence.verified)throw Error('Il video finale ha perso la trasparenza. Scarica la sequenza PNG con alpha.');}
-    if(current.cancelled)return;const ext=blob.type.includes('mp4')?'mp4':'webm';save(blob,outputName(snapshot,ext));report('Video pronto · '+output.width+' × '+output.height+' · '+snapshot.duration+' s · '+(output.transparent?'alpha verificato · ':'')+'senza audio.');
+    if(current.cancelled)return;const ext=blob.type.includes('mp4')?'mp4':'webm';save(blob,outputName(snapshot,ext));report('Video pronto · '+output.width+' × '+output.height+' · '+metadata.duration.toFixed(2)+' s verificati · '+(output.transparent?'alpha verificato · ':'')+'senza audio.');
    }catch(error){report(error.message||'Verifica video non riuscita. Usa la sequenza PNG.');}
-   finally{target.width=target.height=1;if(job===current)job=null;setExporting(false);}
+   finally{target.width=target.height=1;if(job===current)job=null;setExporting(false);if(retry&&!current.cancelled)recordVideo(attempt+1,snapshot).catch(error=>report(error.message));}
   };
-  try{rec.start();}catch(error){stream.getTracks().forEach(track=>track.stop());if(job===current)job=null;setExporting(false);throw error;}
-  const started=performance.now();let previous=-100,lastReport=-1;
+  let started=0,previous=-100,lastReport=-1;
   function next(now){
    if(current.cancelled)return;const elapsed=Math.max(0,(now-started)/1000);
-   if(elapsed>=snapshot.duration){engine.render(context,target.width,target.height,snapshot.duration-1/output.fps,snapshot);rec.stop();return;}
+   if(elapsed>=snapshot.duration){engine.render(context,target.width,target.height,snapshot.duration-1/output.fps,snapshot);current.stopTimer=setTimeout(()=>{if(rec.state!=='inactive')rec.stop();},1000/output.fps);return;}
    if(now-previous>=1000/output.fps-2){engine.render(context,target.width,target.height,elapsed,snapshot);previous=now;}
    const percent=Math.floor(elapsed/snapshot.duration*10)*10;if(percent!==lastReport){report('Creo il video… '+percent+'% · '+output.width+' × '+output.height+' · Tieni aperta questa scheda.');lastReport=percent;}
    current.frame=requestAnimationFrame(next);
   }
-  current.frame=requestAnimationFrame(next);
+  rec.onstart=()=>{current.frame=requestAnimationFrame(next);};
+  started=performance.now();try{rec.start();}catch(error){stream.getTracks().forEach(track=>track.stop());if(job===current)job=null;setExporting(false);throw error;}
  }
- function cancelExport(message='Esportazione annullata.'){if(!job)return;job.cancelled=true;cancelAnimationFrame(job.frame);if(job.rec&&job.rec.state!=='inactive')job.rec.stop();report(message);}
+ function cancelExport(message='Esportazione annullata.'){if(!job)return;job.cancelled=true;cancelAnimationFrame(job.frame);clearTimeout(job.stopTimer);if(job.rec&&job.rec.state!=='inactive')job.rec.stop();report(message);}
  $('[data-ml-cancel]').addEventListener('click',()=>cancelExport());
  $$('[data-ml-export]').forEach(b=>b.addEventListener('click',async()=>{try{switch(b.dataset.mlExport){case'preset':presetFile();break;case'template':templateFile();break;case'png':await pngFile();break;case'video':await recordVideo();break;case'sequence':await sequenceFile();break;}}catch(e){report(e.message||'Non è stato possibile salvare il file.');}}));
  $('[data-ml-controls]').addEventListener('submit',e=>e.preventDefault());
