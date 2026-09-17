@@ -146,12 +146,28 @@ body.h-maker-template{margin:0;background:#d4e1e4;font-family:Arial,Helvetica,sa
 @media(max-width:380px){.qr-downloads{gap:8px}.qr-downloads button{flex:1;padding:13px 10px;font-size:11px}.qr-size-head{gap:10px}}
 
 #qr-studio .section-meta{display:flex;justify-content:space-between;gap:20px;font:11px/1.5 'Courier New',monospace}#qr-studio .section-meta h2{font:inherit;text-transform:uppercase;margin:0}.h-maker-template #qr-studio{padding:clamp(25px,4vw,60px);margin:24px auto 60px;max-width:1500px}
+
+/* Vector icons inherit the surrounding colour and size, including on iOS. */
+svg.ui-icon{display:inline-block;width:1em;height:1em;min-width:1em;max-width:none;max-height:none;flex:0 0 auto;vertical-align:-.14em;overflow:visible;pointer-events:none;color:inherit}
+.library-art-message::before{content:none}
+.library-art-message>.ui-icon{width:50px;height:50px;color:#063c9a}
+.motion-toggle>.ui-icon,.ml-player button>.ui-icon{vertical-align:middle}
+/* Keep small visual labels usable with a finger. */
+@media(max-width:1024px),(pointer:coarse){
+  button{min-width:44px;min-height:44px}
+  a[download],.custom-type-footer a,.hero-bottom a,.objects-kit,.type-downloads a,.artwork-static-download,.site-footer a,.sg-collection-head a,.motion-kit-bar a{min-height:44px;display:inline-flex;align-items:center;gap:.45em}
+  #lightboxClose,#lightboxPNG,#lightboxDownload{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:10px 12px}
+  .atlas-nav button{min-height:44px}
+  .navigation .home{width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+  .navigation .home>.mark{width:23px}
+  #objectDialog input:not([type=color]),#objectDialog select,#objectDialog textarea,#segnaletica input:not([type=color]),#segnaletica select,.maker-controls input:not([type=color]):not([type=range]),.maker-controls select,.maker-controls textarea,.ml-controls input[type=text],.ml-controls select,.ml-controls textarea{font-size:16px!important}
+}
 </style></head><body><section id="oggetti" class="objects section" aria-labelledby="objectsTitle">
 <div class="section-meta"><h2 id="objectsTitle">Da portare con sé</h2><span>WEAR / PRINT / COLLECT</span></div>
 <div class="objects-heading"><h3 class="objects-name">HANGOVER</h3><p>Un segno da indossare.<br>Un invito da far girare.<br>Qualcosa da tenere.</p></div>
-<div class="object-table" id="objectTable" aria-label="Banco dei materiali HANGOVER"><span class="table-note">TOCCA UN OGGETTO ↗</span></div>
+<div class="object-table" id="objectTable" aria-label="Banco dei materiali HANGOVER"><span class="table-note">TOCCA UN OGGETTO <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></span></div>
 <div class="objects-catalogue">
-<div class="objects-catalogue-head"><h3>60 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#maker">Crea il tuo ↗</a><a class="objects-kit" href="#qr-studio">Crea un QR ↗</a><span class="objects-kit">COLLEZIONE OFFLINE / 60</span></div></div>
+<div class="objects-catalogue-head"><h3>60 modi di esserci.</h3><div class="objects-catalogue-links"><a class="objects-kit" href="#maker">Crea il tuo <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></a><a class="objects-kit" href="#qr-studio">Crea un QR <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></a><span class="objects-kit">COLLEZIONE OFFLINE / 60</span></div></div>
 <div class="object-filters" role="group" aria-label="Categorie di oggetti"><button data-object-filter="all" aria-pressed="true">Tutti / 60</button><button data-object-filter="new" aria-pressed="false">Nuovi / 37</button><button data-object-filter="wear" aria-pressed="false">Da indossare</button><button data-object-filter="stick" aria-pressed="false">Sticker &amp; patch</button><button data-object-filter="print" aria-pressed="false">Stampati</button><button data-object-filter="entry" aria-pressed="false">Pass &amp; accessi</button><button data-object-filter="extra" aria-pressed="false">Sul tavolo</button></div>
 <div class="object-grid" id="objectGrid"></div><p class="object-filter-count" id="objectCount" aria-live="polite"></p>
 <div class="objects-bottom"><p>Apri un pezzo. Scegli i colori, modifica tutte le scritte e aggiungi il tuo link. Scarica il template in SVG o PNG.</p><p>Studi grafici / formati nominali.<br>Abbondanze, supporti e finiture da concordare con la tipografia. I QR aprono un link; non sono un sistema di convalida degli ingressi.</p></div>
@@ -160,12 +176,12 @@ body.h-maker-template{margin:0;background:#d4e1e4;font-family:Arial,Helvetica,sa
   <div class="maker-heading"><div><span class="maker-kicker">HANGOVER / OBJECT MAKER</span><h3 id="makerTitle">Make it<br><em>yours.</em></h3></div><p>Un’idea, mille forme.<br>Scegli il supporto. Trova la tua vibe.<br>Il resto lo decidi tu.</p></div>
   <div class="maker-workspace">
     <div class="maker-canvas-column">
-      <div class="maker-stage"><div class="maker-stage-meta"><span id="makerFormat">STICKER</span><span>LIVE PREVIEW ↗</span></div><div id="makerPreview" class="maker-preview" aria-label="Anteprima del tuo oggetto"></div><div class="maker-stage-foot"><span id="makerDimensions"></span><span id="makerTreatment"></span></div></div>
-      <div class="maker-actions"><button type="button" class="maker-primary" data-maker-export="png">Scarica PNG ↘</button><button type="button" data-maker-export="svg">Scarica SVG ↘</button><button type="button" id="makerUndo" disabled aria-label="Annulla ultima modifica">Annulla ↶</button></div>
+      <div class="maker-stage"><div class="maker-stage-meta"><span id="makerFormat">STICKER</span><span>LIVE PREVIEW <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></span></div><div id="makerPreview" class="maker-preview" aria-label="Anteprima del tuo oggetto"></div><div class="maker-stage-foot"><span id="makerDimensions"></span><span id="makerTreatment"></span></div></div>
+      <div class="maker-actions"><button type="button" class="maker-primary" data-maker-export="png">Scarica PNG <svg class="ui-icon" data-ui-icon="down-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 5l14 14M6 19h13V6"/></svg></button><button type="button" data-maker-export="svg">Scarica SVG <svg class="ui-icon" data-ui-icon="down-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 5l14 14M6 19h13V6"/></svg></button><button type="button" id="makerUndo" disabled aria-label="Annulla ultima modifica">Annulla <svg class="ui-icon" data-ui-icon="undo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M4 9h9a7 7 0 0 1 7 7v3M9 4 4 9l5 5"/></svg></button></div>
       <p class="maker-feedback" id="makerStatus" role="status" aria-live="polite"></p><p class="maker-hint" id="makerHint"></p>
-      <div class="maker-sample-heading"><div><h4>Possibilità.</h4><span id="makerSuggestionsContext"></span></div><button type="button" id="makerGenerate">Altre 4 proposte ↻</button></div>
+      <div class="maker-sample-heading"><div><h4>Possibilità.</h4><span id="makerSuggestionsContext"></span></div><button type="button" id="makerGenerate">Altre 4 proposte <svg class="ui-icon" data-ui-icon="redo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M19 8a8 8 0 1 0 1 8M19 3v5h-5"/></svg></button></div>
       <div id="makerSamples" class="maker-samples" role="group" aria-label="Proposte per il tuo oggetto"></div>
-      <div class="maker-project"><button type="button" id="makerSave">Salva progetto ↓</button><label class="maker-import">Apri progetto ↑<input id="makerImport" type="file" accept=".json,application/json" aria-label="Apri progetto HANGOVER"></label><button type="button" id="makerNew">Nuovo oggetto +</button></div>
+      <div class="maker-project"><button type="button" id="makerSave">Salva progetto <svg class="ui-icon" data-ui-icon="down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 4v16M5 13l7 7 7-7"/></svg></button><label class="maker-import">Apri progetto <svg class="ui-icon" data-ui-icon="up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 20V4M5 11l7-7 7 7"/></svg><input id="makerImport" type="file" accept=".json,application/json" aria-label="Apri progetto HANGOVER"></label><button type="button" id="makerNew">Nuovo oggetto +</button></div>
       <p class="maker-note">PNG con trasparenza, lato lungo 3000 px. SVG vettoriale con lettering HANGOVER in tracciati. Il progetto salva le scelte per riprenderle qui.</p>
     </div>
     <form class="maker-controls" aria-label="Personalizza il tuo oggetto">
@@ -174,7 +190,7 @@ body.h-maker-template{margin:0;background:#d4e1e4;font-family:Arial,Helvetica,sa
       <fieldset><legend>02 / Le tue parole</legend><label>Scritta principale<textarea id="makerText" data-maker-field="title" maxlength="48" rows="2" autocomplete="off" spellcheck="false">AFTER HOURS</textarea></label><label>Seconda riga<input id="makerDetail" data-maker-field="detail" maxlength="100" autocomplete="off" value="AROUND THE VIBE"></label><div class="maker-pair"><label>Carattere<select id="makerFont" data-maker-field="font"></select></label><label>Firma<select id="makerMark" data-maker-field="mark"><option value="hangover">HANGOVER</option><option value="h">H</option><option value="hg">HG</option><option value="hgr">HGR</option><option value="hang">HANG</option><option value="over">OVER</option><option value="none">Nessuna</option></select></label></div></fieldset>
       <fieldset><legend>03 / Vibe</legend><div class="maker-pair"><label>Contesto<select id="makerContext" data-maker-field="context"></select></label><label>Mood<select id="makerMood" data-maker-field="mood"></select></label></div><p class="maker-control-note">Le proposte si adattano al mood e al contesto. Tocca quella che ti piace.</p><label>Composizione<select id="makerLayout" data-maker-field="layout"></select></label></fieldset>
       <fieldset><legend>04 / Colore e materia</legend><div id="makerPalettes" class="maker-palettes" role="group" aria-label="Palette per il tuo oggetto"></div><div class="maker-colors"><label>Fondo<input id="makerBackground" type="color" data-maker-field="bg" value="#063c9a"></label><label>Segno<input id="makerForeground" type="color" data-maker-field="fg" value="#c3e3f3"></label><label>Accento<input id="makerAccent" type="color" data-maker-field="accent" value="#ff552d"></label></div><label>Effetto<select id="makerEffect" data-maker-field="effect"></select></label><label class="maker-range">Intensità <output for="makerIntensity" id="makerIntensityValue">55%</output><input id="makerIntensity" type="range" data-maker-field="intensity" min="0" max="100" value="55"></label></fieldset>
-      <fieldset><legend>05 / Un link da portare con sé</legend><label class="maker-check"><input id="makerQrEnabled" type="checkbox" data-maker-field="qrEnabled"> Aggiungi un QR</label><label id="makerQrURLLabel">Link del QR<input id="makerQrURL" type="url" data-maker-field="qrURL" maxlength="1200" autocomplete="off" spellcheck="false" placeholder="https://…" aria-describedby="makerQrNote"></label><p class="maker-control-note" id="makerQrNote"></p><a class="maker-qr-link" href="#qr-studio">Crea e scarica solo il QR ↗</a></fieldset>
+      <fieldset><legend>05 / Un link da portare con sé</legend><label class="maker-check"><input id="makerQrEnabled" type="checkbox" data-maker-field="qrEnabled"> Aggiungi un QR</label><label id="makerQrURLLabel">Link del QR<input id="makerQrURL" type="url" data-maker-field="qrURL" maxlength="1200" autocomplete="off" spellcheck="false" placeholder="https://…" aria-describedby="makerQrNote"></label><p class="maker-control-note" id="makerQrNote"></p><a class="maker-qr-link" href="#qr-studio">Crea e scarica solo il QR <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></a></fieldset>
     </form>
   </div>
   <div class="maker-footer"><span>YOUR WORDS. YOUR SHAPE. HANGOVER.</span></div>
@@ -190,7 +206,7 @@ body.h-maker-template{margin:0;background:#d4e1e4;font-family:Arial,Helvetica,sa
    <div class="qr-size-head"><label for="qrStudioSize">Dimensione SVG</label><div class="qr-size-number"><input id="qrStudioSizeNumber" type="number" min="25" max="120" step="1" value="40" inputmode="numeric" aria-label="Lato del QR in millimetri" aria-describedby="qrStudioSizeHelp"><span aria-hidden="true">mm</span></div></div>
    <input id="qrStudioSize" type="range" min="25" max="120" step="1" value="40" aria-label="Lato del QR in millimetri" aria-describedby="qrStudioSizeHelp">
    <p class="qr-help" id="qrStudioSizeHelp">Il file SVG conserva queste misure. Il PNG è ad alta risoluzione.</p>
-   <div class="qr-downloads"><button type="button" id="qrStudioSVG" disabled>Scarica SVG ↗</button><button type="button" id="qrStudioPNG" disabled>Scarica PNG ↗</button></div>
+   <div class="qr-downloads"><button type="button" id="qrStudioSVG" disabled>Scarica SVG <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></button><button type="button" id="qrStudioPNG" disabled>Scarica PNG <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg></button></div>
    <p id="qrStudioStatus" class="qr-status" role="status" aria-live="polite" aria-atomic="true">Preparazione del generatore…</p>
   </form>
   <figure class="qr-proof"><div id="qrStudioPreview" class="qr-preview" aria-label="Anteprima del QR"><span>Il tuo QR appare qui.</span></div><figcaption><span id="qrStudioDimensions">40 × 40 mm</span><span id="qrStudioPixels"></span></figcaption></figure>
@@ -213,8 +229,8 @@ body.h-maker-template{margin:0;background:#d4e1e4;font-family:Arial,Helvetica,sa
 <div id="objectTextFields" class="object-text-fields"></div>
 <small id="objectFitHint" aria-live="polite"></small></fieldset>
 <label id="objectUrlLabel">Link per il QR<input id="objectUrl" type="url" inputmode="url" spellcheck="false" maxlength="240" aria-describedby="objectQrHint"><small id="objectQrHint">QR diretto, nero su bianco: il link e lo spazio di lettura restano indipendenti dai colori.</small></label>
-<div class="object-export"><button data-export="svg">SCARICA SVG ↘</button><button data-export="png">SCARICA PNG ↘</button></div>
-<button class="object-qr-download" id="objectQr">Scarica soltanto il QR ↘</button>
+<div class="object-export"><button data-export="svg">SCARICA SVG <svg class="ui-icon" data-ui-icon="down-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 5l14 14M6 19h13V6"/></svg></button><button data-export="png">SCARICA PNG <svg class="ui-icon" data-ui-icon="down-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 5l14 14M6 19h13V6"/></svg></button></div>
+<button class="object-qr-download" id="objectQr">Scarica soltanto il QR <svg class="ui-icon" data-ui-icon="down-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 5l14 14M6 19h13V6"/></svg></button>
 <button class="object-reset" id="objectReset">Ripristina questo modello</button>
 <p role="status" id="objectStatus" aria-live="polite"></p>
 </div></div></dialog>
@@ -3439,6 +3455,44 @@ function fields(id){
 function info(id,options={}){const meta={text:[],logos:[],qr:[]};render(id,options,meta);return meta;}
 root.HangoverObjects={items,palettes,defaults,render,matrix,validatedURL,qrGroup,fields,info};
 })(typeof window!=='undefined'?window:globalThis);
+</script><script>/* Shared vector UI: no platform font or emoji fallback, including portable studios. */
+(function(root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else { root.createHangoverUI = factory; root.HangoverUI = factory(); }
+})(typeof window === 'undefined' ? globalThis : window, function createHangoverUI() {
+  'use strict';
+  const paths = {
+    right: 'M4 12h16M13 5l7 7-7 7', left: 'M20 12H4M11 5l-7 7 7 7',
+    up: 'M12 20V4M5 11l7-7 7 7', down: 'M12 4v16M5 13l7 7 7-7',
+    'up-right': 'M5 19 19 5M6 5h13v13', 'down-right': 'M5 5l14 14M6 19h13V6',
+    'up-left': 'M19 19 5 5M18 5H5v13', 'down-left': 'M19 5 5 19M18 19H5V6',
+    reset: 'M5 8a8 8 0 1 1-1 8M5 3v5h5', redo: 'M19 8a8 8 0 1 0 1 8M19 3v5h-5',
+    undo: 'M4 9h9a7 7 0 0 1 7 7v3M9 4 4 9l5 5', close: 'm6 6 12 12M18 6 6 18',
+    check: 'm5 12 4 4L19 6', pause: 'M8 5v14M16 5v14'
+  };
+  const symbols = {'↗':'up-right','↘':'down-right','↖':'up-left','↙':'down-left','↑':'up','↓':'down','←':'left','→':'right','↺':'reset','↻':'redo','↶':'undo','▶':'play','Ⅱ':'pause','✕':'close','✓':'check','✔':'check'};
+  const styles = 'svg.ui-icon{display:inline-block;width:1em;height:1em;min-width:1em;max-width:none;max-height:none;flex:0 0 auto;vertical-align:-.14em;overflow:visible;pointer-events:none;color:inherit}';
+  function icon(name) {
+    if (!paths[name] && name !== 'play') throw new Error('Unknown UI icon: '+name);
+    const shape = name === 'play' ? '<path d="m7 4 13 8-13 8Z" fill="currentColor" stroke="none"/>' : '<path d="'+paths[name]+'"/>';
+    return '<svg class="ui-icon" data-ui-icon="'+name+'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false">'+shape+'</svg>';
+  }
+  function label(element, text, name) {
+    element.textContent = String(text);
+    if (text && name) element.append(' ');
+    if (name) element.insertAdjacentHTML('beforeend', icon(name));
+    return element;
+  }
+  // Build-time conversion of trusted UI markup. Preserve editable text, artwork,
+  // character specimens, attributes and script data; do not observe user content.
+  function markup(html) {
+    return String(html).replace(/<(script|style|textarea|svg|option|pre|code)\b[^>]*>[\s\S]*?<\/\1\s*>|<[^>]*>|[^<]+/gi, part => {
+      if (part[0] === '<') return part;
+      return part.replace(/[↗↘↖↙↑↓←→↺↻↶▶Ⅱ✕✓✔][\uFE0E\uFE0F]?/g, symbol => icon(symbols[symbol[0]]));
+    });
+  }
+  return {icon, label, markup, styles};
+});
 </script><script>/* Catalogue editor: each object keeps its own text, colours and destination. */
 (function(){
 'use strict';
@@ -3454,7 +3508,7 @@ function thumb(it,uid){return A.render(it.id,{palette:initialPalette(it),uid});}
 for(const id of ['tote','a3','sticker-h','patch','member','ticket','tyvek','sticker-hgr','coaster']){const it=A.items.find(i=>i.id===id),button=document.createElement('button');button.className='table-object';button.dataset.object=id;button.setAttribute('aria-label','Personalizza '+it.name);button.innerHTML=thumb(it,'table');table.append(button);}
 function catalogue(category='all'){
  grid.replaceChildren();const list=A.items.filter(i=>category==='all'||(category==='new'?Number(i.number)>23:i.category===category));
- for(const it of list){const button=document.createElement('button');button.className='object-card';button.dataset.object=it.id;button.setAttribute('aria-label','Apri '+it.name);button.innerHTML=`<span class="object-card-art" aria-hidden="true">${thumb(it,'grid')}</span><span class="object-card-info"><span>${it.name}</span><small>${it.number} ↗</small></span><span class="object-card-format">${it.description}</span>`;grid.append(button);}
+ for(const it of list){const button=document.createElement('button');button.className='object-card';button.dataset.object=it.id;button.setAttribute('aria-label','Apri '+it.name);button.innerHTML=`<span class="object-card-art" aria-hidden="true">${thumb(it,'grid')}</span><span class="object-card-info"><span>${it.name}</span><small>${it.number} ${window.HangoverUI.icon('up-right')}</small></span><span class="object-card-format">${it.description}</span>`;grid.append(button);}
  $('objectCount').textContent=list.length+' oggetti / '+(category==='all'?'collezione completa':'selezione');
 }
 section.querySelector('[data-object-filter="all"]').textContent='Tutti / '+A.items.length;

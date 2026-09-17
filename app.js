@@ -75,7 +75,7 @@ async function showLightboxImage(direction=0){
  if(old){old.removeAttribute('id');old.alt='';old.setAttribute('aria-hidden','true');old.classList.add('is-outgoing');}
  else $('#lightboxImage')?.remove();
  lightboxViewport.append(img);activeImage=img;renderedIndex=index;displayedDownloadItem=item;$('#lightboxPNG').disabled=false;$('#lightboxDownload').hidden=false;
- $('#lightboxCaption').textContent=item.title;$('#lightboxCounter').textContent=pad(index+1)+' / '+pad(lightboxItems.length);$('#lightboxDownload').textContent=item.viewport?'TAVOLA ORIGINALE ↘':'SCARICA ORIGINALE ↘';$('#lightboxDownload').href=item.original;$('#lightboxDownload').download='hangover-'+pad(item.id)+'.'+item.original.split('.').pop();
+ $('#lightboxCaption').textContent=item.title;$('#lightboxCounter').textContent=pad(index+1)+' / '+pad(lightboxItems.length);window.HangoverUI.label($('#lightboxDownload'),item.viewport?'TAVOLA ORIGINALE':'SCARICA ORIGINALE','down-right');$('#lightboxDownload').href=item.original;$('#lightboxDownload').download='hangover-'+pad(item.id)+'.'+item.original.split('.').pop();
  lightboxViewport.removeAttribute('aria-busy');
  Motion.animate(img,[{opacity:0,transform:'translate3d('+direction*55+'px,0,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],340);
  if(old){const from=old.style.transform||'translate3d(0,0,0)';Motion.animate(old,[{opacity:1,transform:from},{opacity:0,transform:'translate3d('+(-direction*65)+'px,0,0)'}],300).then(()=>old.remove());}
@@ -108,7 +108,7 @@ lightbox.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault
 
 // Motion controls apply to every animated surface, including the timecode.
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');let paused=reduced.matches, ticks=0;
-function setPaused(v){v=v||reduced.matches;paused=v;document.body.classList.toggle('paused',v);if(v)Motion.finish();const b=$('#motionToggle');b.setAttribute('aria-pressed',String(v));b.setAttribute('aria-label',v?'Riprendi le animazioni':'Metti in pausa le animazioni');b.textContent=v?'▶':'Ⅱ';b.disabled=reduced.matches;if(reduced.matches)b.setAttribute('aria-label','Animazioni ridotte dalle preferenze di sistema');}
+function setPaused(v){v=v||reduced.matches;paused=v;document.body.classList.toggle('paused',v);if(v)Motion.finish();const b=$('#motionToggle');b.setAttribute('aria-pressed',String(v));b.setAttribute('aria-label',v?'Riprendi le animazioni':'Metti in pausa le animazioni');window.HangoverUI.label(b,'',v?'play':'pause');b.disabled=reduced.matches;if(reduced.matches)b.setAttribute('aria-label','Animazioni ridotte dalle preferenze di sistema');}
 setPaused(paused);$('#motionToggle').addEventListener('click',()=>setPaused(!paused));reduced.addEventListener('change',e=>setPaused(e.matches));
 setInterval(()=>{if(paused||document.hidden)return;ticks++;$('#timecode').textContent='00:'+pad(Math.floor(ticks/10/60)%60)+':'+pad(Math.floor(ticks/10)%60);},100);
 $$('[data-motion]').forEach(b=>b.addEventListener('click',()=>{$$('.motion-options button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));$('.video-stage').dataset.effect=b.dataset.motion;}));

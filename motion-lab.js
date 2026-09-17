@@ -30,7 +30,7 @@ window.initHangoverLab = async function initHangoverLab(){
  try{if(window.HANGOVER_INITIAL_CONFIG)cfg=validate(window.HANGOVER_INITIAL_CONFIG);}catch(e){report(e.message);}
  function render(){engine.preview(ctx,canvas.width,canvas.height,time,cfg,{background:previewBackground,guides:showGuides});$('[data-ml-seek]').value=time;$('[data-ml-seek]').setAttribute('aria-valuetext',time.toFixed(1)+' secondi di '+cfg.duration);$('[data-ml-time]').textContent=stamp(time)+' / '+stamp(cfg.duration);}
  function blocked(){return reduced.matches||document.body.classList.contains('paused');}
- function playerState(){const paused=!playing||blocked();$('[data-ml-play]').textContent=paused?'▶':'Ⅱ';$('[data-ml-play]').setAttribute('aria-pressed',String(paused));$('[data-ml-play]').setAttribute('aria-label',paused?'Riproduci l’anteprima':'Metti in pausa l’anteprima');}
+ function playerState(){const paused=!playing||blocked();window.HangoverUI.label($('[data-ml-play]'),'',paused?'play':'pause');$('[data-ml-play]').setAttribute('aria-pressed',String(paused));$('[data-ml-play]').setAttribute('aria-label',paused?'Riproduci l’anteprima':'Metti in pausa l’anteprima');}
  function schedule(){cancelAnimationFrame(frame);frame=0;last=0;if(playing&&!blocked()&&inView&&!document.hidden&&!exporting)frame=requestAnimationFrame(tick);playerState();}
  function tick(now){if(last)time=(time+(now-last)/1000)%cfg.duration;last=now;render();frame=requestAnimationFrame(tick);}
  function resize(){const [w,h]=engine.dimensions(cfg.format,640);const k=Math.min(1,1000/w,1100/h);canvas.width=Math.round(w*k);canvas.height=Math.round(h*k);canvas.style.aspectRatio=w+'/'+h;render();}
@@ -43,10 +43,10 @@ window.initHangoverLab = async function initHangoverLab(){
   canvas.setAttribute('aria-label','Anteprima '+(cfg.content==='wordmark'?'firma HANGOVER':preset.name)+' — '+cfg.format);
   $$('[data-ml-format]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.mlFormat===cfg.format));b.disabled=Boolean(cfg.content!=='wordmark'&&preset.formats&&!preset.formats.includes(b.dataset.mlFormat));});
   $('[data-ml-overlay-controls]').hidden=!output.transparent;$('[data-ml-export=sequence]').hidden=false;$('[data-ml-export=video]').hidden=false;
-  $('[data-ml-export=sequence]').textContent=output.transparent?'Sequenza PNG alpha · ZIP ↓':'Sequenza PNG · ZIP ↓';
-  const videoButton=$('[data-ml-export=video]');videoButton.textContent=output.transparent?(alphaSupport.state==='verified'?'Video WebM alpha ↗':'Verifica video WebM alpha ↗'):'Esporta video ↗';videoButton.disabled=exporting||(output.transparent&&alphaSupport.state==='unsupported');
+  window.HangoverUI.label($('[data-ml-export=sequence]'),output.transparent?'Sequenza PNG alpha · ZIP':'Sequenza PNG · ZIP','down');
+  const videoButton=$('[data-ml-export=video]');window.HangoverUI.label(videoButton,output.transparent?(alphaSupport.state==='verified'?'Video WebM alpha':'Verifica video WebM alpha'):'Esporta video','up-right');videoButton.disabled=exporting||(output.transparent&&alphaSupport.state==='unsupported');
   $('[data-ml-guide-label]').hidden=cfg.format!=='9:16';
-  const clip=$('[data-ml-clip]');clip.hidden=!preset.clipSrc||cfg.content==='wordmark';if(preset.clipSrc){clip.href=preset.clipSrc;clip.download=preset.clipName;clip.textContent='WebM originale · 1080 × 1920 · 6 s ↓';clip.title='Clip originale fisso: non include le modifiche o la risoluzione selezionata.';}else clip.removeAttribute('href');
+  const clip=$('[data-ml-clip]');clip.hidden=!preset.clipSrc||cfg.content==='wordmark';if(preset.clipSrc){clip.href=preset.clipSrc;clip.download=preset.clipName;window.HangoverUI.label(clip,'WebM originale · 1080 × 1920 · 6 s','down');clip.title='Clip originale fisso: non include le modifiche o la risoluzione selezionata.';}else clip.removeAttribute('href');
   $('[data-ml-export-note]').textContent=output.transparent?'PNG e sequenza PNG conservano il canale alpha. Lo sfondo di prova e le guide non vengono esportati. WebM disponibile solo se la trasparenza supera la verifica.':'Video senza audio · 30 fps · MP4 o WebM secondo il browser. La sequenza PNG esporta ogni fotogramma alla risoluzione scelta.';
   $$('[data-ml-output]').forEach(el=>{el.value=cfg[el.dataset.mlOutput];if(el.dataset.mlOutput==='resolution')Array.from(el.options).forEach(option=>{const d=engine.dimensions(cfg.format,Number(option.value));option.textContent=({'1080':'Full HD','1440':'2K / QHD','2160':'4K / UHD'}[option.value])+' · '+d.join(' × ');});});
   const wordmarkControls=$('[data-ml-wordmark-controls]');if(wordmarkControls)wordmarkControls.hidden=cfg.content!=='wordmark';
@@ -63,7 +63,7 @@ window.initHangoverLab = async function initHangoverLab(){
  }
  function save(blob,name){
   if(videoURL)URL.revokeObjectURL(videoURL);videoURL=URL.createObjectURL(blob);
-  const link=$('[data-ml-download]');link.href=videoURL;link.download=name;link.textContent='Scarica '+name.split('.').pop().toUpperCase()+' ↓';link.hidden=false;
+  const link=$('[data-ml-download]');link.href=videoURL;link.download=name;window.HangoverUI.label(link,'Scarica '+name.split('.').pop().toUpperCase(),'down');link.hidden=false;
   showResult(blob.type,videoURL);
  }
  function showResult(type,url){
@@ -79,10 +79,12 @@ window.initHangoverLab = async function initHangoverLab(){
  function presetFile(){save(new Blob([JSON.stringify({schema:'hangover.motion.preset',version:1,config:cfg},null,2)],{type:'application/json'}),fileName('json'));report('Preset pronto: testi, formato, palette, foto ed effetti.');}
  function templateFile(){
   const json=v=>JSON.stringify(v).replace(/</g,'\\u003c'),end='<'+'/script>';
-  const extensions=['createHangoverEditorial','createHangoverSocial','createHangoverOverlays','createHangoverZip'].map(k=>'window.'+k+'='+window[k].toString()+';').join('');
+  const extensions=['createHangoverUI','createHangoverEditorial','createHangoverSocial','createHangoverOverlays','createHangoverZip'].map(k=>'window.'+k+'='+window[k].toString()+';').join('');
   let exportStyles=data.exportStyles||'';if(!exportStyles)for(const sheet of Array.from(document.styleSheets)){try{if(sheet.href&&sheet.href.includes('motion-export.css'))exportStyles+=Array.from(sheet.cssRules,r=>r.cssText).join('\n');}catch(_error){}}
-  const portableData={...data,exportStyles};
-  const html='<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hangover — Motion Studio</title><style>'+data.styles+exportStyles+'</style></head><body class="h-motion-template">'+pristine+'<script>window.HANGOVER_STUDIO_DATA='+json(portableData)+';window.HANGOVER_INITIAL_CONFIG='+json(cfg)+';'+end+'<script>'+extensions+end+'<script>window.createHangoverStudio='+window.createHangoverStudio.toString()+';'+end+'<script>window.initHangoverLab='+window.initHangoverLab.toString()+';window.initHangoverLab();'+end+'</body></html>';
+  let uiStyles=data.uiStyles||'';if(!uiStyles)for(const sheet of Array.from(document.styleSheets)){try{if(sheet.href&&sheet.href.includes('ui-controls.css'))uiStyles+=Array.from(sheet.cssRules,r=>r.cssText).join('\n');}catch(_error){}}
+  if(!uiStyles)uiStyles=window.HangoverUI.styles;
+  const portableData={...data,exportStyles,uiStyles};
+  const html=window.HangoverUI.markup('<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hangover — Motion Studio</title><style>'+data.styles+exportStyles+uiStyles+'</style></head><body class="h-motion-template">'+pristine+'<script>window.HANGOVER_STUDIO_DATA='+json(portableData)+';window.HANGOVER_INITIAL_CONFIG='+json(cfg)+';'+end+'<script>'+extensions+'window.HangoverUI=window.createHangoverUI();'+end+'<script>window.createHangoverStudio='+window.createHangoverStudio.toString()+';'+end+'<script>window.initHangoverLab='+window.initHangoverLab.toString()+';window.initHangoverLab();'+end+'</body></html>');
   save(new Blob([html],{type:'text/html'}),fileName('html'));report('Template pronto. Scarica e apri il file HTML per ritrovare questo studio, modificarlo ed esportarlo offline.');
  }
  async function pngFile(){

@@ -13,7 +13,7 @@ function thumb(it,uid){return A.render(it.id,{palette:initialPalette(it),uid});}
 for(const id of ['tote','a3','sticker-h','patch','member','ticket','tyvek','sticker-hgr','coaster']){const it=A.items.find(i=>i.id===id),button=document.createElement('button');button.className='table-object';button.dataset.object=id;button.setAttribute('aria-label','Personalizza '+it.name);button.innerHTML=thumb(it,'table');table.append(button);}
 function catalogue(category='all'){
  grid.replaceChildren();const list=A.items.filter(i=>category==='all'||(category==='new'?Number(i.number)>23:i.category===category));
- for(const it of list){const button=document.createElement('button');button.className='object-card';button.dataset.object=it.id;button.setAttribute('aria-label','Apri '+it.name);button.innerHTML=`<span class="object-card-art" aria-hidden="true">${thumb(it,'grid')}</span><span class="object-card-info"><span>${it.name}</span><small>${it.number} ↗</small></span><span class="object-card-format">${it.description}</span>`;grid.append(button);}
+ for(const it of list){const button=document.createElement('button');button.className='object-card';button.dataset.object=it.id;button.setAttribute('aria-label','Apri '+it.name);button.innerHTML=`<span class="object-card-art" aria-hidden="true">${thumb(it,'grid')}</span><span class="object-card-info"><span>${it.name}</span><small>${it.number} ${window.HangoverUI.icon('up-right')}</small></span><span class="object-card-format">${it.description}</span>`;grid.append(button);}
  $('objectCount').textContent=list.length+' oggetti / '+(category==='all'?'collezione completa':'selezione');
 }
 section.querySelector('[data-object-filter="all"]').textContent='Tutti / '+A.items.length;

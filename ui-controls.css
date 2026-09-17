@@ -1,0 +1,15 @@
+/* Vector icons inherit the surrounding colour and size, including on iOS. */
+svg.ui-icon{display:inline-block;width:1em;height:1em;min-width:1em;max-width:none;max-height:none;flex:0 0 auto;vertical-align:-.14em;overflow:visible;pointer-events:none;color:inherit}
+.library-art-message::before{content:none}
+.library-art-message>.ui-icon{width:50px;height:50px;color:#063c9a}
+.motion-toggle>.ui-icon,.ml-player button>.ui-icon{vertical-align:middle}
+/* Keep small visual labels usable with a finger. */
+@media(max-width:1024px),(pointer:coarse){
+  button{min-width:44px;min-height:44px}
+  a[download],.custom-type-footer a,.hero-bottom a,.objects-kit,.type-downloads a,.artwork-static-download,.site-footer a,.sg-collection-head a,.motion-kit-bar a{min-height:44px;display:inline-flex;align-items:center;gap:.45em}
+  #lightboxClose,#lightboxPNG,#lightboxDownload{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:10px 12px}
+  .atlas-nav button{min-height:44px}
+  .navigation .home{width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+  .navigation .home>.mark{width:23px}
+  #objectDialog input:not([type=color]),#objectDialog select,#objectDialog textarea,#segnaletica input:not([type=color]),#segnaletica select,.maker-controls input:not([type=color]):not([type=range]),.maker-controls select,.maker-controls textarea,.ml-controls input[type=text],.ml-controls select,.ml-controls textarea{font-size:16px!important}
+}
