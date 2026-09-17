@@ -2,10 +2,14 @@
 window.createHangoverEditorial = function createHangoverEditorial() {
   'use strict';
 
+  const hasText = value => String(value ?? '').trim().length > 0;
+
   function display(e, value, x, y, width, size, color, align) {
+    if (!hasText(value)) return 0;
     return e.text(value, x, y, size, color || e.p.fg, width, align || 'left', 400, '"HANGOVER Display", sans-serif');
   }
   function copy(e, value, x, y, width, color, align, size) {
+    if (!hasText(value)) return 0;
     return e.text(value, x, y, size || 16, color || e.p.fg, width, align || 'left', 400, 'monospace');
   }
   function clip(e, x, y, width, height, draw) {
@@ -19,7 +23,7 @@ window.createHangoverEditorial = function createHangoverEditorial() {
     return height;
   }
   function titleLines(value, length) {
-    const words = value.split(/\s+/).filter(Boolean), lines = [];
+    const words = String(value ?? '').split(/\s+/).filter(Boolean), lines = [];
     let line = '';
     words.forEach(function (word) {
       if (line && (line + ' ' + word).length > length && lines.length < 2) { lines.push(line); line = word; }
@@ -30,7 +34,7 @@ window.createHangoverEditorial = function createHangoverEditorial() {
       const split = Math.ceil(words.length / 2);
       return [words.slice(0, split).join(' '), words.slice(split).join(' ')];
     }
-    return lines.length ? lines : ['ALL NIGHT'];
+    return lines;
   }
   function footer(e, y, titleSize) {
     display(e, e.title, 50, y, 900, titleSize || (e.tall ? 100 : e.square ? 67 : 47));
@@ -225,8 +229,8 @@ window.createHangoverEditorial = function createHangoverEditorial() {
       display(e, e.title, 50, 40, 900, e.tall ? 116 : e.square ? 85 : 53);
       copy(e, 'WITH / HANGOVER', 50, e.tall ? 231 : e.square ? 176 : 119, 850, p.accent, 'left', 15);
       const contentHeight = bottom - top, seam = e.tall ? 650 : 635;
-      e.line(seam, top, seam, bottom, p.muted, 1);
-      const names = (e.cfg.lineup || '[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]').split('\n').filter(Boolean).slice(0,4);
+      const names = String(e.cfg.lineup ?? '[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]').split('\n').map(name => name.trim()).filter(Boolean).slice(0,4);
+      if (names.length) e.line(seam, top, seam, bottom, p.muted, 1);
       const row = contentHeight / Math.max(names.length, 3), size = Math.min(e.tall ? 67 : e.square ? 48 : 35, row * .43);
       const lift = drift(e) * Math.min(16, row * .12);
       names.forEach(function (name, i) {

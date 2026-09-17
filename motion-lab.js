@@ -6,8 +6,10 @@ window.initHangoverLab = async function initHangoverLab(){
  const $=s=>root.querySelector(s),$$=s=>Array.from(root.querySelectorAll(s));
  const canvas=$('[data-ml-canvas]'),ctx=canvas.getContext('2d'),stage=$('[data-ml-stage]'),status=$('[data-ml-status]');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const defaults={preset:'prisma',palette:'ice',format:'16:9',title:'ALL NIGHT',subtitle:'HANGOVER / AFTER DARK',lineup:'[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]',duration:10,speed:1,photo:'01',effects:['grain'],customImage:null,resolution:1080,content:'composition',background:'preset',wordmarkMotion:'drift'};
+ const defaults={preset:'prisma',palette:'ice',format:'16:9',title:'ALL NIGHT',subtitle:'HANGOVER / AFTER DARK',lineup:'[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]',duration:10,speed:1,photo:'01',effects:['grain'],customImage:null,resolution:1080,content:'composition',background:'preset',wordmarkMotion:'drift',logo:{kind:'preset',finish:'original',image:null,original:null},layout:{}};
  let cfg={...defaults},time=2.4,playing=!reduced.matches,inView=false,frame=0,last=0,exporting=false,job=null,photoRevision=0;
+ let editing=true,selectedElement=null,drag=null,logoRevision=0,editorSignature='',editorHistory=[];
+ const cutout=window.createHangoverCutout(),selection=document.createElement('div');selection.className='ml-selection';selection.hidden=true;stage.append(selection);stage.dataset.editing='true';
  let previewBackground='photo',showGuides=false,alphaSupport={state:'unknown',mime:null};
  let videoURL=null;const fileURLs=new Set();
  const stamp=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
@@ -25,10 +27,51 @@ window.initHangoverLab = async function initHangoverLab(){
   if(!data.photos.some(x=>x.id===value.photo))throw Error('Immagine non riconosciuta.');c.photo=value.photo;
   if(!Array.isArray(value.effects)||value.effects.length>3||!value.effects.every(x=>['grain','light','registration'].includes(x)))throw Error('Effetti non riconosciuti.');c.effects=[...new Set(value.effects)];
   if(value.customImage!=null){if(typeof value.customImage!=='string'||value.customImage.length>12000000||!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=\r\n]+$/.test(value.customImage))throw Error('Foto del preset non valida.');c.customImage=value.customImage;}
+  c.layout=engine.validateLayout(value.layout);
+  if(value.logo!=null){const l=value.logo;if(typeof l!=='object'||!['preset','h','hg','hgr','hangover','hang-over','custom','none'].includes(l.kind)||!['original','flat','chrome','outline','duotone'].includes(l.finish))throw Error('Logo del preset non valido.');c.logo={kind:l.kind,finish:l.finish,image:null,original:null};
+   for(const key of ['image','original'])if(l[key]!=null){if(typeof l[key]!=='string'||l[key].length>16000000||!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=\r\n]+$/.test(l[key]))throw Error('Immagine del logo non valida.');c.logo[key]=l[key];}
+  }
   return c;
  }
  try{if(window.HANGOVER_INITIAL_CONFIG)cfg=validate(window.HANGOVER_INITIAL_CONFIG);}catch(e){report(e.message);}
- function render(){engine.preview(ctx,canvas.width,canvas.height,time,cfg,{background:previewBackground,guides:showGuides});$('[data-ml-seek]').value=time;$('[data-ml-seek]').setAttribute('aria-valuetext',time.toFixed(1)+' secondi di '+cfg.duration);$('[data-ml-time]').textContent=stamp(time)+' / '+stamp(cfg.duration);}
+ function render(){engine.preview(ctx,canvas.width,canvas.height,time,cfg,{background:previewBackground,guides:showGuides});$('[data-ml-seek]').value=time;$('[data-ml-seek]').setAttribute('aria-valuetext',time.toFixed(1)+' secondi di '+cfg.duration);$('[data-ml-time]').textContent=stamp(time)+' / '+stamp(cfg.duration);updateEditor();}
+ function rememberEdit(){editorHistory.push({layout:JSON.parse(JSON.stringify(cfg.layout||{})),logo:{...cfg.logo}});if(editorHistory.length>15)editorHistory.shift();$('[data-ml-undo]').disabled=false;}
+ function currentElement(){return engine.elements().find(e=>e.id===selectedElement);}
+ function selectionRect(item){const c=canvas.getBoundingClientRect(),s=stage.getBoundingClientRect();selection.hidden=!editing||!item||item.hidden;if(selection.hidden)return;Object.assign(selection.style,{left:(c.left-s.left+item.x*c.width)+'px',top:(c.top-s.top+item.y*c.height)+'px',width:item.w*c.width+'px',height:item.h*c.height+'px'});}
+ function updateEditor(){
+  const items=engine.elements(),signature=items.map(e=>e.id+':'+e.name+':'+e.hidden).join('|'),select=$('[data-ml-element]');
+  if(signature!==editorSignature){editorSignature=signature;select.replaceChildren();const none=document.createElement('option');none.value='';none.textContent='Scegli nell’anteprima';select.append(none);for(const item of items){const o=document.createElement('option');o.value=item.id;o.textContent=item.name+(item.hidden?' · nascosto':'');select.append(o);}select.value=selectedElement||'';}
+  const item=items.find(e=>e.id===selectedElement);$('[data-ml-element-controls]').hidden=!item;selectionRect(item);
+  if(item){select.value=item.id;for(const axis of ['x','y']){const input=$('[data-ml-position='+axis+']');if(document.activeElement!==input)input.value=Math.round((item[axis]+item[axis==='x'?'w':'h']/2)*1000)/10;}for(const key of ['scale','rotation']){const input=$('[data-ml-transform='+key+']');if(document.activeElement!==input)input.value=item[key]*(key==='scale'?100:1);}$('[data-ml-element-hidden]').checked=item.hidden;}
+  $('[data-ml-undo]').disabled=!editorHistory.length||exporting;
+ }
+ function setElement(id){selectedElement=id||null;playing=false;schedule();render();}
+ function changeElement(delta){if(!selectedElement)return;cfg.layout={...cfg.layout,[selectedElement]:{...cfg.layout?.[selectedElement],...delta}};render();}
+ function syncLogo(){const l=cfg.logo||defaults.logo;$$('[data-ml-logo]').forEach(input=>{input.value=l[input.dataset.mlLogo];input.disabled=exporting||(input.dataset.mlLogo==='finish'&&l.kind==='custom');});const panel=$('[data-ml-cutout-panel]');panel.hidden=!l.original;if(l.image)$('[data-ml-logo-preview]').src=l.image;}
+ function canvasPoint(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};}
+ canvas.addEventListener('pointerdown',e=>{if(!editing||exporting||e.button>0)return;const p=canvasPoint(e),item=engine.hit(p.x,p.y);if(!item){setElement(null);return;}e.preventDefault();setElement(item.id);rememberEdit();drag={id:item.id,x:p.x,y:p.y,dx:cfg.layout?.[item.id]?.dx||0,dy:cfg.layout?.[item.id]?.dy||0};canvas.setPointerCapture(e.pointerId);canvas.focus({preventScroll:true});stage.dataset.dragging='true';});
+ canvas.addEventListener('pointermove',e=>{if(!drag)return;const p=canvasPoint(e);changeElement({dx:Math.max(-3,Math.min(3,drag.dx+p.x-drag.x)),dy:Math.max(-3,Math.min(3,drag.dy+p.y-drag.y))});});
+ const endDrag=()=>{drag=null;delete stage.dataset.dragging;};canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);canvas.addEventListener('lostpointercapture',endDrag);
+ canvas.addEventListener('keydown',e=>{if(!editing||exporting||!selectedElement)return;const dirs={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};if(dirs[e.key]){e.preventDefault();rememberEdit();const [x,y]=dirs[e.key],n=e.shiftKey?.05:.005,o=cfg.layout?.[selectedElement]||{};changeElement({dx:Math.max(-3,Math.min(3,(o.dx||0)+x*n)),dy:Math.max(-3,Math.min(3,(o.dy||0)+y*n))});}else if(e.key==='Escape'){selectedElement=null;render();}});
+ $('[data-ml-edit-toggle]').addEventListener('click',()=>{editing=!editing;stage.dataset.editing=String(editing);$('[data-ml-edit-toggle]').setAttribute('aria-pressed',String(editing));selectionRect(currentElement());});
+ $('[data-ml-element]').addEventListener('change',e=>setElement(e.target.value));
+ $$('[data-ml-position]').forEach(input=>input.addEventListener('input',()=>{const item=currentElement(),n=Number(input.value);if(!item||!input.value||!Number.isFinite(n))return;rememberEdit();const axis=input.dataset.mlPosition;changeElement({[axis==='x'?'dx':'dy']:Math.max(-3,Math.min(3,n/100-item.base[axis]-item.base[axis==='x'?'w':'h']/2))});}));
+ $$('[data-ml-transform]').forEach(input=>input.addEventListener('input',()=>{if(!currentElement())return;rememberEdit();const k=input.dataset.mlTransform;changeElement({[k]:Number(input.value)/(k==='scale'?100:1)});}));
+ $('[data-ml-element-hidden]').addEventListener('change',e=>{rememberEdit();changeElement({hidden:e.target.checked});});
+ $('[data-ml-element-reset]').addEventListener('click',()=>{rememberEdit();const next={...cfg.layout};delete next[selectedElement];cfg.layout=next;render();});
+ $('[data-ml-layout-reset]').addEventListener('click',()=>{rememberEdit();const prefix=(cfg.content==='wordmark'?'isolated':cfg.preset)+':';cfg.layout=Object.fromEntries(Object.entries(cfg.layout||{}).filter(([id])=>!id.startsWith(prefix)));render();report('Posizioni del preset ripristinate.');});
+ $('[data-ml-undo]').addEventListener('click',async()=>{const previous=editorHistory.pop();if(!previous)return;logoRevision++;cfg={...cfg,...previous};if(cfg.logo.image)await engine.load(cfg.logo.image);syncLogo();render();});
+ $$('[data-ml-logo]').forEach(input=>input.addEventListener('change',()=>{logoRevision++;rememberEdit();cfg.logo={...cfg.logo,[input.dataset.mlLogo]:input.value};selectedElement=null;syncLogo();render();if(input.value==='custom'&&!cfg.logo.image)report('Carica l’immagine da usare come logo.');}));
+ $('[data-ml-logo-file]').addEventListener('change',async e=>{
+  const file=e.target.files[0],revision=++logoRevision;if(!file)return;
+  try{if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>12*1024*1024)throw Error('Scegli PNG, JPG o WebP entro 12 MB.');report('Preparo la tua immagine…');
+   const image=await createImageBitmap(file);if(image.width*image.height>64000000){image.close();throw Error('Immagine troppo grande. Usa una copia più piccola.');}
+   const k=Math.min(1,1600/image.width,1600/image.height),c=document.createElement('canvas');c.width=Math.max(1,Math.round(image.width*k));c.height=Math.max(1,Math.round(image.height*k));c.getContext('2d').drawImage(image,0,0,c.width,c.height);image.close();const src=c.toDataURL('image/png');c.width=c.height=1;
+   const info=await cutout.inspect(src);await engine.load(src);if(revision!==logoRevision)return;rememberEdit();cfg.logo={...cfg.logo,kind:'custom',image:src,original:src};$('[data-ml-cutout-color]').value=info.suggestedColor||'#ffffff';$('[data-ml-cutout-note]').textContent=info.hasAlpha?'La trasparenza è già presente. Puoi mantenere l’immagine così.':'Vuoi rimuovere lo sfondo? Puoi provare qui sotto e ripristinare l’originale.';syncLogo();render();report('Immagine caricata. Trascinala nell’anteprima per posizionarla.');
+  }catch(error){report(error.message||'Immagine non leggibile.');}finally{e.target.value='';}
+ });
+ $('[data-ml-cutout]').addEventListener('click',async()=>{if(!cfg.logo.original)return;const button=$('[data-ml-cutout]'),revision=++logoRevision,original=cfg.logo.original;button.disabled=true;report('Rimuovo lo sfondo…');try{const result=await cutout.remove(original,{color:$('[data-ml-cutout-color]').value,tolerance:Number($('[data-ml-cutout-tolerance]').value)});await engine.load(result.src);if(revision!==logoRevision)return;rememberEdit();cfg.logo={...cfg.logo,image:result.src};syncLogo();render();report(result.removedFraction>.001?'Sfondo rimosso. L’originale resta disponibile.':'Nessuno sfondo uniforme trovato ai bordi. Regola colore e tolleranza.');}catch(error){report(error.message);}finally{button.disabled=false;}});
+ $('[data-ml-logo-original]').addEventListener('click',async()=>{if(!cfg.logo.original)return;logoRevision++;rememberEdit();cfg.logo={...cfg.logo,image:cfg.logo.original};await engine.load(cfg.logo.image);syncLogo();render();report('Immagine originale ripristinata.');});
  function blocked(){return reduced.matches||document.body.classList.contains('paused');}
  function playerState(){const paused=!playing||blocked();window.HangoverUI.label($('[data-ml-play]'),'',paused?'play':'pause');$('[data-ml-play]').setAttribute('aria-pressed',String(paused));$('[data-ml-play]').setAttribute('aria-label',paused?'Riproduci l’anteprima':'Metti in pausa l’anteprima');}
  function schedule(){cancelAnimationFrame(frame);frame=0;last=0;if(playing&&!blocked()&&inView&&!document.hidden&&!exporting)frame=requestAnimationFrame(tick);playerState();}
@@ -39,7 +82,7 @@ window.initHangoverLab = async function initHangoverLab(){
   $('[data-ml-name]').textContent=String(ix).padStart(2,'0')+' / '+preset.name.toUpperCase();
   $('[data-ml-description]').textContent=preset.description;
   const output=engine.exportSettings(cfg);$('[data-ml-dimensions]').textContent=output.width+' × '+output.height;
-  if(cfg.content==='wordmark'){$('[data-ml-name]').textContent='HANGOVER / FIRMA ANIMATA';$('[data-ml-description]').textContent='Solo il nome · contorni originali';}
+  if(cfg.content==='wordmark'){$('[data-ml-name]').textContent='HANGOVER / FIRMA ANIMATA';$('[data-ml-description]').textContent='Solo il logo scelto';}
   canvas.setAttribute('aria-label','Anteprima '+(cfg.content==='wordmark'?'firma HANGOVER':preset.name)+' — '+cfg.format);
   $$('[data-ml-format]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.mlFormat===cfg.format));b.disabled=Boolean(cfg.content!=='wordmark'&&preset.formats&&!preset.formats.includes(b.dataset.mlFormat));});
   $('[data-ml-overlay-controls]').hidden=!output.transparent;$('[data-ml-export=sequence]').hidden=false;$('[data-ml-export=video]').hidden=false;
@@ -51,7 +94,7 @@ window.initHangoverLab = async function initHangoverLab(){
   $$('[data-ml-output]').forEach(el=>{el.value=cfg[el.dataset.mlOutput];if(el.dataset.mlOutput==='resolution')Array.from(el.options).forEach(option=>{const d=engine.dimensions(cfg.format,Number(option.value));option.textContent=({'1080':'Full HD','1440':'2K / QHD','2160':'4K / UHD'}[option.value])+' · '+d.join(' × ');});});
   const wordmarkControls=$('[data-ml-wordmark-controls]');if(wordmarkControls)wordmarkControls.hidden=cfg.content!=='wordmark';
   const summary=$('[data-ml-output-summary]');if(summary)summary.textContent=output.width+' × '+output.height+' px · 30 fps · '+(output.transparent?'alpha / senza sfondo':'sfondo incluso')+(cfg.resolution===2160?' · la sequenza 4K richiede più tempo e memoria':'');
-  const alphaStatus=$('[data-ml-alpha-status]');if(alphaStatus)alphaStatus.textContent=output.transparent?(alphaSupport.state==='verified'?'WebM alpha verificato in questo browser; anche il file finale viene controllato.':alphaSupport.state==='unsupported'?'Questo browser non conserva la trasparenza nel video. Usa PNG o sequenza PNG; i WebM originali restano file separati.':'PNG e sequenza PNG con alpha reale. Per il video, verifico prima che questo browser conservi la trasparenza.'):(cfg.content==='wordmark'?'Firma animata isolata: nessun titolo, foto, pannello o secondo logo.':'Trasparente rimuove sfondo e fotografie e conserva testi, segni e pannelli grafici.');
+  const alphaStatus=$('[data-ml-alpha-status]');if(alphaStatus)alphaStatus.textContent=output.transparent?(alphaSupport.state==='verified'?'WebM alpha verificato in questo browser; anche il file finale viene controllato.':alphaSupport.state==='unsupported'?'Questo browser non conserva la trasparenza nel video. Usa PNG o sequenza PNG; i WebM originali restano file separati.':'PNG e sequenza PNG con alpha reale. Per il video, verifico prima che questo browser conservi la trasparenza.'):(cfg.content==='wordmark'?'Firma animata isolata: il segno o l’immagine selezionata, senza elementi aggiuntivi.':'Trasparente rimuove sfondo e fotografie e conserva testi, segni e pannelli grafici.');
   $$('[data-ml-palette]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mlPalette===cfg.palette)));
   $$('[data-ml-field]').forEach(el=>el.value=cfg[el.dataset.mlField]);
   $$('[data-ml-effect]').forEach(el=>{el.checked=cfg.effects.includes(el.dataset.mlEffect);el.closest('label').hidden=Boolean((output.transparent&&el.dataset.mlEffect==='registration')||cfg.content==='wordmark');});
@@ -59,7 +102,7 @@ window.initHangoverLab = async function initHangoverLab(){
   const copyControls=$('.ml-copy');if(copyControls)copyControls.hidden=cfg.content==='wordmark';const photoControls=$('[data-ml-photo]').closest('fieldset');if(photoControls)photoControls.hidden=cfg.content==='wordmark';
   $('[data-ml-lineup-label]').hidden=!(cfg.preset==='lineup'||preset.usesLineup);$('[data-ml-photo]').value=cfg.photo;$('[data-ml-reset-photo]').hidden=!cfg.customImage;
   $('[data-ml-photo-note]').textContent=cfg.customImage?'La tua foto resta nel browser e nei file che scarichi.':preset.transparent?'La materia colora il segno; lo sfondo è solo una prova.':'La materia entra nelle foto e crea riflessi nei layout tipografici.';
-  $('[data-ml-seek]').max=cfg.duration;time=Math.min(time,cfg.duration-.01);resize();playerState();
+  $('[data-ml-seek]').max=cfg.duration;time=Math.min(time,cfg.duration-.01);syncLogo();resize();playerState();
  }
  function save(blob,name){
   if(videoURL)URL.revokeObjectURL(videoURL);videoURL=URL.createObjectURL(blob);
@@ -79,17 +122,18 @@ window.initHangoverLab = async function initHangoverLab(){
  function presetFile(){save(new Blob([JSON.stringify({schema:'hangover.motion.preset',version:1,config:cfg},null,2)],{type:'application/json'}),fileName('json'));report('Preset pronto: testi, formato, palette, foto ed effetti.');}
  function templateFile(){
   const json=v=>JSON.stringify(v).replace(/</g,'\\u003c'),end='<'+'/script>';
-  const extensions=['createHangoverUI','createHangoverEditorial','createHangoverSocial','createHangoverOverlays','createHangoverZip'].map(k=>'window.'+k+'='+window[k].toString()+';').join('');
+  const extensions=['createHangoverUI','createHangoverLayers','createHangoverCutout','createHangoverEditorial','createHangoverSocial','createHangoverOverlays','createHangoverZip'].map(k=>'window.'+k+'='+window[k].toString()+';').join('');
   let exportStyles=data.exportStyles||'';if(!exportStyles)for(const sheet of Array.from(document.styleSheets)){try{if(sheet.href&&sheet.href.includes('motion-export.css'))exportStyles+=Array.from(sheet.cssRules,r=>r.cssText).join('\n');}catch(_error){}}
   let uiStyles=data.uiStyles||'';if(!uiStyles)for(const sheet of Array.from(document.styleSheets)){try{if(sheet.href&&sheet.href.includes('ui-controls.css'))uiStyles+=Array.from(sheet.cssRules,r=>r.cssText).join('\n');}catch(_error){}}
   if(!uiStyles)uiStyles=window.HangoverUI.styles;
-  const portableData={...data,exportStyles,uiStyles};
-  const html=window.HangoverUI.markup('<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hangover — Motion Studio</title><style>'+data.styles+exportStyles+uiStyles+'</style></head><body class="h-motion-template">'+pristine+'<script>window.HANGOVER_STUDIO_DATA='+json(portableData)+';window.HANGOVER_INITIAL_CONFIG='+json(cfg)+';'+end+'<script>'+extensions+'window.HangoverUI=window.createHangoverUI();'+end+'<script>window.createHangoverStudio='+window.createHangoverStudio.toString()+';'+end+'<script>window.initHangoverLab='+window.initHangoverLab.toString()+';window.initHangoverLab();'+end+'</body></html>');
+  let editStyles=data.editStyles||'';if(!editStyles)for(const sheet of Array.from(document.styleSheets)){try{if(sheet.href&&sheet.href.includes('motion-edit.css'))editStyles+=Array.from(sheet.cssRules,r=>r.cssText).join('\n');}catch(_error){}}
+  const portableData={...data,exportStyles,uiStyles,editStyles};
+  const html=window.HangoverUI.markup('<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hangover — Motion Studio</title><style>'+data.styles+exportStyles+uiStyles+editStyles+'</style></head><body class="h-motion-template">'+pristine+'<script>window.HANGOVER_STUDIO_DATA='+json(portableData)+';window.HANGOVER_INITIAL_CONFIG='+json(cfg)+';'+end+'<script>'+extensions+'window.HangoverUI=window.createHangoverUI();'+end+'<script>window.createHangoverStudio='+window.createHangoverStudio.toString()+';'+end+'<script>window.initHangoverLab='+window.initHangoverLab.toString()+';window.initHangoverLab();'+end+'</body></html>');
   save(new Blob([html],{type:'text/html'}),fileName('html'));report('Template pronto. Scarica e apri il file HTML per ritrovare questo studio, modificarlo ed esportarlo offline.');
  }
  async function pngFile(){
   const snapshot=JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),target=document.createElement('canvas'),current={type:'png',cancelled:false};job=current;setExporting(true);
-  try{[target.width,target.height]=[output.width,output.height];const context=target.getContext('2d');engine.render(context,target.width,target.height,time,snapshot);if(output.transparent&&!frameHasAlpha(context,target.width,target.height))throw Error('Il fotogramma non conserva la trasparenza. Riprova con Solo HANGOVER.');
+  try{[target.width,target.height]=[output.width,output.height];const context=target.getContext('2d');engine.render(context,target.width,target.height,time,snapshot);if(output.transparent&&!frameHasAlpha(context,target.width,target.height))throw Error('Il fotogramma non conserva la trasparenza. Riprova con Solo logo / nome.');
    const blob=await new Promise(r=>target.toBlob(r,'image/png'));if(!blob)throw Error('Il fotogramma non è stato creato. Riprova.');if(current.cancelled)return;save(blob,outputName(snapshot,'png'));report('Fotogramma pronto: '+target.width+' × '+target.height+' px'+(output.transparent?' · alpha reale.':'.'));
   }finally{target.width=target.height=1;if(job===current)job=null;setExporting(false);}
  }
@@ -98,7 +142,7 @@ window.initHangoverLab = async function initHangoverLab(){
  async function sequenceFile(){
   const snapshot=JSON.parse(JSON.stringify(cfg)),output=engine.exportSettings(snapshot),target=document.createElement('canvas');[target.width,target.height]=[output.width,output.height];const context=target.getContext('2d');
   const current={cancelled:false,type:'sequence'};job=current;setExporting(true);const frames=snapshot.duration*output.fps,entries=[];let storedBytes=0;
-  try{for(let i=0;i<frames;i++){if(current.cancelled)return;engine.render(context,target.width,target.height,i/output.fps,snapshot);if(i===0&&output.transparent&&!frameHasAlpha(context,target.width,target.height))throw Error('Questa composizione non conserva l’alpha. Usa Solo HANGOVER o cambia studio.');const blob=await new Promise(resolve=>target.toBlob(resolve,'image/png'));if(!blob)throw Error('Fotogramma non disponibile.');storedBytes+=blob.size;if(storedBytes>1024*1024*1024)throw Error('La sequenza supera 1 GB nel browser. Scegli 6 secondi o una risoluzione più bassa e riprova.');const bytes=new Uint8Array(await blob.arrayBuffer());if(current.cancelled)return;entries.push({name:'frames/'+String(i).padStart(5,'0')+'.png',bytes});if(i%10===0)report('Creo la sequenza PNG'+(output.transparent?' alpha':'')+'… '+Math.round(i/frames*100)+'% · '+output.width+' × '+output.height);}
+  try{for(let i=0;i<frames;i++){if(current.cancelled)return;engine.render(context,target.width,target.height,i/output.fps,snapshot);if(i===0&&output.transparent&&!frameHasAlpha(context,target.width,target.height))throw Error('Questa composizione non conserva l’alpha. Usa Solo logo / nome o cambia studio.');const blob=await new Promise(resolve=>target.toBlob(resolve,'image/png'));if(!blob)throw Error('Fotogramma non disponibile.');storedBytes+=blob.size;if(storedBytes>1024*1024*1024)throw Error('La sequenza supera 1 GB nel browser. Scegli 6 secondi o una risoluzione più bassa e riprova.');const bytes=new Uint8Array(await blob.arrayBuffer());if(current.cancelled)return;entries.push({name:'frames/'+String(i).padStart(5,'0')+'.png',bytes});if(i%10===0)report('Creo la sequenza PNG'+(output.transparent?' alpha':'')+'… '+Math.round(i/frames*100)+'% · '+output.width+' × '+output.height);}
    if(current.cancelled)return;
    entries.push({name:'LEGGIMI.txt',bytes:'HANGOVER / '+(snapshot.content==='wordmark'?'SOLO FIRMA / '+snapshot.wordmarkMotion:snapshot.preset)+'\n'+target.width+' x '+target.height+' / '+output.fps+' fps / '+snapshot.duration+' s\n'+(output.transparent?'RGBA con trasparenza reale. Importa frames/00000.png come sequenza di immagini a 30 fps e posizionala sopra il tuo video. Mantieni il canale alpha.':'PNG con sfondo. Importa frames/00000.png come sequenza di immagini a 30 fps.')+'\nNessuna guida o sfondo di prova è incluso.\n'});
    entries.push({name:'preset.json',bytes:JSON.stringify({schema:'hangover.motion.preset',version:1,config:snapshot},null,2)});save(window.createHangoverZip(entries),outputName(snapshot,'zip'));report('Sequenza pronta: '+frames+' PNG'+(output.transparent?' con alpha':'')+' · '+target.width+' × '+target.height+' · 30 fps.');
@@ -211,7 +255,7 @@ window.initHangoverLab = async function initHangoverLab(){
  });
  $('[data-ml-preset-file]').addEventListener('change',async e=>{
   const file=e.target.files[0];if(!file)return;
-  try{if(file.size>13*1024*1024)throw Error('Il preset supera 13 MB.');const value=JSON.parse(await file.text());if(value.schema!=='hangover.motion.preset'||value.version!==1)throw Error('Scegli un preset salvato da Hangover Motion Studio.');const next=validate(value.config);if(next.customImage)await engine.load(next.customImage);photoRevision++;cfg=next;time=0;sync();report('Preset importato: '+data.presets.find(x=>x.id===cfg.preset).name+'.');}
+  try{if(file.size>40*1024*1024)throw Error('Il preset supera 40 MB.');const value=JSON.parse(await file.text());if(value.schema!=='hangover.motion.preset'||value.version!==1)throw Error('Scegli un preset salvato da Hangover Motion Studio.');const next=validate(value.config);if(next.customImage)await engine.load(next.customImage);if(next.logo.image){await cutout.inspect(next.logo.image);await engine.load(next.logo.image);}photoRevision++;logoRevision++;selectedElement=null;editorHistory=[];cfg=next;time=0;sync();report('Preset importato: '+data.presets.find(x=>x.id===cfg.preset).name+'.');}
   catch(error){report(error instanceof SyntaxError?'Il file non è un preset JSON valido.':error.message);}e.target.value='';
  });
  const photoSelect=$('[data-ml-photo]');photoSelect.replaceChildren();for(const label of ['Scene','Superfici']){const group=document.createElement('optgroup');group.label=label;data.photos.filter(p=>(p.kind==='surface')===(label==='Superfici')).forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.label;group.append(o);});photoSelect.append(group);}
@@ -224,14 +268,14 @@ window.initHangoverLab = async function initHangoverLab(){
  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelExport('Video annullato perché la scheda è stata nascosta. Tienila aperta durante l’esportazione.');schedule();});
  window.addEventListener('pagehide',()=>{cancelExport();cancelAnimationFrame(frame);fileURLs.forEach(URL.revokeObjectURL);if(videoURL)URL.revokeObjectURL(videoURL);});
  try{
-  await engine.ready;if(cfg.customImage)await engine.load(cfg.customImage);
+  await engine.ready;if(cfg.customImage)await engine.load(cfg.customImage);if(cfg.logo.image){await cutout.inspect(cfg.logo.image);await engine.load(cfg.logo.image);}
   const library=$('[data-ml-library]');library.replaceChildren();
   data.presets.forEach((preset,i)=>{
    const b=document.createElement('button');b.type='button';b.className='ml-preset';b.dataset.mlPreset=preset.id;b.dataset.category=preset.category;b.setAttribute('aria-label','Prova '+preset.name+' — '+preset.description);b.setAttribute('aria-pressed',String(cfg.preset===preset.id));
    const thumb=document.createElement('span');thumb.className='ml-thumb';const c=document.createElement('canvas');const size=engine.dimensions(preset.format,240);[c.width,c.height]=size;c.setAttribute('aria-hidden','true');engine.preview(c.getContext('2d'),c.width,c.height,2.4,{...defaults,preset:preset.id,palette:preset.palette,format:preset.format,photo:preset.photo});thumb.append(c);
    const title=document.createElement('span');title.className='ml-preset-title';title.append(document.createTextNode(preset.name));const number=document.createElement('small');number.textContent=String(i+1).padStart(2,'0');title.append(number);
    const description=document.createElement('span');description.className='ml-preset-desc';description.textContent=preset.format+' / '+({compositions:'COMPOSIZIONE',stories:'STORY',video:'VIDEO',reels:'REEL',tiktok:'TIKTOK',overlays:'OVERLAY / ALPHA'}[preset.category]);b.append(thumb,title,description);
-   b.addEventListener('click',()=>{cfg={...cfg,content:'composition',preset:preset.id,format:preset.format,palette:preset.palette,photo:preset.photo};time=0;last=0;sync();report(preset.name+' · '+preset.description+'.');stage.scrollIntoView({behavior:blocked()?'instant':'smooth',block:'center'});});library.append(b);
+   b.addEventListener('click',()=>{cfg={...cfg,content:'composition',preset:preset.id,format:preset.format,palette:preset.palette,photo:preset.photo};time=0;last=0;selectedElement=null;sync();report(preset.name+' · '+preset.description+'.');stage.scrollIntoView({behavior:blocked()?'instant':'smooth',block:'center'});});library.append(b);
   });
   $('[data-ml-loading]').hidden=true;sync();schedule();
  }catch(error){$('[data-ml-loading]').textContent='Anteprima non disponibile. Ricarica la pagina.';report(error.message);}

@@ -13,14 +13,17 @@
 <link rel="stylesheet" href="interactions.css?v=20260916-e1">
 <link rel="stylesheet" href="foundation.css?v=20260916-shape1">
 <link rel="stylesheet" href="motion-lab.css?v=20260916-motion40">
+<link rel="stylesheet" href="motion-edit.css?v=20260917-editor1">
 <script src="image-views.js?v=20260916-e1" defer></script><script src="catalog.js?v=20260916-e1" defer></script><script src="foundation-catalog.js?v=20260916-g1" defer></script><script src="interactions.js?v=20260916-m1" defer></script><script src="campus-catalog.js?v=20260916-e1" defer></script><script src="app.js?v=20260917-icons1" defer></script><script src="foundation.js?v=20260916-e1" defer></script>
 <script src="motion-data.js?v=20260916-motion40" defer></script>
-<script src="motion-editorial.js?v=20260916-motion40" defer></script>
-<script src="motion-social.js?v=20260916-motion40" defer></script>
-<script src="motion-overlays.js?v=20260916-motion40" defer></script>
+<script src="motion-editorial.js?v=20260917-editor1" defer></script>
+<script src="motion-social.js?v=20260917-editor1" defer></script>
+<script src="motion-overlays.js?v=20260917-editor1" defer></script>
 <script src="motion-zip.js?v=20260916-motion40" defer></script>
-<script src="motion-engine.js?v=20260916-export29" defer></script>
-<script src="motion-lab.js?v=20260917-icons1" defer></script>
+<script src="motion-layers.js?v=20260917-editor1" defer></script>
+<script src="motion-cutout.js?v=20260917-editor1" defer></script>
+<script src="motion-engine.js?v=20260917-editor1" defer></script>
+<script src="motion-lab.js?v=20260917-editor1" defer></script>
 <link rel="stylesheet" href="objects.css?v=20260917-qa1">
 <script src="vendor/qrcode.js?v=20260916-o1" defer></script>
 <script src="qr-engine.js?v=20260916-maker1" defer></script>
@@ -228,10 +231,11 @@
   <div class="ml-preview-column">
    <div class="ml-stage" data-ml-stage>
     <div class="ml-stage-top"><span data-ml-name>01 / PRISMA</span><span data-ml-dimensions>1920 × 1080</span></div>
-    <canvas data-ml-canvas width="960" height="540" role="img" aria-label="Anteprima animata Prisma"></canvas>
+    <canvas tabindex="0" aria-describedby="mlEditHint" data-ml-canvas width="960" height="540" role="img" aria-label="Anteprima animata Prisma"></canvas>
     <div class="ml-stage-bottom"><span data-ml-description>Luce liquida · logo cromato</span><span>H / 2026</span></div>
     <span class="ml-loading" data-ml-loading>Preparazione anteprima…</span>
    </div>
+   <div class="ml-edit-bar"><button type="button" data-ml-edit-toggle aria-pressed="true">Sposta elementi</button><span id="mlEditHint">Trascina · frecce per spostare · Maiusc per passi più grandi</span></div>
    <div class="ml-player">
     <button type="button" data-ml-play aria-label="Metti in pausa l’anteprima" aria-pressed="false"><svg class="ui-icon" data-ui-icon="pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M8 5v14M16 5v14"/></svg></button>
     <button type="button" data-ml-restart aria-label="Ricomincia l’anteprima"><svg class="ui-icon" data-ui-icon="reset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 8a8 8 0 1 1-1 8M5 3v5h5"/></svg></button>
@@ -239,12 +243,12 @@
     <output data-ml-time>00:00 / 00:10</output>
    </div>
    <div class="ml-preview-options"><label data-ml-guide-label hidden><input type="checkbox" data-ml-guide> Guide verticali</label><label data-ml-overlay-controls hidden>Sfondo di prova <select data-ml-overlay-background><option value="photo">Foto / materia</option><option value="checker">Trasparenza</option></select></label></div>
-   <!-- Insert before .ml-export inside .ml-preview-column; pair with motion-export.css. -->
+<!-- Insert before .ml-export inside .ml-preview-column; pair with motion-export.css. -->
 <fieldset class="ml-output-settings" data-ml-output-settings>
  <legend>Esporta a modo tuo</legend>
  <div class="ml-output-grid">
   <label>Risoluzione<select data-ml-output="resolution"><option value="1080">Full HD · 1920 × 1080</option><option value="1440">2K / QHD · 2560 × 1440</option><option value="2160">4K / UHD · 3840 × 2160</option></select></label>
-  <label>Contenuto<select data-ml-output="content"><option value="composition">Composizione completa</option><option value="wordmark">Solo HANGOVER</option></select></label>
+  <label>Contenuto<select data-ml-output="content"><option value="composition">Composizione completa</option><option value="wordmark">Solo logo / nome</option></select></label>
   <label>Sfondo<select data-ml-output="background"><option value="preset">Sfondo del preset</option><option value="transparent">Trasparente / overlay</option></select></label>
   <label data-ml-wordmark-controls hidden>Movimento della firma<select data-ml-output="wordmarkMotion"><option value="drift">Fluttua</option><option value="reveal">Rivelazione</option><option value="pulse">Respiro</option></select></label>
  </div>
@@ -271,6 +275,32 @@
 [ARTISTA 03]</textarea></label></fieldset>
    <fieldset><legend>04 / MATERIA</legend><label class="ml-sr-only" for="mlPhoto">Immagine di partenza</label><select id="mlPhoto" data-ml-photo><option value="01">Materia / riflessi</option><option value="03">Ritmo / linee</option><option value="17">Console / notte</option><option value="23">Dancefloor / persone</option></select><div class="ml-file-row"><label class="ml-file-button">Usa una tua foto <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg><input type="file" data-ml-photo-file accept="image/jpeg,image/png,image/webp"></label><button type="button" data-ml-reset-photo hidden>Ripristina</button></div><span class="ml-note" data-ml-photo-note>La foto entra nei preset fotografici.</span></fieldset>
    <fieldset><legend>05 / RITMO &amp; EFFETTI</legend><div class="ml-two-fields"><label>Durata<select data-ml-field="duration"><option value="6">6 secondi</option><option value="10" selected>10 secondi</option><option value="15">15 secondi</option></select></label><label>Movimento<select data-ml-field="speed"><option value="0.75">Lento</option><option value="1" selected>Normale</option><option value="1.25">Veloce</option></select></label></div><div class="ml-effects"><label><input type="checkbox" data-ml-effect="grain" checked> Grana</label><label><input type="checkbox" data-ml-effect="light"> Luce</label><label><input type="checkbox" data-ml-effect="registration"> Fuori registro</label></div></fieldset>
+   <fieldset class="ml-logo-controls"><legend>06 / IL LOGO</legend>
+    <label>Segno<select data-ml-logo="kind"><option value="preset">Quello del preset</option><option value="h">H</option><option value="hg">HG</option><option value="hgr">HGR</option><option value="hangover">HANGOVER</option><option value="hang-over">HANG / OVER</option><option value="custom">La tua immagine</option><option value="none">Nessun logo</option></select></label>
+    <label>Finitura<select data-ml-logo="finish"><option value="original">Originale</option><option value="flat">Pieno</option><option value="chrome">Cromo</option><option value="outline">Contorno</option><option value="duotone">Doppio colore</option></select></label>
+    <div class="ml-file-row"><label class="ml-file-button">Carica immagine <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg><input type="file" data-ml-logo-file accept="image/png,image/jpeg,image/webp"></label></div>
+    <p class="ml-note" data-ml-logo-note>PNG, JPG o WebP. La trasparenza viene mantenuta.</p>
+    <div data-ml-cutout-panel hidden>
+     <img class="ml-cutout-preview" data-ml-logo-preview alt="Immagine caricata, con anteprima della trasparenza">
+     <p class="ml-note" data-ml-cutout-note></p>
+     <div class="ml-two-fields"><label>Colore da rimuovere<input type="color" data-ml-cutout-color value="#ffffff"></label><label>Tolleranza<input type="range" data-ml-cutout-tolerance min="0" max="100" step="1" value="24"></label></div>
+     <div class="ml-editor-actions"><button type="button" data-ml-cutout>Rimuovi sfondo</button><button type="button" data-ml-logo-original>Ripristina originale</button></div>
+     <p class="ml-note">Per sfondi uniformi. Regola colore e tolleranza per conservare i dettagli.</p>
+    </div>
+   </fieldset>
+   <fieldset class="ml-layout-controls"><legend>07 / POSIZIONE</legend>
+    <p class="ml-note">Tocca un elemento nell’anteprima e trascinalo. Puoi anche sceglierlo qui.</p>
+    <label>Elemento<select data-ml-element><option value="">Scegli nell’anteprima</option></select></label>
+    <div data-ml-element-controls hidden>
+     <div class="ml-two-fields"><label>Orizzontale · %<input type="number" data-ml-position="x" step="1" min="-200" max="300"></label><label>Verticale · %<input type="number" data-ml-position="y" step="1" min="-200" max="300"></label></div>
+     <label>Dimensione · %<input type="range" data-ml-transform="scale" min="10" max="400" step="1" value="100"></label>
+     <label>Rotazione<input type="range" data-ml-transform="rotation" min="-180" max="180" step="1" value="0"></label>
+     <label class="ml-check"><input type="checkbox" data-ml-element-hidden> Nascondi elemento</label>
+     <button type="button" data-ml-element-reset>Ripristina elemento</button>
+    </div>
+    <div class="ml-editor-actions"><button type="button" data-ml-undo disabled>Annulla <svg class="ui-icon" data-ui-icon="undo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M4 9h9a7 7 0 0 1 7 7v3M9 4 4 9l5 5"/></svg></button><button type="button" data-ml-layout-reset>Ripristina posizioni</button></div>
+   </fieldset>
+
    <div class="ml-preset-actions"><button type="button" data-ml-export="preset">Salva preset <svg class="ui-icon" data-ui-icon="down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 4v16M5 13l7 7 7-7"/></svg></button><label class="ml-file-button">Importa preset <svg class="ui-icon" data-ui-icon="up-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M5 19 19 5M6 5h13v13"/></svg><input type="file" data-ml-preset-file accept="application/json,.json"></label></div>
   </form>
  </div>
@@ -278,6 +308,7 @@
  <div class="ml-library" data-ml-library aria-label="Libreria dei preset"></div>
  <noscript>Attiva JavaScript per provare le animazioni e personalizzare i template.</noscript>
 </div>
+
 <div class="motion-kit-bar"><span>Lo studio offline + tutti i 40 preset.</span><a href="downloads/HANGOVER-MOTION-KIT.zip" download>Scarica il Motion Kit <svg class="ui-icon" data-ui-icon="down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 4v16M5 13l7 7 7-7"/></svg></a></div>
 <details class="motion-legacy"><summary>Prime prove / Chrome, Echo, Cut e carosello</summary>
 <div class="motion-layout">

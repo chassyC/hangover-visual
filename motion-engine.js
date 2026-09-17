@@ -2,7 +2,7 @@
    Original vector contours are never reshaped. No external dependencies. */
 window.createHangoverStudio = function createHangoverStudio(data) {
  'use strict';
- const paths={}, pictures=new Map();
+ const paths={}, pictures=new Map(),layers=window.createHangoverLayers();
  const renderers=Object.assign({},...['createHangoverEditorial','createHangoverSocial','createHangoverOverlays'].map(name=>typeof window[name]==='function'?window[name]():{}));
  for(const [name,g] of Object.entries(data.glyphs)){
   const p=new Path2D();
@@ -35,22 +35,48 @@ window.createHangoverStudio = function createHangoverStudio(data) {
  function render(ctx,width,height,time,cfg){
   const W=1000,H=1000*height/width,tall=H>1150,square=H>850&&!tall,p=data.palettes[cfg.palette]||data.palettes.ice;
   const duration=Number(cfg.duration)||10, q=phase(time/duration), cycles=Number(cfg.speed)===.75?1:Number(cfg.speed)===1.25?3:2, theta=q*Math.PI*2*cycles;
-  const title=(cfg.title||'ALL NIGHT').toUpperCase(),sub=(cfg.subtitle||'HANGOVER / AFTER DARK').toUpperCase();
+  const title=String(cfg.title??'ALL NIGHT').trim().toUpperCase(),sub=String(cfg.subtitle??'HANGOVER / AFTER DARK').trim().toUpperCase();
   const chosen=data.photos.find(x=>x.id===cfg.photo)||data.photos[0],src=cfg.customImage||chosen.src;
   const image=pictures.get(src)?.image;
   const output=exportSettings(cfg),transparent=output.transparent,isolated=output.content==='wordmark',removeBackground=cfg.background==='transparent';
+  layers.begin(ctx,width,height,cfg);let logoCount=0;
   ctx.save();ctx.setTransform(width/W,0,0,height/H,0,0);ctx.clearRect(0,0,W,H);
-  const rect=(x,y,w,h,color)=>{if(removeBackground&&ctx.globalCompositeOperation!=='source-atop'&&x<=0&&y<=0&&x+w>=W&&y+h>=H)return;ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
-  const line=(x,y,x2,y2,color=p.fg,width=1)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();};
-  const circle=(x,y,r,color,stroke=false,width=2)=>{ctx.beginPath();ctx.arc(x,y,Math.max(0,r),0,Math.PI*2);ctx[stroke?'strokeStyle':'fillStyle']=color;if(stroke){ctx.lineWidth=width;ctx.stroke();}else ctx.fill();};
-  function mark(name,x,y,w,color=p.fg){const g=data.glyphs[name];ctx.save();ctx.translate(x,y);ctx.scale(w/g.width,w/g.width);if(removeBackground&&!isolated&&cfg.preset==='shutter'&&name==='hangover'){ctx.beginPath();for(let i=0;i<6;i++){const visible=.12+((Math.sin(theta-i*.24)+1)/2)*.88;ctx.rect(i*g.width/6,g.height*(1-visible)/2,g.width/6+1,g.height*visible);}ctx.clip();}ctx.fillStyle=color;ctx.fill(paths[name],'evenodd');ctx.restore();return w*g.height/g.width;}
+  const drawable=(kind,tag,label,box,paint)=>layers.draw(kind,tag,label,box,paint);
+  const rect=(x,y,w,h,color)=>{if(removeBackground&&ctx.globalCompositeOperation!=='source-atop'&&x<=0&&y<=0&&x+w>=W&&y+h>=H)return;const paint=()=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};if(w>=W&&h>=H||w<=0||h<=0)paint();else drawable('shape','panel','Riquadro',{x,y,w,h},paint);};
+  const line=(x,y,x2,y2,color=p.fg,weight=1)=>drawable('shape','line','Linea',{x:Math.min(x,x2),y:Math.min(y,y2),w:Math.max(Math.abs(x2-x),weight),h:Math.max(Math.abs(y2-y),weight)},()=>{ctx.strokeStyle=color;ctx.lineWidth=weight;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();});
+  const circle=(x,y,r,color,stroke=false,weight=2)=>drawable('shape','circle','Cerchio',{x:x-r,y:y-r,w:r*2,h:r*2},()=>{ctx.beginPath();ctx.arc(x,y,Math.max(0,r),0,Math.PI*2);ctx[stroke?'strokeStyle':'fillStyle']=color;if(stroke){ctx.lineWidth=weight;ctx.stroke();}else ctx.fill();});
+  function mark(name,x,y,w,color=p.fg,targetHeight){
+   const original=data.glyphs[name],box={x,y,w,h:targetHeight??w*original.height/original.width},isLogo=['h','hg','hgr'].includes(name)||isolated,logo=cfg.logo||{};
+   if(isLogo)logoCount++;
+   const kind=isLogo&&logo.kind&&logo.kind!=='preset'?logo.kind:name;
+   const g=kind==='custom'?null:kind==='hang-over'?{width:543,height:296}:data.glyphs[kind];
+   const photoLogo=kind==='custom'?pictures.get(logo.image)?.image:null;
+   if(kind==='none'||kind==='custom'&&!photoLogo)return box.h;
+   const mw=photoLogo?.width||g?.width||original.width,mh=photoLogo?.height||g?.height||original.height,k=Math.min(box.w/mw,box.h/mh),dx=x+(box.w-mw*k)/2,dy=y+(box.h-mh*k)/2;
+   drawable('mark',name,(isLogo?'Logo ':'Nome ')+(kind==='preset'?name:kind).toUpperCase(),box,()=>{
+    if(kind==='none'||kind==='custom'&&!photoLogo)return;
+    ctx.save();ctx.translate(dx,dy);ctx.scale(k,k);
+    if(photoLogo)ctx.drawImage(photoLogo,0,0);
+    else{
+     const shape=new Path2D();if(kind==='hang-over'){shape.addPath(paths.hang);shape.addPath(paths.over,new DOMMatrix().translate(0,155));}else shape.addPath(paths[kind]||paths[name]);
+     if(removeBackground&&!isolated&&cfg.preset==='shutter'&&name==='hangover'){ctx.beginPath();for(let i=0;i<6;i++){const visible=.12+((Math.sin(theta-i*.24)+1)/2)*.88;ctx.rect(i*mw/6,mh*(1-visible)/2,mw/6+1,mh*visible);}ctx.clip();}
+     const finish=isLogo?(logo.finish||'original'):'original',ink=isLogo&&logo.color&&logo.color!=='auto'?logo.color:color;
+     if(finish==='duotone'){ctx.save();ctx.translate(mw*.025,mh*.045);ctx.fillStyle=p.accent;ctx.fill(shape,'evenodd');ctx.restore();}
+     if(finish==='chrome'){const grad=ctx.createLinearGradient(0,0,mw*.45,mh);for(const [stop,c] of [[0,'#eaf7ff'],[.23,'#839cac'],[.45,'#fff'],[.49,'#263949'],[.68,'#d3e5ef'],[1,'#8196a3']])grad.addColorStop(stop,c);ctx.fillStyle=grad;}else ctx.fillStyle=ink;
+     if(finish==='outline'){ctx.strokeStyle=ink;ctx.lineWidth=Math.max(1,mw*.012);ctx.stroke(shape);}else ctx.fill(shape,'evenodd');
+    }ctx.restore();
+   });return box.h;
+  }
   function text(s,x,y,size=22,color=p.fg,max=900,align='left',weight=400,font='monospace'){
+   s=String(s??'');if(!s.trim())return 0;
    ctx.save();ctx.textAlign=align;ctx.textBaseline='top';ctx.font=`${weight} ${size}px ${font}`;
-   if(ctx.measureText(s).width>max){size*=max/ctx.measureText(s).width;ctx.font=`${weight} ${size}px ${font}`;}
-   ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore();return size;
+   const measured=ctx.measureText(s).width;if(measured>max){size*=max/measured;ctx.font=`${weight} ${size}px ${font}`;}
+   const tw=ctx.measureText(s).width,tx=x-(align==='center'?tw/2:align==='right'?tw:0),tag=s===title||s.length>1&&title.includes(s)?'title':s===sub||s.length>1&&sub.includes(s)?'subtitle':'copy-'+Array.from(s).reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,0).toString(36);
+   const label=tag==='title'?'Titolo':tag==='subtitle'?'Dettaglio':s.slice(0,28),savedSize=size;
+   drawable('text',tag,label,{x:tx,y,w:tw,h:size*1.2},()=>{ctx.save();ctx.textAlign=align;ctx.textBaseline='top';ctx.font=`${weight} ${savedSize}px ${font}`;ctx.fillStyle=color;ctx.fillText(s,x,y);ctx.restore();});ctx.restore();return size;
   }
   function headline(s,x,y,w,size=100,color=p.fg){return text(s,x,y,size,color,w,'left',800,'Arial, sans-serif');}
-  function photo(img,x,y,w,h,zoom=1){if(removeBackground&&ctx.globalCompositeOperation!=='source-atop')return;if(!img){rect(x,y,w,h,p.muted);return;}ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const k=Math.max(w/img.width,h/img.height)*zoom,iw=img.width*k,ih=img.height*k;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);ctx.restore();}
+  function photo(img,x,y,w,h,zoom=1){if(removeBackground&&ctx.globalCompositeOperation!=='source-atop')return;const paint=()=>{if(!img){ctx.fillStyle=p.muted;ctx.fillRect(x,y,w,h);return;}ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const k=Math.max(w/img.width,h/img.height)*zoom,iw=img.width*k,ih=img.height*k;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);ctx.restore();};if(w>=W&&h>=H)paint();else drawable('photo','image','Foto',{x,y,w,h},paint);}
   function rules(label,accent=p.fg){text('HANGOVER / '+label,45,35,17,accent,730);text('MOTION SERIES',955,H-39,14,accent,400,'right');}
   function ribbon(y,w=1050,color=p.fg,direction=1){const h=w*141/1087,x=-phase(q*cycles*direction)*(w+24);for(let k=-1;k<3;k++)mark('hangover',x+k*(w+24),y,w,color);return h;}
   function tintedPhoto(x,y,w,h){photo(image,x,y,w,h,1.02+.02*Math.sin(theta));}
@@ -58,11 +84,12 @@ window.createHangoverStudio = function createHangoverStudio(data) {
   if(isolated){
    // A dedicated output layer: no secondary marks, copy, panels, pictures or guide pixels.
    const motion=['drift','reveal','pulse'].includes(cfg.wordmarkMotion)?cfg.wordmarkMotion:'drift';
-   const w=motion==='pulse'?860*(.94+.06*Math.sin(theta)):860,h=w*data.glyphs.hangover.height/data.glyphs.hangover.width;
+   const logoKind=cfg.logo?.kind,lg=logoKind==='custom'?pictures.get(cfg.logo.image)?.image:logoKind==='hang-over'?{width:543,height:296}:data.glyphs[logoKind]||data.glyphs.hangover,ratio=lg?lg.height/lg.width:data.glyphs.hangover.height/data.glyphs.hangover.width;
+   const size=Math.min(860,H*.76/ratio),w=motion==='pulse'?size*(.94+.06*Math.sin(theta)):size,h=w*ratio;
    const x=(W-w)/2,y=(H-h)/2+(motion==='drift'?Math.sin(theta)*Math.min(24,H*.04):0);
    ctx.save();
    if(motion==='reveal'){const visible=.12+.88*smooth((1-Math.cos(theta))/2);ctx.beginPath();ctx.rect(x-1,y-2,(w+2)*visible,h+4);ctx.clip();}
-   mark('hangover',x,y,w,p.fg);ctx.restore();ctx.restore();return;
+   mark('hangover',x,y,w,p.fg,h);ctx.restore();ctx.restore();layers.flush();return;
   }
   if(renderers[cfg.preset])renderers[cfg.preset]({ctx,W,H,p,cfg,time,q,theta,tall,square,title,sub,image,mark,text,headline,photo,line,rect,circle,ribbon,tintedPhoto,clamp,ease,smooth,phase,data});
   else switch(cfg.preset){
@@ -110,8 +137,8 @@ window.createHangoverStudio = function createHangoverStudio(data) {
     break;
    }
    case 'lineup':{
-    mark('hangover',50,70,900,p.fg);text('LINE-UP / '+title,50,tall?230:210,24,p.fg,900);
-    const names=(cfg.lineup||'[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]').split('\n').filter(Boolean).slice(0,4),top=tall?H*.32:square?H*.39:H*.44,row=Math.min(tall?200:square?125:64,(H-100-top)/names.length);
+    mark('hangover',50,70,900,p.fg);if(title)text('LINE-UP / '+title,50,tall?230:210,24,p.fg,900);
+    const names=String(cfg.lineup??'[ARTISTA 01]\n[ARTISTA 02]\n[ARTISTA 03]').split('\n').map(s=>s.trim()).filter(Boolean).slice(0,4),top=tall?H*.32:square?H*.39:H*.44,row=Math.min(tall?200:square?125:64,(H-100-top)/Math.max(1,names.length));
     names.forEach((name,i)=>{const shift=22*Math.sin(theta-i*.5),y=top+i*row;line(50,y-20,950,y-20,p.muted);if(i===Math.floor(q*names.length)){rect(42,y-9,916,row-20,p.accent);}
      headline(name.toUpperCase(),62+shift,y+8,864-shift,Math.min(tall?118:square?88:49,row*.72),i===Math.floor(q*names.length)?p.bg:p.fg);});
     text(sub,50,H-60,20,p.fg,900);break;
@@ -153,6 +180,8 @@ window.createHangoverStudio = function createHangoverStudio(data) {
     text(title,45,H-112,32,p.fg,900);text(sub,45,H-54,17,p.fg,900);rules('PRISMA');
    }
   }
+  if(!logoCount&&cfg.logo?.kind&&cfg.logo.kind!=='preset'&&cfg.logo.kind!=='none')mark('h',45,60,135,p.fg);
+  ctx.restore();layers.flush();ctx.save();ctx.setTransform(width/W,0,0,height/H,0,0);
   // A selected surface also reaches typographic layouts; overlay pixels stay transparent.
   if(chosen.kind==='surface'||cfg.customImage){ctx.save();ctx.globalCompositeOperation=transparent?'source-atop':'soft-light';ctx.globalAlpha=transparent?.28:.22;photo(image,0,0,W,H,1.01);ctx.restore();}
   if(!transparent&&cfg.effects?.includes('registration')){ctx.save();ctx.globalAlpha=.11;mark('hangover',45+Math.sin(theta)*5,H-27,910,p.accent);ctx.restore();}
@@ -160,7 +189,7 @@ window.createHangoverStudio = function createHangoverStudio(data) {
   if(cfg.effects?.includes('light')){const sweep=phase(q*cycles)*2000-500,g=ctx.createLinearGradient(sweep-220,0,sweep+220,H);g.addColorStop(0,'#ffffff00');g.addColorStop(.5,'#ffffff23');g.addColorStop(1,'#ffffff00');rect(0,0,W,H,g);}
   if(cfg.effects?.includes('grain')){ctx.save();ctx.globalAlpha=.48;ctx.fillStyle=ctx.createPattern(grain,'repeat');ctx.fillRect(0,0,W,H);ctx.restore();}
   ctx.restore();
-  ctx.restore();
+  ctx.restore();layers.flush();
  }
  function preview(ctx,width,height,time,cfg,options={}){
   render(ctx,width,height,time,cfg);
@@ -175,5 +204,5 @@ window.createHangoverStudio = function createHangoverStudio(data) {
    ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#080c1466';ctx.beginPath();ctx.rect(0,0,width,height);ctx.rect(width*.08,height*.15,width*.76,height*.57);ctx.fill('evenodd');ctx.strokeStyle='#e5ff79';ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.strokeRect(width*.08,height*.15,width*.76,height*.57);ctx.restore();
   }
  }
- return {render,preview,load,ready,dimensions,exportSettings};
+ return {render,preview,load,ready,dimensions,exportSettings,elements:layers.all,hit:layers.hit,validateLayout:layers.validate};
 };

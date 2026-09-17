@@ -20,6 +20,7 @@ window.createHangoverOverlays = function createHangoverOverlays() {
  }
  // Wrap full 42/72-character fields; font fitting never stretches the contours.
  function block(e,value,x,y,width,size,maxLines,color=e.p.fg,font='Arial, sans-serif',weight=600){
+  if(!copy(value))return 0;
   const {ctx,text}=e;ctx.save();let rows=[],fitted=size;
   do{ctx.font=weight+' '+fitted+'px '+font;rows=lines(ctx,value,width);if(rows.length<=maxLines)break;fitted-=1;}while(fitted>8);
   ctx.restore();rows.forEach((row,i)=>text(row,x,y+i*fitted*1.2,fitted,color,width,'left',weight,font));
@@ -40,11 +41,12 @@ window.createHangoverOverlays = function createHangoverOverlays() {
   },
   'overlay-title-tag':function(e){
    const {ctx,H,p,mark,rect,line,title,sub}=e,a=loop(e),x=88,y=H*.595+Math.sin(a)*3,w=704,h=208;
-   panel(e,x,y,w,h,p.bg);rect(x,y,6,h,p.accent);
-   mark('h',x+24,y+27,58,p.fg);line(x+106,y+25,x+106,y+h-25,p.fg,1);
+   const hasFields=Boolean(copy(title)||copy(sub));
+   if(hasFields){panel(e,x,y,w,h,p.bg);rect(x,y,6,h,p.accent);}
+   mark('h',x+24,y+27,58,p.fg);if(hasFields)line(x+106,y+25,x+106,y+h-25,p.fg,1);
    block(e,title,x+127,y+27,550,40,2,p.fg);
    block(e,sub,x+129,y+133,544,20,2,p.fg,'monospace',400);
-   ctx.save();ctx.beginPath();ctx.rect(x+6,y,w-6,3);ctx.clip();rect(x+7+(Math.sin(a)+1)*290,y,116,3,p.fg);ctx.restore();
+   if(hasFields){ctx.save();ctx.beginPath();ctx.rect(x+6,y,w-6,3);ctx.clip();rect(x+7+(Math.sin(a)+1)*290,y,116,3,p.fg);ctx.restore();}
   },
   'overlay-viewfinder':function(e){
    const {ctx,H,p,mark,line,title,sub}=e,a=loop(e),x=68,right=890,top=H*.164,bottom=H*.711;
@@ -62,6 +64,7 @@ window.createHangoverOverlays = function createHangoverOverlays() {
   'overlay-ticker':function(e){
    const {ctx,H,p,mark,line,rect,text,title,sub}=e,a=loop(e),x=80,y=H*.678,w=760,h=59;
    block(e,title,x,y-63,w,34,1,p.fg);
+   if(!copy(sub))return;
    panel(e,x,y,w,h,p.bg,.92);line(x,y,x+w,y,p.accent,2);
    mark('h',x+13,y+10,35,p.fg);line(x+65,y+12,x+65,y+h-12,p.fg,1);
    const content=copy(sub)+'   /   ',font='monospace',size=21;
@@ -83,14 +86,15 @@ window.createHangoverOverlays = function createHangoverOverlays() {
   },
   'overlay-timecard':function(e){
    const {H,p,mark,line,text,rect,title,sub}=e,a=loop(e),x=88,y=H*.55+Math.sin(a)*2,w=650,h=258;
-   panel(e,x,y,w,h,p.bg,.95);rect(x,y,5,h,p.accent);
+   const hasFields=Boolean(copy(title)||copy(sub));
+   if(hasFields){panel(e,x,y,w,h,p.bg,.95);rect(x,y,5,h,p.accent);}
    mark('hangover',x+23,y+25,263,p.fg);
    const seconds=Math.max(0,Math.floor(Number(e.time)||0)),stamp=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
    text(stamp,x+w-24,y+28,23,p.fg,116,'right',400,'monospace');
-   line(x+23,y+81,x+w-24,y+81,p.fg,1);
+   if(hasFields)line(x+23,y+81,x+w-24,y+81,p.fg,1);
    block(e,title,x+23,y+101,w-49,38,2,p.fg);
    block(e,sub,x+23,y+193,w-49,20,2,p.fg,'monospace',400);
-   line(x+23,y+h-11,x+23+(w-47)*(.5+.46*Math.sin(a)),y+h-11,p.accent,2);
+   if(hasFields)line(x+23,y+h-11,x+23+(w-47)*(.5+.46*Math.sin(a)),y+h-11,p.accent,2);
   }
  };
 };

@@ -8,6 +8,10 @@ Apri HANGOVER-MOTION-STUDIO.html nel browser. Funziona anche offline: il font HA
 
 Scegli uno studio, cambia parole, palette, materia, durata e velocità. Puoi caricare una tua foto. Salva un preset JSON per ritrovare le scelte o un template HTML per portare con te lo studio completo.
 
+I campi vuoti restano vuoti: cancella titolo, dettaglio o line-up per nasconderli. Con “Sposta elementi” attivo, tocca un elemento e trascinalo; il menu Posizione permette anche di scegliere elementi sovrapposti, cambiare dimensione e rotazione, nasconderli, annullare o ripristinare. Le frecce della tastiera spostano l’elemento selezionato; Maiusc aumenta il passo. Gli elementi animati conservano il loro movimento attorno alla nuova posizione.
+
+Il pannello Logo offre H, HG, HGR, HANGOVER e HANG / OVER con finiture piena, cromo, contorno e doppio colore, oppure un’immagine personale PNG, JPG o WebP (entro 12 MB). La trasparenza esistente viene conservata; le immagini grandi vengono adattate a 1600 pixel sul lato lungo. Per uno sfondo uniforme puoi scegliere colore e tolleranza, rimuoverlo e ripristinare l’originale. Tutto viene elaborato nel browser. Posizioni, logo e immagine sono inclusi nel JSON, nel template e nelle esportazioni.
+
 Le 12 materie comprendono le 4 scene originali e 8 nuove superfici: cromo liquido, alluminio spazzolato, titanio iridescente, vetro a onde, velluto prugna, scie neon, rete in tensione, carta in rilievo. La superficie entra nelle fotografie o colora i layout tipografici. Gli overlay mantengono la trasparenza.
 
 ## Esporta
@@ -15,8 +19,8 @@ Le 12 materie comprendono le 4 scene originali e 8 nuove superfici: cromo liquid
 - Video: 30 fps, MP4 o WebM secondo il browser. Nessun audio incluso; aggiungi musica e riprese nel tuo editor. Mantieni la scheda aperta durante l'esportazione.
 - WebM originale: i sei file 35–40 sono video VP9 con alpha, 1080×1920, 30 fps, 6 secondi. Usano parole e colori iniziali. Puoi metterli subito sopra una ripresa se il tuo editor supporta WebM con trasparenza; altrimenti usa la sequenza PNG.
 - Risoluzione: Full HD (1920×1080), QHD / 2K (2560×1440), UHD / 4K (3840×2160). Il verticale scambia altezza e larghezza; il quadrato usa 1080, 1440 o 2160 pixel.
-- Contenuto: composizione completa oppure solo il nome HANGOVER, con movimento fluttuante, rivelazione o respiro. Il nome isolato funziona in tutti i rapporti.
-- Sfondo: quello del preset oppure trasparente. La trasparenza rimuove fondi e fotografie; mantiene gli elementi grafici della composizione. Per avere solo il nome, scegli Solo HANGOVER.
+- Contenuto: composizione completa oppure solo il logo o il nome selezionato, con movimento fluttuante, rivelazione o respiro. Il logo isolato funziona in tutti i rapporti, anche con un’immagine personale.
+- Sfondo: quello del preset oppure trasparente. La trasparenza rimuove fondi e fotografie; mantiene gli elementi grafici della composizione. Per avere solo il logo, scegli “Solo logo / nome”.
 - PNG: il fotogramma corrente, alla risoluzione selezionata, con alpha quando lo sfondo è trasparente.
 - Sequenza PNG: fotogrammi RGBA alla risoluzione selezionata, a 30 fps in uno ZIP, per tutti i 40 preset. Importa `frames/00000.png` come sequenza a 30 fps e posizionala sopra il tuo video. Sono inclusi preset e istruzioni. È trasparente; foto e guide di anteprima non vengono esportate.
 - WebM trasparente personalizzato: disponibile solo quando il browser supera il controllo reale di codifica e lettura della trasparenza. Se non lo supporta, usa la sequenza PNG. MP4 con trasparenza non è proposto.
